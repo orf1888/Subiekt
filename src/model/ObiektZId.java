@@ -4,11 +4,11 @@ import kontroler.ObiektWyszukanieWarunki.StrukturaWarunku;
 
 public interface ObiektZId
 {
-	int getId();
+    int getId();
 
-	String[] piszWierszTabeli();
+    String[] piszWierszTabeli();
 
-	String[] getKolumnyPrzeszukiwania();
+    String[] getKolumnyPrzeszukiwania();
 
-	StrukturaWarunku getWarunekWidoczny();
+    StrukturaWarunku getWarunekWidoczny();
 }

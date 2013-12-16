@@ -9,5 +9,4 @@ public class ObiektWiersz
 
 	public String[] wiersz;
 
-	//public abstract int getId();
 }

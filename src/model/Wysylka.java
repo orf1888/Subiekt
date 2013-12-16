@@ -17,11 +17,6 @@ public class Wysylka
 
 	public static String[] kolumnyWBazie = { "id", "data" };
 
-
-	/*
-	 * 
-	 */
-
 	public int id;
 
 	public Date data_wysylki;
@@ -74,8 +69,6 @@ public class Wysylka
 		return result;
 	}
 
-	//private static StrukturaWarunku warunekWidoczny = new StrukturaWarunku( 1, "aktualna", false );
-
 	@Override
 	public StrukturaWarunku getWarunekWidoczny()
 	{
@@ -85,7 +78,6 @@ public class Wysylka
 	@SuppressWarnings( "deprecation" )
 	public String getNumer()
 	{
-		//return MojeUtils.poprawNrFaktury( rodzaj, numer, ( data_wystawienia.getYear() + 1900 ) + "" );
 		return "W/" + id + "/" + ( data_wysylki.getYear() + 1900 );
 	}
 }

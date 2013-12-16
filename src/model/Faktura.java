@@ -131,7 +131,6 @@ public class Faktura
 		return result;
 	}
 
-
 	private static StrukturaWarunku warunekWidoczny = new StrukturaWarunku( 1, "aktualna", false );
 
 	@Override
