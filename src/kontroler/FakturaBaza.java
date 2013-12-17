@@ -1,6 +1,5 @@
 package kontroler;
 
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,10 +19,8 @@ import utils.MojeUtils;
 import utils.SqlUtils;
 import utils.UserShowException;
 
-public class FakturaBaza
-	implements ObiektBazaManager
+public class FakturaBaza implements ObiektBazaManager
 {
-
 	private static FakturaBaza instance = new FakturaBaza();
 
 	public static FakturaBaza instance()
@@ -31,328 +28,392 @@ public class FakturaBaza
 		return instance;
 	}
 
-	BazaStatementFunktor pobieranieWierszaFunktor = new BazaStatementFunktor() {
+	BazaStatementFunktor pobieranieWierszaFunktor = new BazaStatementFunktor()
+	{
 		@Override
-		public Object operacja( ResultSet result ) throws SQLException
+		public Object operacja(ResultSet result) throws SQLException
 		{
 			List<String[]> wynik = new ArrayList<String[]>();
 			// dodajemy do tabeli kolejne pobrane wiersze
-			while ( result.next() ) {
-				String data = MojeUtils.formatujDate( result.getString( 2 ) );
+			while (result.next())
+			{
+				String data = MojeUtils.formatujDate(result.getString(2));
 				String[] wiersz =
-					{
-						MojeUtils.poprawNrFaktury( result.getInt( 7 ), result.getInt( 1 ),
-							data.substring( 6 ), result.getBoolean( 8 ) ),
+				{
+						MojeUtils.poprawNrFaktury(result.getInt(7),
+								result.getInt(1), data.substring(6),
+								result.getBoolean(8)),
 						data,
-						MojeUtils.formatujDate( result.getString( 3 ) ),
-						KontrachentBaza.pobierzNazweZBazy( result.getInt( 4 ) ),
-						MojeUtils.formatujWartosc( result.getInt( 5 ) )
-							+ " "
-							+ WalutaManager.pobierzNazweZBazy( result.getLong( 9 ) - 1,
-								Waluta.tabelaWaluta ), "" + result.getInt( 6 ), };
-				wynik.add( wiersz );
+						MojeUtils.formatujDate(result.getString(3)),
+						KontrachentBaza.pobierzNazweZBazy(result.getInt(4)),
+						MojeUtils.formatujWartosc(result.getInt(5))
+								+ " "
+								+ WalutaManager.pobierzNazweZBazy(
+										result.getLong(9) - 1,
+										Waluta.tabelaWaluta),
+						"" + result.getInt(6), };
+				wynik.add(wiersz);
 			}
 			return wynik;
 		}
 	};
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings("unchecked")
 	@Override
-	public String[][] pobierzWierszeZBazy( ObiektWyszukanieWarunki warunki ) throws SQLException
+	public String[][] pobierzWierszeZBazy(ObiektWyszukanieWarunki warunki)
+			throws SQLException
 	{
-		String querySql =
-			"SELECT DISTINCT numer, data_wystawienia, termin_platnosci, id_kontrachent, wartosc, id_faktura, rodzaj, czy_korekta, waluta FROM "
+		String querySql = "SELECT DISTINCT numer, data_wystawienia, termin_platnosci, id_kontrachent, wartosc, id_faktura, rodzaj, czy_korekta, waluta FROM "
 				+ Faktura.tableName;
 		querySql += warunki.generujWarunekWhere();
 
-		MojeUtils.println( querySql );
+		MojeUtils.println(querySql);
 
-		List<String[]> wynik = (List<String[]>) BazaDanych.getInstance().zapytanie(
-		// sql do pobrania
-			querySql,
-			// operacja na pobranych danych
-			pobieranieWierszaFunktor );
+		List<String[]> wynik = (List<String[]>) BazaDanych.getInstance()
+				.zapytanie(/* sql do pobrania */querySql,
+				/* operacja na pobranych danych */pobieranieWierszaFunktor);
 
-		// probujemy wyszukac po nazwie kontrachenta
-		if ( warunki.dowolnaKolumna != null && !warunki.dowolnaKolumna.equals( "*" ) )
-			wynik.addAll( wyszukajPoKontrachencie( warunki ) );
+		/* probujemy wyszukac po nazwie kontrachenta */
+		if (warunki.dowolnaKolumna != null
+				&& !warunki.dowolnaKolumna.equals("*"))
+			wynik.addAll(wyszukajPoKontrachencie(warunki));
 
-		// druga i trzecia wartosc to daty
-		//wynik[1]
-
-
-		return wynik.toArray( new String[wynik.size()][] );
+		/* druga i trzecia wartosc to daty wynik[1] */
+		return wynik.toArray(new String[wynik.size()][]);
 	}
 
-	@SuppressWarnings( "unchecked" )
-	private List<String[]> wyszukajPoKontrachencie( ObiektWyszukanieWarunki warunki ) throws SQLException
+	@SuppressWarnings("unchecked")
+	private List<String[]> wyszukajPoKontrachencie(
+			ObiektWyszukanieWarunki warunki) throws SQLException
 	{
-		ObiektWyszukanieWarunki warunekTmp = new ObiektWyszukanieWarunki( warunki.typObiektu );
+		ObiektWyszukanieWarunki warunekTmp = new ObiektWyszukanieWarunki(
+				warunki.typObiektu);
 		warunekTmp.warunki = warunki.warunki;
 		warunekTmp.tylkoWidoczne = warunki.tylkoWidoczne;
 
-		String querySql =
-			"SELECT DISTINCT f.numer, f.data_wystawienia,f.termin_platnosci, f.id_kontrachent, f.wartosc, f.id_faktura, f.rodzaj FROM "
+		String querySql = "SELECT DISTINCT f.numer, f.data_wystawienia,f.termin_platnosci, f.id_kontrachent, f.wartosc, f.id_faktura, f.rodzaj FROM "
 				+ Faktura.tableName
 				+ " f JOIN "
 				+ Kontrachent.tableName
 				+ " k ON k.id_kontrachent=f.id_kontrachent WHERE k.nazwa like '"
-				+ SqlUtils.poprawZAsteryskem( warunki.dowolnaKolumna )
+				+ SqlUtils.poprawZAsteryskem(warunki.dowolnaKolumna)
 				+ "' AND "
-				+ warunekTmp.generujWarunekWhere().substring( 6 );
+				+ warunekTmp.generujWarunekWhere().substring(6);
 
-		MojeUtils.println( querySql );
+		MojeUtils.println(querySql);
 
-		return (List<String[]>) BazaDanych.getInstance().zapytanie( querySql, pobieranieWierszaFunktor );
+		return (List<String[]>) BazaDanych.getInstance().zapytanie(querySql,
+				pobieranieWierszaFunktor);
 	}
 
 	@Override
-	public ObiektZId pobierzObiektZBazy( ObiektWiersz wiersz )
+	public ObiektZId pobierzObiektZBazy(ObiektWiersz wiersz)
 	{
-		try {
-			final int id = getIdFromWiersz( wiersz );
+		try
+		{
+			final int id = getIdFromWiersz(wiersz);
 
-			final List<ProduktWFakturze> produkty = ProduktBaza.pobierzDlaFaktury( id, false );
+			final List<ProduktWFakturze> produkty = ProduktBaza
+					.pobierzDlaFaktury(id, false);
 
-			final List<ProduktWFakturze> produktyKorekta = ProduktBaza.pobierzDlaFaktury( id, true );
+			final List<ProduktWFakturze> produktyKorekta = ProduktBaza
+					.pobierzDlaFaktury(id, true);
 
-			MojeUtils.println( "Pobrano " + produkty.size() + " produktow" );
+			MojeUtils.println("Pobrano " + produkty.size() + " produktow");
 
-			String querySql =
-				"SELECT numer, data_wystawienia, termin_platnosci, zaplacona, rodzaj, id_kontrachent, wartosc, aktualna, czy_korekta, waluta FROM "
-					+ Faktura.tableName + " WHERE id_faktura= " + SqlUtils.popraw( id );
+			String querySql = "SELECT numer, data_wystawienia, termin_platnosci, zaplacona, rodzaj, id_kontrachent, wartosc, aktualna, czy_korekta, waluta FROM "
+					+ Faktura.tableName
+					+ " WHERE id_faktura= "
+					+ SqlUtils.popraw(id);
 
-			MojeUtils.println( querySql );
+			MojeUtils.println(querySql);
 
 			return (ObiektZId) BazaDanych.getInstance().zapytanie(
-			// sql do pobrania
-				querySql,
-
-				// operacja na pobranych danych
-				new BazaStatementFunktor() {
-					@Override
-					public Object operacja( ResultSet result ) throws SQLException
-					{
-						// dodajemy do tabeli kolejne pobrane wiersze, skladajace sie z 4 elementow
-						return new Faktura( id, result.getInt( 1 ),
-								MojeUtils.parsujDate( result.getString( 2 ) ),
-								MojeUtils.parsujDate( result.getString( 3 ) ), result.getBoolean( 4 ),
-								result.getInt( 5 ),
-								(Kontrachent) KontrachentBaza.pobierzObiektZBazy( result.getInt( 6 ) ),
-								result.getInt( 7 ), result.getBoolean( 8 ), result.getBoolean( 9 ),
-								produkty, produktyKorekta, result.getLong( 10 ) );
-					}
-				} );
-		}
-		catch ( SQLException e ) {
+			/* sql do pobrania */querySql,
+			/* operacja na pobranych danych */
+			new BazaStatementFunktor()
+			{
+				@Override
+				public Object operacja(ResultSet result) throws SQLException
+				{
+					// dodajemy do tabeli kolejne pobrane wiersze,
+					// skladajace sie z 4 elementow
+					return new Faktura(id, result.getInt(1), MojeUtils
+							.parsujDate(result.getString(2)), MojeUtils
+							.parsujDate(result.getString(3)), result
+							.getBoolean(4), result.getInt(5),
+							(Kontrachent) KontrachentBaza
+									.pobierzObiektZBazy(result.getInt(6)),
+							result.getInt(7), result.getBoolean(8), result
+									.getBoolean(9), produkty, produktyKorekta,
+							result.getLong(10));
+				}
+			});
+		} catch (SQLException e)
+		{
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public static int pobierzNrFaktury( int rodzaj )
+	public static int pobierzNrFaktury(int rodzaj)
 	{
-		try {
-			String querySql =
-				"SELECT max( numer ) FROM " + Faktura.tableName + " WHERE rodzaj= "
-					+ SqlUtils.popraw( rodzaj );
+		try
+		{
+			String querySql = "SELECT max( numer ) FROM " + Faktura.tableName
+					+ " WHERE rodzaj= " + SqlUtils.popraw(rodzaj);
 
-			MojeUtils.println( querySql );
+			MojeUtils.println(querySql);
 
-			return (Integer) BazaDanych.getInstance().zapytanie( querySql,
+			return (Integer) BazaDanych.getInstance().zapytanie(querySql,
 
-			new BazaStatementFunktor() {
+			new BazaStatementFunktor()
+			{
 				@Override
-				public Object operacja( ResultSet result ) throws SQLException
+				public Object operacja(ResultSet result) throws SQLException
 				{
-					try {
-						return result.getInt( 1 );
-					}
-					catch ( Exception przemilcz ) {
+					try
+					{
+						return result.getInt(1);
+					} catch (Exception przemilcz)
+					{
 						return null;
 					}
 				}
-			} );
-		}
-		catch ( SQLException e ) {
+			});
+		} catch (SQLException e)
+		{
 			e.printStackTrace();
 			return -1;
 		}
 	}
 
 	@Override
-	public void dodaj( Object nowy ) throws Exception
+	public void dodaj(Object nowy) throws Exception
 	{
 		Faktura nowaFaktura = (Faktura) nowy;
 
-		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki( new Faktura() );
-		warunki.dodajWarunek( nowaFaktura.numer, "numer" );
-		warunki.dodajWarunek( nowaFaktura.rodzaj, "rodzaj" );
+		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
+				new Faktura());
+		warunki.dodajWarunek(nowaFaktura.numer, "numer");
+		warunki.dodajWarunek(nowaFaktura.rodzaj, "rodzaj");
 
-		String[][] znalezioneWiersze = pobierzWierszeZBazy( warunki );
+		String[][] znalezioneWiersze = pobierzWierszeZBazy(warunki);
 
-		if ( znalezioneWiersze.length == 0 ) {
-			dodaj_encje_faktura( nowaFaktura );
+		if (znalezioneWiersze.length == 0)
+		{
+			dodaj_encje_faktura(nowaFaktura);
 
-			// edycja magazynu
-			ProduktBaza.dodajListeProduktow( nowaFaktura.produkty, nowaFaktura.id_faktura );
-			boolean dodac = ( nowaFaktura.rodzaj == Faktura.SPRZEDAZ ) ? false
+			/* edycja magazynu */
+			ProduktBaza.dodajListeProduktow(nowaFaktura.produkty,
+					nowaFaktura.id_faktura);
+			boolean dodac = (nowaFaktura.rodzaj == Faktura.SPRZEDAZ) ? false
 					: true;
-			ProduktBaza.instance().zmienIloscProduktyZMagazynu( nowaFaktura.produkty, dodac );
-			//MojeUtils.println( generatedId );
-		}
-		else
-			throw new UserShowException( "Znaleziono już fakturę o takim numerze" );
+			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
+					nowaFaktura.produkty, dodac);
+		} else
+			throw new UserShowException(
+					"Znaleziono już fakturę o takim numerze");
 	}
 
-	public static Faktura nowaFaktura( int rodzajFaktury, int numer,
-			List<ProduktWFakturze> listaProduktow, Long waluta ) throws UserShowException
+	public static Faktura nowaFaktura(int rodzajFaktury, int numer,
+			List<ProduktWFakturze> listaProduktow, Long waluta)
+			throws UserShowException
 	{
-		if ( rodzajFaktury == Faktura.ZAKUP ) {
-			if ( numer < 1 ) {
-				throw new UserShowException( "Podano niepoprawny numer" );
+		if (rodzajFaktury == Faktura.ZAKUP)
+		{
+			if (numer < 1)
+			{
+				throw new UserShowException("Podano niepoprawny numer");
 			}
-		}
-		else {
-			numer = FakturaBaza.pobierzNrFaktury( rodzajFaktury ) + 1;
+		} else
+		{
+			numer = FakturaBaza.pobierzNrFaktury(rodzajFaktury) + 1;
 		}
 		Date data_wystawienia = new Date();
-		Date termin_platnosci = new Date( data_wystawienia.getTime() );
-		if ( data_wystawienia.after( termin_platnosci ) )
-			throw new UserShowException( "Data wystawienia nie może być po terminie płatności!" );
+		Date termin_platnosci = new Date(data_wystawienia.getTime());
+		if (data_wystawienia.after(termin_platnosci))
+			throw new UserShowException(
+					"Data wystawienia nie może być po terminie płatności!");
 
 		int wartosc = 0;
-		for ( ProduktWFakturze p : listaProduktow )
+		for (ProduktWFakturze p : listaProduktow)
 			wartosc += p.liczWartoscZNarzutem();
 
 		List<ProduktWFakturze> copy_lista = new ArrayList<ProduktWFakturze>();
-		copy_lista.addAll( listaProduktow );
+		copy_lista.addAll(listaProduktow);
 		boolean zaplacona = false;
-		return new Faktura( 0, numer, data_wystawienia, termin_platnosci, zaplacona, rodzajFaktury,
-				null, wartosc, true, false, copy_lista, null, waluta );
+		return new Faktura(0, numer, data_wystawienia, termin_platnosci,
+				zaplacona, rodzajFaktury, null, wartosc, true, false,
+				copy_lista, null, waluta);
 	}
 
 	/**
-	 * funkcja juz bez sprawdzania, czy numer sie powtarza, i bez edycji produktow w bazie
+	 * funkcja juz bez sprawdzania, czy numer sie powtarza, i bez edycji
+	 * produktow w bazie
 	 */
-	public void dodaj_encje_faktura( Faktura nowaFaktura ) throws Exception
+	public void dodaj_encje_faktura(Faktura nowaFaktura) throws Exception
 	{
-		@SuppressWarnings( "deprecation" ) int generatedId =
-			BazaDanych.getInstance()
-						.wstaw(
-							"INSERT INTO  "
-								+ Faktura.tableName
-								+ " (numer, data_wystawienia, termin_platnosci, zaplacona, rodzaj, id_kontrachent, wartosc, aktualna, czy_korekta, waluta"
-								+ ") VALUES ('" + SqlUtils.popraw( nowaFaktura.numer ) + "','"
-								+ SqlUtils.popraw( nowaFaktura.data_wystawienia.toGMTString() ) + "','"
-								+ SqlUtils.popraw( nowaFaktura.termin_platnosci.toGMTString() ) + "','"
-								+ SqlUtils.popraw( ( nowaFaktura.zaplacona ? 1
-										: 0 ) ) + "'," + SqlUtils.popraw( nowaFaktura.rodzaj ) + ","
-								+ SqlUtils.popraw( ( ( nowaFaktura.kontrahent == null ? 0
-										: nowaFaktura.kontrahent.id_kontrachent ) ) ) + ",'"
-								+ SqlUtils.popraw( nowaFaktura.wartosc_z_narzutem ) + "','"
-								+ SqlUtils.popraw( ( nowaFaktura.aktualna ? 1
-										: 0 ) ) + "','" + SqlUtils.popraw( ( nowaFaktura.isKorekta ? 1
-										: 0 ) ) + "','" + SqlUtils.popraw( nowaFaktura.waluta ) + "')" );
+		@SuppressWarnings("deprecation")
+		int generatedId = BazaDanych
+				.getInstance()
+				.wstaw("INSERT INTO  "
+						+ Faktura.tableName
+						+ " (numer, data_wystawienia, termin_platnosci, zaplacona, rodzaj, id_kontrachent, wartosc, aktualna, czy_korekta, waluta"
+						+ ") VALUES ('"
+						+ SqlUtils.popraw(nowaFaktura.numer)
+						+ "','"
+						+ SqlUtils.popraw(nowaFaktura.data_wystawienia
+								.toGMTString())
+						+ "','"
+						+ SqlUtils.popraw(nowaFaktura.termin_platnosci
+								.toGMTString())
+						+ "','"
+						+ SqlUtils.popraw((nowaFaktura.zaplacona ? 1 : 0))
+						+ "',"
+						+ SqlUtils.popraw(nowaFaktura.rodzaj)
+						+ ","
+						+ SqlUtils.popraw(((nowaFaktura.kontrahent == null ? 0
+								: nowaFaktura.kontrahent.id_kontrachent)))
+						+ ",'"
+						+ SqlUtils.popraw(nowaFaktura.wartosc_z_narzutem)
+						+ "','"
+						+ SqlUtils.popraw((nowaFaktura.aktualna ? 1 : 0))
+						+ "','"
+						+ SqlUtils.popraw((nowaFaktura.isKorekta ? 1 : 0))
+						+ "','" + SqlUtils.popraw(nowaFaktura.waluta) + "')");
 
 		nowaFaktura.id_faktura = generatedId;
 	}
 
-	public void ustawNieaktualna( Faktura faktura ) throws Exception
+	public void ustawNieaktualna(Faktura faktura) throws Exception
 	{
 		BazaDanych.getInstance().aktualizacja(
-			"UPDATE " + Faktura.tableName + " set aktualna = '"
-				+ SqlUtils.popraw( ( faktura.aktualna ? 1
-						: 0 ) ) + "' WHERE id_faktura = " + SqlUtils.popraw( faktura.id_faktura ) );
+				"UPDATE " + Faktura.tableName + " set aktualna = '"
+						+ SqlUtils.popraw((faktura.aktualna ? 1 : 0))
+						+ "' WHERE id_faktura = "
+						+ SqlUtils.popraw(faktura.id_faktura));
 	}
 
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	@Override
-	public void edytuj( Object stara, Object nowa ) throws Exception
+	public void edytuj(Object stara, Object nowa) throws Exception
 	{
 		Faktura staraFaktura = (Faktura) stara;
 		Faktura nowaFaktura = (Faktura) nowa;
-		if ( staraFaktura.isKorekta != nowaFaktura.isKorekta )
+		if (staraFaktura.isKorekta != nowaFaktura.isKorekta)
 			throw new NullPointerException();
-		if ( MojeUtils.equals( "" + nowaFaktura.numer, "" + staraFaktura.numer ) ) {
-			// numer sie nie zmienil - to jedyny warunek, jest OK
-		}
-		else {
-			// numer sie zmienil - sprawdz czy taki sam juz nie istnieje w bazie?
-			ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki( new Faktura() );
-			warunki.dodajWarunek( nowaFaktura.numer, "numer" );
-			warunki.dodajWarunek( 1, "aktualna" );
+		if (MojeUtils.equals("" + nowaFaktura.numer, "" + staraFaktura.numer))
+		{
+			/* numer sie nie zmienil - to jedyny warunek, jest OK */
+		} else
+		{
+			/*
+			 * numer sie zmienil - sprawdz czy taki sam juz nie istnieje w
+			 * bazie?
+			 */
+			ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
+					new Faktura());
+			warunki.dodajWarunek(nowaFaktura.numer, "numer");
+			warunki.dodajWarunek(1, "aktualna");
 
-			String[][] znalezioneWiersze = pobierzWierszeZBazy( warunki );
-			if ( znalezioneWiersze.length == 0 ) {
-				// mozna edytować bo numer nie wystepuje w bazie
-			}
-			else
-				MojeUtils.showError( "Znaleziono taki sam numer: "
-					+ getNumerFromWiersz( znalezioneWiersze[0] ) );
+			String[][] znalezioneWiersze = pobierzWierszeZBazy(warunki);
+			if (znalezioneWiersze.length == 0)
+			{
+				/* mozna edytować bo numer nie wystepuje w bazie */
+			} else
+				MojeUtils.showError("Znaleziono taki sam numer: "
+						+ getNumerFromWiersz(znalezioneWiersze[0]));
 		}
 
 		BazaDanych.getInstance().aktualizacja(
-			"UPDATE " + Faktura.tableName + " set numer= '" + SqlUtils.popraw( nowaFaktura.numer )
-				+ "', data_wystawienia= '"
-				+ SqlUtils.popraw( nowaFaktura.data_wystawienia.toGMTString() )
-				+ "', termin_platnosci= '"
-				+ SqlUtils.popraw( nowaFaktura.termin_platnosci.toGMTString() ) + "', zaplacona= '"
-				+ SqlUtils.popraw( ( nowaFaktura.zaplacona ? 1
-						: 0 ) ) + "', rodzaj= '" + SqlUtils.popraw( nowaFaktura.rodzaj )
-				+ "', id_kontrachent = '" + SqlUtils.popraw( nowaFaktura.kontrahent.id_kontrachent )
-				+ "', wartosc = '" + SqlUtils.popraw( nowaFaktura.wartosc_z_narzutem )
-				+ "', aktualna = '" + SqlUtils.popraw( ( nowaFaktura.aktualna ? 1
-						: 0 ) ) + "', waluta = '" + nowaFaktura.waluta + "' WHERE id_faktura = "
-				+ SqlUtils.popraw( staraFaktura.id_faktura ) );
+				"UPDATE "
+						+ Faktura.tableName
+						+ " set numer= '"
+						+ SqlUtils.popraw(nowaFaktura.numer)
+						+ "', data_wystawienia= '"
+						+ SqlUtils.popraw(nowaFaktura.data_wystawienia
+								.toGMTString())
+						+ "', termin_platnosci= '"
+						+ SqlUtils.popraw(nowaFaktura.termin_platnosci
+								.toGMTString())
+						+ "', zaplacona= '"
+						+ SqlUtils.popraw((nowaFaktura.zaplacona ? 1 : 0))
+						+ "', rodzaj= '"
+						+ SqlUtils.popraw(nowaFaktura.rodzaj)
+						+ "', id_kontrachent = '"
+						+ SqlUtils
+								.popraw(nowaFaktura.kontrahent.id_kontrachent)
+						+ "', wartosc = '"
+						+ SqlUtils.popraw(nowaFaktura.wartosc_z_narzutem)
+						+ "', aktualna = '"
+						+ SqlUtils.popraw((nowaFaktura.aktualna ? 1 : 0))
+						+ "', waluta = '" + nowaFaktura.waluta
+						+ "' WHERE id_faktura = "
+						+ SqlUtils.popraw(staraFaktura.id_faktura));
 
-		if ( !nowaFaktura.isKorekta ) {
-			ProduktBaza.usunListeProduktow( Produkt.tableLaczacaFaktura, //staraFaktura.produkty,
-				"id_faktura", staraFaktura.id_faktura );
-			ProduktBaza.dodajListeProduktow( nowaFaktura.produkty, staraFaktura.id_faktura );
-			boolean dodac = ( nowaFaktura.rodzaj == Faktura.SPRZEDAZ ) ? false
+		if (!nowaFaktura.isKorekta)
+		{
+			ProduktBaza.usunListeProduktow(Produkt.tableLaczacaFaktura, // staraFaktura.produkty,
+					"id_faktura", staraFaktura.id_faktura);
+			ProduktBaza.dodajListeProduktow(nowaFaktura.produkty,
+					staraFaktura.id_faktura);
+			boolean dodac = (nowaFaktura.rodzaj == Faktura.SPRZEDAZ) ? false
 					: true;
-			ProduktBaza.instance().zmienIloscProduktyZMagazynu( staraFaktura.produkty, !dodac );
-			ProduktBaza.instance().zmienIloscProduktyZMagazynu( nowaFaktura.produkty, dodac );
-		}
-		else {
-			ProduktBaza.usunListeProduktow( Produkt.tableLaczacaFaktura, //staraFaktura.produkty,
-				"id_faktura", staraFaktura.id_faktura );
-			ProduktBaza.dodajListeProduktow( nowaFaktura.produkty, staraFaktura.id_faktura );
-			ProduktBaza.dodajListeProduktow( nowaFaktura.produktyKorekta, staraFaktura.id_faktura );
-			boolean dodac = ( nowaFaktura.rodzaj == Faktura.SPRZEDAZ ) ? false
+			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
+					staraFaktura.produkty, !dodac);
+			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
+					nowaFaktura.produkty, dodac);
+		} else
+		{
+			ProduktBaza.usunListeProduktow(Produkt.tableLaczacaFaktura, // staraFaktura.produkty,
+					"id_faktura", staraFaktura.id_faktura);
+			ProduktBaza.dodajListeProduktow(nowaFaktura.produkty,
+					staraFaktura.id_faktura);
+			ProduktBaza.dodajListeProduktow(nowaFaktura.produktyKorekta,
+					staraFaktura.id_faktura);
+			boolean dodac = (nowaFaktura.rodzaj == Faktura.SPRZEDAZ) ? false
 					: true;
-			// wlasciwe produkty (z korekty)
-			ProduktBaza.instance().zmienIloscProduktyZMagazynu( staraFaktura.produktyKorekta, !dodac );
-			ProduktBaza.instance().zmienIloscProduktyZMagazynu( nowaFaktura.produktyKorekta, dodac );
+			/* wlasciwe produkty (z korekty) */
+			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
+					staraFaktura.produktyKorekta, !dodac);
+			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
+					nowaFaktura.produktyKorekta, dodac);
 			// stare produkty robione na odwrot
-			ProduktBaza.instance().zmienIloscProduktyZMagazynu( staraFaktura.produkty, !dodac );
-			ProduktBaza.instance().zmienIloscProduktyZMagazynu( nowaFaktura.produkty, dodac );
+			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
+					staraFaktura.produkty, !dodac);
+			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
+					nowaFaktura.produkty, dodac);
 		}
 	}
 
+	/* Refactoring */
 	@Override
-	public void zmienWidocznosc( ObiektWiersz wiersz, boolean aktualna ) throws SQLException
+	public void zmienWidocznosc(ObiektWiersz wiersz, boolean aktualna)
+			throws SQLException
 	{
 		BazaDanych.getInstance().aktualizacja(
-			"UPDATE " + Faktura.tableName + " set aktualna = " + ( aktualna ? 1
-					: 0 ) + " WHERE id_faktura = " + SqlUtils.popraw( getIdFromWiersz( wiersz ) ) );
+				"UPDATE " + Faktura.tableName + " set aktualna = "
+						+ (aktualna ? 1 : 0) + " WHERE id_faktura = "
+						+ SqlUtils.popraw(getIdFromWiersz(wiersz)));
 	}
 
-	public static int getIdFromWiersz( ObiektWiersz wiersz )
+	public static int getIdFromWiersz(ObiektWiersz wiersz)
 	{
-		return Integer.parseInt( wiersz.wiersz[5] );
+		return Integer.parseInt(wiersz.wiersz[5]);
 	}
 
-	public static String getNumerFromWiersz( String[] wiersz )
+	public static String getNumerFromWiersz(String[] wiersz)
 	{
 		return wiersz[0];
 	}
 
-	public static void ustawZaplacona( ObiektWiersz wiersz, boolean zaplacona ) throws SQLException
+	public static void ustawZaplacona(ObiektWiersz wiersz, boolean zaplacona)
+			throws SQLException
 	{
 		BazaDanych.getInstance().aktualizacja(
-			"UPDATE " + Faktura.tableName + " set zaplacona = " + ( zaplacona ? "1"
-					: "0" ) + " WHERE id_faktura = " + SqlUtils.popraw( getIdFromWiersz( wiersz ) ) );
+				"UPDATE " + Faktura.tableName + " set zaplacona = "
+						+ (zaplacona ? "1" : "0") + " WHERE id_faktura = "
+						+ SqlUtils.popraw(getIdFromWiersz(wiersz)));
 	}
 }
