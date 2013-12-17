@@ -27,9 +27,6 @@ import javax.swing.border.LineBorder;
 
 class IntMatrix implements Cloneable
 {
-	/**
-	 * Contruct an IntMatrix with initial value.
-	 */
 	public IntMatrix(int height, int width, int initialValue) {
 		_height = height;
 		_width = width;
