@@ -120,6 +120,8 @@ class IntMatrix implements Cloneable
 
 	/**
 	 * Delete the specified row and move down the rows above.
+	 * 
+	 * 
 	 */
 	public void deleteRow(int index)
 	{
