@@ -36,9 +36,6 @@ class IntMatrix implements Cloneable
 				_data[i][j] = initialValue;
 	}
 
-	/**
-	 * Copy contructor.
-	 */
 	public IntMatrix(IntMatrix rhs) {
 		_height = rhs.getHeight();
 		_width = rhs.getWidth();
