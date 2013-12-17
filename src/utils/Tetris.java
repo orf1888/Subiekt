@@ -45,56 +45,35 @@ class IntMatrix implements Cloneable
 				_data[i][j] = rhs.get(i, j);
 	}
 
-	/**
-	 * Contruct an IntMatrix with all elements unoccupied.
-	 */
 	public IntMatrix(int height, int width) {
 		this(height, width, 0);
 	}
 
-	/**
-	 * Return height.
-	 */
 	public int getHeight()
 	{
 		return _height;
 	}
 
-	/**
-	 * Return width.
-	 */
 	public int getWidth()
 	{
 		return _width;
 	}
 
-	/**
-	 * Set the value of an element.
-	 */
 	public void set(int row, int column, int value)
 	{
 		_data[row][column] = value;
 	}
 
-	/**
-	 * Return the value of an element.
-	 */
 	public int get(int row, int column)
 	{
 		return _data[row][column];
 	}
 
-	/**
-	 * Return true if the other IntMatrix can be placed in this one.
-	 */
 	public boolean contains(IntMatrix other, Position pos)
 	{
 		return partlyContains(other, pos, 0);
 	}
 
-	/**
-	 * Return true if part of the other IntMatrix can be placed in this one.
-	 */
 	public boolean partlyContains(IntMatrix other, Position pos, int begin)
 	{
 		if (pos.getRow() < 0 || pos.getColumn() < 0)
@@ -116,9 +95,6 @@ class IntMatrix implements Cloneable
 		return true;
 	}
 
-	/**
-	 * Add the other IntMatrix to this one.
-	 */
 	public void add(IntMatrix other, Position pos)
 	{
 		for (int i = 0; i < other.getHeight(); i++)
@@ -132,9 +108,6 @@ class IntMatrix implements Cloneable
 		}
 	}
 
-	/**
-	 * Return true if all the elements in the specified row are occupied.
-	 */
 	public boolean isRowOccupied(int index)
 	{
 		for (int i = 0; i < _width; i++)
