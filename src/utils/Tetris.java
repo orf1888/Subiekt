@@ -25,11 +25,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
-/**
- * A two dimensions interger array wrapper class. It privides such semantics
- * that if an element's value equals to 0, we say this element is unoccupied, if
- * an element's value do not equal to 0, we say this element is occupied.
- */
 class IntMatrix implements Cloneable
 {
 	/**
