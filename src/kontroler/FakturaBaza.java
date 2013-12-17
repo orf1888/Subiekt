@@ -70,7 +70,8 @@ public class FakturaBaza implements ObiektBazaManager
 		MojeUtils.println(querySql);
 
 		List<String[]> wynik = (List<String[]>) BazaDanych.getInstance()
-				.zapytanie(/* sql do pobrania */querySql,
+				.zapytanie(
+				/* sql do pobrania */querySql,
 				/* operacja na pobranych danych */pobieranieWierszaFunktor);
 
 		/* probujemy wyszukac po nazwie kontrachenta */
@@ -379,7 +380,7 @@ public class FakturaBaza implements ObiektBazaManager
 					staraFaktura.produktyKorekta, !dodac);
 			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
 					nowaFaktura.produktyKorekta, dodac);
-			// stare produkty robione na odwrot
+
 			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
 					staraFaktura.produkty, !dodac);
 			ProduktBaza.instance().zmienIloscProduktyZMagazynu(

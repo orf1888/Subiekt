@@ -26,44 +26,41 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
 /**
- * A two dimensions interger array wrapper class. It privides such semantics that if an element's value equals to 0,
- *  we say this element is unoccupied, if an element's value do not equal to 0, we say this element is occupied.
+ * A two dimensions interger array wrapper class. It privides such semantics
+ * that if an element's value equals to 0, we say this element is unoccupied, if
+ * an element's value do not equal to 0, we say this element is occupied.
  */
-class IntMatrix
-	implements Cloneable
+class IntMatrix implements Cloneable
 {
 	/**
 	 * Contruct an IntMatrix with initial value.
 	 */
-	public IntMatrix( int height, int width, int initialValue )
-	{
+	public IntMatrix(int height, int width, int initialValue) {
 		_height = height;
 		_width = width;
 		_data = new int[_height][_width];
-		for ( int i = 0; i < _height; i++ )
-			for ( int j = 0; j < _width; j++ )
+		for (int i = 0; i < _height; i++)
+			for (int j = 0; j < _width; j++)
 				_data[i][j] = initialValue;
 	}
 
 	/**
 	 * Copy contructor.
 	 */
-	public IntMatrix( IntMatrix rhs )
-	{
+	public IntMatrix(IntMatrix rhs) {
 		_height = rhs.getHeight();
 		_width = rhs.getWidth();
 		_data = new int[_height][_width];
-		for ( int i = 0; i < _height; i++ )
-			for ( int j = 0; j < _width; j++ )
-				_data[i][j] = rhs.get( i, j );
+		for (int i = 0; i < _height; i++)
+			for (int j = 0; j < _width; j++)
+				_data[i][j] = rhs.get(i, j);
 	}
 
 	/**
 	 * Contruct an IntMatrix with all elements unoccupied.
 	 */
-	public IntMatrix( int height, int width )
-	{
-		this( height, width, 0 );
+	public IntMatrix(int height, int width) {
+		this(height, width, 0);
 	}
 
 	/**
@@ -85,7 +82,7 @@ class IntMatrix
 	/**
 	 * Set the value of an element.
 	 */
-	public void set( int row, int column, int value )
+	public void set(int row, int column, int value)
 	{
 		_data[row][column] = value;
 	}
@@ -93,7 +90,7 @@ class IntMatrix
 	/**
 	 * Return the value of an element.
 	 */
-	public int get( int row, int column )
+	public int get(int row, int column)
 	{
 		return _data[row][column];
 	}
@@ -101,26 +98,29 @@ class IntMatrix
 	/**
 	 * Return true if the other IntMatrix can be placed in this one.
 	 */
-	public boolean contains( IntMatrix other, Position pos )
+	public boolean contains(IntMatrix other, Position pos)
 	{
-		return partlyContains( other, pos, 0 );
+		return partlyContains(other, pos, 0);
 	}
 
 	/**
 	 * Return true if part of the other IntMatrix can be placed in this one.
 	 */
-	public boolean partlyContains( IntMatrix other, Position pos, int begin )
+	public boolean partlyContains(IntMatrix other, Position pos, int begin)
 	{
-		if ( pos.getRow() < 0 || pos.getColumn() < 0 )
+		if (pos.getRow() < 0 || pos.getColumn() < 0)
 			return false;
-		if ( pos.getColumn() + other.getWidth() > this._width )
+		if (pos.getColumn() + other.getWidth() > this._width)
 			return false;
-		if ( pos.getRow() + other.getHeight() - begin > this._height )
+		if (pos.getRow() + other.getHeight() - begin > this._height)
 			return false;
-		for ( int i = begin; i < other.getHeight(); i++ ) {
-			for ( int j = 0; j < other.getWidth(); j++ ) {
-				if ( other.get( i, j ) > 0
-					&& this.get( i + pos.getRow() - begin, j + pos.getColumn() ) > 0 )
+		for (int i = begin; i < other.getHeight(); i++)
+		{
+			for (int j = 0; j < other.getWidth(); j++)
+			{
+				if (other.get(i, j) > 0
+						&& this.get(i + pos.getRow() - begin,
+								j + pos.getColumn()) > 0)
 					return false;
 			}
 		}
@@ -130,12 +130,15 @@ class IntMatrix
 	/**
 	 * Add the other IntMatrix to this one.
 	 */
-	public void add( IntMatrix other, Position pos )
+	public void add(IntMatrix other, Position pos)
 	{
-		for ( int i = 0; i < other.getHeight(); i++ ) {
-			for ( int j = 0; j < other.getWidth(); j++ ) {
-				if ( other.get( i, j ) > 0 )
-					this.set( pos.getRow() + i, pos.getColumn() + j, other.get( i, j ) );
+		for (int i = 0; i < other.getHeight(); i++)
+		{
+			for (int j = 0; j < other.getWidth(); j++)
+			{
+				if (other.get(i, j) > 0)
+					this.set(pos.getRow() + i, pos.getColumn() + j,
+							other.get(i, j));
 			}
 		}
 	}
@@ -143,10 +146,11 @@ class IntMatrix
 	/**
 	 * Return true if all the elements in the specified row are occupied.
 	 */
-	public boolean isRowOccupied( int index )
+	public boolean isRowOccupied(int index)
 	{
-		for ( int i = 0; i < _width; i++ ) {
-			if ( _data[index][i] == 0 )
+		for (int i = 0; i < _width; i++)
+		{
+			if (_data[index][i] == 0)
 				return false;
 		}
 		return true;
@@ -155,13 +159,14 @@ class IntMatrix
 	/**
 	 * Delete the specified row and move down the rows above.
 	 */
-	public void deleteRow( int index )
+	public void deleteRow(int index)
 	{
-		for ( int i = index; i > 0; i-- )
-			for ( int j = 0; j < _width; j++ ) {
+		for (int i = index; i > 0; i--)
+			for (int j = 0; j < _width; j++)
+			{
 				_data[i][j] = _data[i - 1][j];
 			}
-		clearRow( 0 );
+		clearRow(0);
 	}
 
 	/**
@@ -169,20 +174,21 @@ class IntMatrix
 	 */
 	public void clear()
 	{
-		for ( int i = 0; i < _height; i++ ) {
-			clearRow( i );
+		for (int i = 0; i < _height; i++)
+		{
+			clearRow(i);
 		}
 	}
 
 	/**
 	 * Rotate the source IntMatrix clockwise and return the new created one.
 	 */
-	public static IntMatrix transform( IntMatrix source )
+	public static IntMatrix transform(IntMatrix source)
 	{
-		IntMatrix target = new IntMatrix( source.getWidth(), source.getHeight() );
-		for ( int i = 0; i < target.getHeight(); i++ )
-			for ( int j = 0; j < target.getWidth(); j++ )
-				target.set( i, j, source.get( source.getHeight() - j - 1, i ) );
+		IntMatrix target = new IntMatrix(source.getWidth(), source.getHeight());
+		for (int i = 0; i < target.getHeight(); i++)
+			for (int j = 0; j < target.getWidth(); j++)
+				target.set(i, j, source.get(source.getHeight() - j - 1, i));
 		return target;
 	}
 
@@ -193,10 +199,11 @@ class IntMatrix
 	public Object clone()
 	{
 		IntMatrix o = null;
-		try {
+		try
+		{
 			o = (IntMatrix) super.clone();
-		}
-		catch ( CloneNotSupportedException e ) {}
+		} catch (CloneNotSupportedException e)
+		{}
 		o._height = this._height;
 		o._width = this._width;
 		o._data = this._data.clone();
@@ -208,24 +215,27 @@ class IntMatrix
 	 */
 	public void dump()
 	{
-		System.out.println( "<<------------->>" );
-		System.out.print( "Height=" );
-		System.out.print( _height );
-		System.out.print( " Width=" );
-		System.out.print( _width );
+		System.out.println("<<------------->>");
+		System.out.print("Height=");
+		System.out.print(_height);
+		System.out.print(" Width=");
+		System.out.print(_width);
 		System.out.println();
-		for ( int i = 0; i < _height; i++ ) {
-			for ( int j = 0; j < _width; j++ ) {
-				System.out.print( _data[i][j] );
-				System.out.print( " " );
+		for (int i = 0; i < _height; i++)
+		{
+			for (int j = 0; j < _width; j++)
+			{
+				System.out.print(_data[i][j]);
+				System.out.print(" ");
 			}
 			System.out.println();
 		}
 	}
 
-	private void clearRow( int index )
+	private void clearRow(int index)
 	{
-		for ( int j = 0; j < _width; j++ ) {
+		for (int j = 0; j < _width; j++)
+		{
 			_data[index][j] = 0;
 		}
 	}
@@ -245,8 +255,7 @@ class Position
 	/**
 	 * Contruct a Postion.
 	 */
-	public Position( int row, int column )
-	{
+	public Position(int row, int column) {
 		_row = row;
 		_column = column;
 	}
@@ -254,17 +263,15 @@ class Position
 	/**
 	 * Copy constructor.
 	 */
-	public Position( Position rhs )
-	{
-		this( rhs.getRow(), rhs.getColumn() );
+	public Position(Position rhs) {
+		this(rhs.getRow(), rhs.getColumn());
 	}
 
 	/**
 	 * Contruct a Position with row and column to be zero.
 	 */
-	public Position()
-	{
-		this( 0, 0 );
+	public Position() {
+		this(0, 0);
 	}
 
 	/**
@@ -278,7 +285,7 @@ class Position
 	/**
 	 * Set row.
 	 */
-	public void setRow( int row )
+	public void setRow(int row)
 	{
 		_row = row;
 	}
@@ -294,7 +301,7 @@ class Position
 	/**
 	 * Set column.
 	 */
-	public void setColumn( int column )
+	public void setColumn(int column)
 	{
 		_column = column;
 	}
@@ -302,7 +309,7 @@ class Position
 	/**
 	 * Set position equals to another one.
 	 */
-	public void setPosition( Position pos )
+	public void setPosition(Position pos)
 	{
 		_row = pos.getRow();
 		_column = pos.getColumn();
@@ -320,9 +327,9 @@ interface TetrisView
 {
 	/**
 	 * Set the tetris model of the view to establish the two-way association.
-	 *  This method will be invoked by TetirsModel.setView().
+	 * This method will be invoked by TetirsModel.setView().
 	 */
-	void setModel( TetrisModel model );
+	void setModel(TetrisModel model);
 
 	/**
 	 * Notify the view that the main map is changed.
@@ -342,7 +349,7 @@ interface TetrisView
 	/**
 	 * Notify the view that there are rows will be deleted in the map.
 	 */
-	void rowsToDelete( int row[], int count );
+	void rowsToDelete(int row[], int count);
 
 	/**
 	 * Notify the view that the game is over.
@@ -353,8 +360,7 @@ interface TetrisView
 /**
  * The model of tetris game. It's the MODEL of M-VC pattern.
  */
-class TetrisModel
-	implements Runnable
+class TetrisModel implements Runnable
 {
 	private static final long Sleep = 1000;
 
@@ -363,20 +369,19 @@ class TetrisModel
 	/**
 	 * Contructor
 	 */
-	public TetrisModel( int height, int width )
-	{
-		_map = new IntMatrix( height, width );
-		_viewMap = new IntMatrix( height, width );
-		_cube = new ActiveCube( _map );
+	public TetrisModel(int height, int width) {
+		_map = new IntMatrix(height, width);
+		_viewMap = new IntMatrix(height, width);
+		_cube = new ActiveCube(_map);
 	}
 
 	/**
 	 * Set the view of this model.
 	 */
-	public void setView( TetrisView view )
+	public void setView(TetrisView view)
 	{
 		_view = view;
-		_view.setModel( this );
+		_view.setModel(this);
 	}
 
 	/**
@@ -386,11 +391,11 @@ class TetrisModel
 	{
 		_stopped = false;
 		_map.clear();
-		_cube.next( getNextCube() );
+		_cube.next(getNextCube());
 		update();
 		_score = 0;
 		_view.scoreChanged();
-		Thread t = new Thread( this );
+		Thread t = new Thread(this);
 		t.start();
 
 	}
@@ -444,9 +449,9 @@ class TetrisModel
 	 */
 	public void left()
 	{
-		if ( isStoppedOrPaused() )
+		if (isStoppedOrPaused())
 			return;
-		if ( _cube.left() )
+		if (_cube.left())
 			update();
 	}
 
@@ -455,9 +460,9 @@ class TetrisModel
 	 */
 	public void right()
 	{
-		if ( isStoppedOrPaused() )
+		if (isStoppedOrPaused())
 			return;
-		if ( _cube.right() )
+		if (_cube.right())
 			update();
 	}
 
@@ -466,9 +471,9 @@ class TetrisModel
 	 */
 	public void rotate()
 	{
-		if ( isStoppedOrPaused() )
+		if (isStoppedOrPaused())
 			return;
-		if ( _cube.rotate() )
+		if (_cube.rotate())
 			update();
 	}
 
@@ -477,9 +482,9 @@ class TetrisModel
 	 */
 	public void down()
 	{
-		if ( isStoppedOrPaused() )
+		if (isStoppedOrPaused())
 			return;
-		if ( _cube.down() )
+		if (_cube.down())
 			update();
 	}
 
@@ -513,22 +518,27 @@ class TetrisModel
 	@Override
 	public void run()
 	{
-		while ( !_stopped ) {
+		while (!_stopped)
+		{
 			maybePause();
-			try {
-				Thread.sleep( SleepTime );
-			}
-			catch ( InterruptedException e ) {}
+			try
+			{
+				Thread.sleep(SleepTime);
+			} catch (InterruptedException e)
+			{}
 			maybePause();
-			synchronized ( this ) {
-				if ( _cube.down() ) {
+			synchronized (this)
+			{
+				if (_cube.down())
+				{
 					update();
-				}
-				else {
+				} else
+				{
 					accept();
-					_cube.next( getNextCube() );
+					_cube.next(getNextCube());
 					update();
-					if ( _cube.getPos().getRow() < 0 ) {
+					if (_cube.getPos().getRow() < 0)
+					{
 						_stopped = true;
 						_paused = false;
 						_view.gameOver();
@@ -541,10 +551,11 @@ class TetrisModel
 
 	private void update()
 	{
-		for ( int i = 0; i < _map.getHeight(); i++ )
-			for ( int j = 0; j < _map.getWidth(); j++ )
-				_viewMap.set( i, j, _map.get( i, j ) );
-		if ( _stopped ) {
+		for (int i = 0; i < _map.getHeight(); i++)
+			for (int j = 0; j < _map.getWidth(); j++)
+				_viewMap.set(i, j, _map.get(i, j));
+		if (_stopped)
+		{
 			_view.mapChanged();
 			return;
 		}
@@ -552,50 +563,56 @@ class TetrisModel
 		IntMatrix shape = _cube.getShape();
 		Position pos = _cube.getPos();
 		int start = 0;
-		if ( pos.getRow() < 0 )
-			start = Math.abs( pos.getRow() );
-		for ( int i = start; i < shape.getHeight(); i++ )
-			for ( int j = 0; j < shape.getWidth(); j++ ) {
-				if ( shape.get( i, j ) > 0 )
-					_viewMap.set( i + pos.getRow(), j + pos.getColumn(), shape.get( i, j ) );
+		if (pos.getRow() < 0)
+			start = Math.abs(pos.getRow());
+		for (int i = start; i < shape.getHeight(); i++)
+			for (int j = 0; j < shape.getWidth(); j++)
+			{
+				if (shape.get(i, j) > 0)
+					_viewMap.set(i + pos.getRow(), j + pos.getColumn(),
+							shape.get(i, j));
 			}
 		_view.mapChanged();
 	}
 
 	private synchronized void maybePause()
 	{
-		try {
-			while ( _paused )
+		try
+		{
+			while (_paused)
 				wait();
-		}
-		catch ( InterruptedException e ) {}
+		} catch (InterruptedException e)
+		{}
 	}
 
 	private void accept()
 	{
-		_map.add( _cube.getShape(), _cube.getPos() );
+		_map.add(_cube.getShape(), _cube.getPos());
 		int count = 0;
 		int[] todelete = new int[_map.getHeight()];
-		for ( int i = 0; i < _map.getHeight(); i++ ) {
-			if ( _map.isRowOccupied( i ) ) {
+		for (int i = 0; i < _map.getHeight(); i++)
+		{
+			if (_map.isRowOccupied(i))
+			{
 				count++;
 				todelete[count - 1] = i;
-				_map.deleteRow( i );
+				_map.deleteRow(i);
 			}
 		}
-		if ( count > 0 ) {
-			_view.rowsToDelete( todelete, count );
+		if (count > 0)
+		{
+			_view.rowsToDelete(todelete, count);
 			_score += count;
 			_view.scoreChanged();
-			//level up co clearów;)
-			if ( _score % 10 == 0 )
+			// level up co clearów;)
+			if (_score % 10 == 0)
 				SleepTime = SleepTime / 2;
 		}
 	}
 
 	private synchronized boolean isStoppedOrPaused()
 	{
-		return ( _stopped || _paused );
+		return (_stopped || _paused);
 	}
 
 	private CubeShape getNextCube()
@@ -626,27 +643,28 @@ class TetrisModel
 class CubeShape
 {
 
-	public CubeShape()
-	{
-		_shape = _random.nextInt( _shapeCount );
-		_direction = _random.nextInt( 4 );
+	public CubeShape() {
+		_shape = _random.nextInt(_shapeCount);
+		_direction = _random.nextInt(4);
 	}
 
-	public boolean rotate( IntMatrix map, Position pos )
+	public boolean rotate(IntMatrix map, Position pos)
 	{
-		int next = ( _direction + 1 ) % 4;
+		int next = (_direction + 1) % 4;
 		IntMatrix currShape = getShape();
 		int tryCount = currShape.getHeight() - currShape.getWidth() + 1;
-		if ( tryCount <= 0 )
+		if (tryCount <= 0)
 			tryCount = 1;
-		Position temp = new Position( pos );
-		for ( int i = 0; i < tryCount; i++ ) {
-			if ( map.contains( _shapes[_shape][next], temp ) ) {
+		Position temp = new Position(pos);
+		for (int i = 0; i < tryCount; i++)
+		{
+			if (map.contains(_shapes[_shape][next], temp))
+			{
 				_direction = next;
-				pos.setColumn( temp.getColumn() );
+				pos.setColumn(temp.getColumn());
 				return true;
 			}
-			temp.setColumn( temp.getColumn() - 1 );
+			temp.setColumn(temp.getColumn() - 1);
 		}
 		return false;
 	}
@@ -665,46 +683,47 @@ class CubeShape
 	private static java.util.Random _random = new java.util.Random();
 
 	private static IntMatrix _shapes[][] = new IntMatrix[_shapeCount][4];
-	static {
-		IntMatrix line = new IntMatrix( 1, 4, 1 );
-		_shapes[0] = buildSeriesShape( line );
+	static
+	{
+		IntMatrix line = new IntMatrix(1, 4, 1);
+		_shapes[0] = buildSeriesShape(line);
 
-		IntMatrix square = new IntMatrix( 2, 2, 1 );
-		_shapes[1] = buildSeriesShape( square );
+		IntMatrix square = new IntMatrix(2, 2, 1);
+		_shapes[1] = buildSeriesShape(square);
 
-		IntMatrix leftL = new IntMatrix( 3, 2, 1 );
-		leftL.set( 0, 1, 0 );
-		leftL.set( 1, 1, 0 );
-		_shapes[2] = buildSeriesShape( leftL );
+		IntMatrix leftL = new IntMatrix(3, 2, 1);
+		leftL.set(0, 1, 0);
+		leftL.set(1, 1, 0);
+		_shapes[2] = buildSeriesShape(leftL);
 
-		IntMatrix rightL = new IntMatrix( 3, 2, 1 );
-		rightL.set( 0, 0, 0 );
-		rightL.set( 1, 0, 0 );
-		_shapes[3] = buildSeriesShape( rightL );
+		IntMatrix rightL = new IntMatrix(3, 2, 1);
+		rightL.set(0, 0, 0);
+		rightL.set(1, 0, 0);
+		_shapes[3] = buildSeriesShape(rightL);
 
-		IntMatrix leftS = new IntMatrix( 3, 2, 1 );
-		leftS.set( 0, 1, 0 );
-		leftS.set( 2, 0, 0 );
-		_shapes[4] = buildSeriesShape( leftS );
+		IntMatrix leftS = new IntMatrix(3, 2, 1);
+		leftS.set(0, 1, 0);
+		leftS.set(2, 0, 0);
+		_shapes[4] = buildSeriesShape(leftS);
 
-		IntMatrix rightS = new IntMatrix( 3, 2, 1 );
-		rightS.set( 0, 0, 0 );
-		rightS.set( 2, 1, 0 );
-		_shapes[5] = buildSeriesShape( rightS );
+		IntMatrix rightS = new IntMatrix(3, 2, 1);
+		rightS.set(0, 0, 0);
+		rightS.set(2, 1, 0);
+		_shapes[5] = buildSeriesShape(rightS);
 
-		IntMatrix tshape = new IntMatrix( 3, 2, 1 );
-		tshape.set( 0, 1, 0 );
-		tshape.set( 2, 1, 0 );
-		_shapes[6] = buildSeriesShape( tshape );
+		IntMatrix tshape = new IntMatrix(3, 2, 1);
+		tshape.set(0, 1, 0);
+		tshape.set(2, 1, 0);
+		_shapes[6] = buildSeriesShape(tshape);
 	}
 
-	private static IntMatrix[] buildSeriesShape( IntMatrix initial )
+	private static IntMatrix[] buildSeriesShape(IntMatrix initial)
 	{
 		IntMatrix[] shapes = new IntMatrix[4];
-		shapes[0] = new IntMatrix( initial );
-		shapes[1] = IntMatrix.transform( shapes[0] );
-		shapes[2] = IntMatrix.transform( shapes[1] );
-		shapes[3] = IntMatrix.transform( shapes[2] );
+		shapes[0] = new IntMatrix(initial);
+		shapes[1] = IntMatrix.transform(shapes[0]);
+		shapes[2] = IntMatrix.transform(shapes[1]);
+		shapes[3] = IntMatrix.transform(shapes[2]);
 		return shapes;
 	}
 }
@@ -712,8 +731,7 @@ class CubeShape
 class ActiveCube
 {
 
-	public ActiveCube( IntMatrix map )
-	{
+	public ActiveCube(IntMatrix map) {
 		_map = map;
 	}
 
@@ -727,20 +745,22 @@ class ActiveCube
 		return _pos;
 	}
 
-	public boolean next( CubeShape shape )
+	public boolean next(CubeShape shape)
 	{
 		_shape = shape;
-		int column = ( _map.getWidth() - shape.getShape().getWidth() ) / 2;
-		_pos.setColumn( column );
-		Position temp = new Position( 0, column );
+		int column = (_map.getWidth() - shape.getShape().getWidth()) / 2;
+		_pos.setColumn(column);
+		Position temp = new Position(0, column);
 		int i = 0;
-		for ( ; i <= shape.getShape().getHeight(); i++ ) {
-			if ( _map.partlyContains( shape.getShape(), temp, i ) ) {
-				_pos.setRow( -i );
+		for (; i <= shape.getShape().getHeight(); i++)
+		{
+			if (_map.partlyContains(shape.getShape(), temp, i))
+			{
+				_pos.setRow(-i);
 				break;
 			}
 		}
-		if ( i == 0 )
+		if (i == 0)
 			return true;
 		else
 			return false;
@@ -748,46 +768,49 @@ class ActiveCube
 
 	public boolean rotate()
 	{
-		return _shape.rotate( _map, _pos );
+		return _shape.rotate(_map, _pos);
 	}
 
 	public boolean down()
 	{
-		Position temp = new Position( _pos.getRow() + 1, _pos.getColumn() );
-		if ( _map.contains( _shape.getShape(), temp ) ) {
-			_pos.setRow( _pos.getRow() + 1 );
+		Position temp = new Position(_pos.getRow() + 1, _pos.getColumn());
+		if (_map.contains(_shape.getShape(), temp))
+		{
+			_pos.setRow(_pos.getRow() + 1);
 			return true;
-		}
-		else {
+		} else
+		{
 			return false;
 		}
 	}
 
 	public boolean left()
 	{
-		return goLeftOrRight( true );
+		return goLeftOrRight(true);
 	}
 
 	public boolean right()
 	{
-		return goLeftOrRight( false );
+		return goLeftOrRight(false);
 	}
 
-	private boolean goLeftOrRight( boolean isLeft )
+	private boolean goLeftOrRight(boolean isLeft)
 	{
 		int column = 0;
-		if ( isLeft ) {
+		if (isLeft)
+		{
 			column = _pos.getColumn() - 1;
-		}
-		else {
+		} else
+		{
 			column = _pos.getColumn() + 1;
 		}
-		Position temp = new Position( _pos.getRow(), column );
-		if ( _map.contains( _shape.getShape(), temp ) ) {
-			_pos.setColumn( column );
+		Position temp = new Position(_pos.getRow(), column);
+		if (_map.contains(_shape.getShape(), temp))
+		{
+			_pos.setColumn(column);
 			return true;
-		}
-		else {
+		} else
+		{
 			return false;
 		}
 	}
@@ -799,52 +822,49 @@ class ActiveCube
 	private final IntMatrix _map;
 }
 
-@SuppressWarnings( "serial" )
-class SimpleView
-	extends JPanel
-	implements TetrisView
+@SuppressWarnings("serial")
+class SimpleView extends JPanel implements TetrisView
 {
-	public SimpleView( int height, int width )
-	{
-		_panel = new GridPanel( height, width, true, Color.WHITE );
-		_previewPanel = new GridPanel( 4, 4, false, Color.BLACK );
+	public SimpleView(int height, int width) {
+		_panel = new GridPanel(height, width, true, Color.WHITE);
+		_previewPanel = new GridPanel(4, 4, false, Color.BLACK);
 
 		_scorePanel = new ScorePanel();
 
-		this.setLayout( new BorderLayout() );
+		this.setLayout(new BorderLayout());
 
-		this.add( _panel, BorderLayout.CENTER );
+		this.add(_panel, BorderLayout.CENTER);
 
 		JPanel control = new JPanel();
-		control.setLayout( new GridLayout( 2, 1, 1, 10 ) );
+		control.setLayout(new GridLayout(2, 1, 1, 10));
 		JPanel box = new JPanel();
-		box.setLayout( new BoxLayout( box, BoxLayout.Y_AXIS ) );
-		box.add( control );
+		box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
+		box.add(control);
 
 		JPanel preview = new JPanel();
-		_previewPanel.setPreferredSize( new Dimension( 90, 90 ) );
-		preview.add( _previewPanel );
+		_previewPanel.setPreferredSize(new Dimension(90, 90));
+		preview.add(_previewPanel);
 
 		JPanel box2 = new JPanel();
-		box2.setLayout( new BoxLayout( box2, BoxLayout.Y_AXIS ) );
+		box2.setLayout(new BoxLayout(box2, BoxLayout.Y_AXIS));
 
-		_scorePanel.setPreferredSize( new Dimension( 80, 30 ) );
+		_scorePanel.setPreferredSize(new Dimension(80, 30));
 
-		box2.add( _scorePanel );
-		box2.add( preview );
+		box2.add(_scorePanel);
+		box2.add(preview);
 
 		JPanel all = new JPanel();
-		all.setLayout( new BorderLayout() );
-		all.add( box2, BorderLayout.NORTH );
+		all.setLayout(new BorderLayout());
+		all.add(box2, BorderLayout.NORTH);
 
-		this.add( all, BorderLayout.EAST );
+		this.add(all, BorderLayout.EAST);
 
 		setupKeyboard();
 
 	}
 
 	@Override
-	public void setModel( TetrisModel model )
+	public void setModel(TetrisModel model)
 	{
 		_model = model;
 		_model.start();
@@ -853,128 +873,139 @@ class SimpleView
 	@Override
 	public void scoreChanged()
 	{
-		_scorePanel.setScore( _model.getScore() );
+		_scorePanel.setScore(_model.getScore());
 	}
 
 	@Override
 	public void mapChanged()
 	{
-		_panel.setModel( _model.getViewMap() );
+		_panel.setModel(_model.getViewMap());
 	}
 
 	@Override
 	public void previewChanged()
 	{
-		_previewPanel.setModel( _model.getPreviewShape() );
+		_previewPanel.setModel(_model.getPreviewShape());
 	}
 
 	@Override
 	public void gameOver()
 	{
-		SwingUtilities.invokeLater( new Runnable() {
+		SwingUtilities.invokeLater(new Runnable()
+		{
 			@Override
 			public void run()
 			{
-				JOptionPane.showMessageDialog( SimpleView.this, "HA HA HA GAME OVER.\nTwój wynik to: "
-					+ _model.getScore() + ".", "GAME OVER", JOptionPane.INFORMATION_MESSAGE );
-				//_start.setText( "Start" );
-				//_pause.setText( "Pauza" );
+				JOptionPane.showMessageDialog(
+						SimpleView.this,
+						"HA HA HA GAME OVER.\nTwój wynik to: "
+								+ _model.getScore() + ".", "GAME OVER",
+						JOptionPane.INFORMATION_MESSAGE);
+				// _start.setText( "Start" );
+				// _pause.setText( "Pauza" );
 			}
-		} );
+		});
 	}
 
 	@Override
-	public void rowsToDelete( final int row[], final int count )
+	public void rowsToDelete(final int row[], final int count)
 	{
-		_panel.blink( row, count );
+		_panel.blink(row, count);
 	}
 
 	private void setupKeyboard()
 	{
-		InputMap input = this.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW );
-		/*kontrolsy*/
-		input.put( KeyStroke.getKeyStroke( KeyEvent.VK_LEFT, 0 ), "left" );
-		input.put( KeyStroke.getKeyStroke( KeyEvent.VK_RIGHT, 0 ), "right" );
-		input.put( KeyStroke.getKeyStroke( KeyEvent.VK_SPACE, 0 ), "space" );
-		input.put( KeyStroke.getKeyStroke( KeyEvent.VK_DOWN, 0 ), "down" );
+		InputMap input = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		/* kontrolsy */
+		input.put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "left");
+		input.put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "right");
+		input.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0), "space");
+		input.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "down");
 
-		input.put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "escape" );
-		input.put( KeyStroke.getKeyStroke( KeyEvent.VK_P, 0 ), "p" );
+		input.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escape");
+		input.put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0), "p");
 		ActionMap action = this.getActionMap();
-		action.put( "left", new AbstractAction() {
+		action.put("left", new AbstractAction()
+		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				if ( _model == null )
+				if (_model == null)
 					return;
 				_model.left();
 			}
-		} );
+		});
 
-		action.put( "right", new AbstractAction() {
+		action.put("right", new AbstractAction()
+		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				if ( _model == null )
+				if (_model == null)
 					return;
 				_model.right();
 			}
-		} );
-		action.put( "escape", new AbstractAction() {
+		});
+		action.put("escape", new AbstractAction()
+		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				if ( _model == null )
+				if (_model == null)
 					return;
-				if ( _model.isStopped() )
+				if (_model.isStopped())
 					_model.start();
 				else
 					_model.stop();
 
 			}
-		} );
-		action.put( "down", new AbstractAction() {
+		});
+		action.put("down", new AbstractAction()
+		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				if ( _model == null )
+				if (_model == null)
 					return;
 				_model.down();
 			}
-		} );
-		action.put( "p", new AbstractAction() {
+		});
+		action.put("p", new AbstractAction()
+		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				if ( _model == null )
+				if (_model == null)
 					return;
 				pauseOrResume();
 			}
-		} );
-		action.put( "space", new AbstractAction() {
+		});
+		action.put("space", new AbstractAction()
+		{
 			@Override
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed(ActionEvent e)
 			{
-				if ( _model == null )
+				if (_model == null)
 					return;
 				_model.rotate();
 			}
-		} );
+		});
 	}
 
 	private void pauseOrResume()
 	{
-		if ( _model == null )
+		if (_model == null)
 			return;
-		if ( _model.isStopped() )
+		if (_model.isStopped())
 			return;
-		if ( _model.isPaused() ) {
+		if (_model.isPaused())
+		{
 			_model.resume();
-			//	_pause.setText( "Pause" );
-		}
-		else {
+			// _pause.setText( "Pause" );
+		} else
+		{
 			_model.pause();
-			//	_pause.setText( "Kontunuuj" );
+			// _pause.setText( "Kontunuuj" );
 		}
 	}
 
@@ -988,19 +1019,18 @@ class SimpleView
 
 };
 
-@SuppressWarnings( "serial" )
-class GridPanel
-	extends JPanel
+@SuppressWarnings("serial")
+class GridPanel extends JPanel
 {
 
-	public GridPanel( int rols, int cols, boolean hasBorder, Color borderColor )
-	{
-		setLayout( new GridLayout( rols, cols ) );
+	public GridPanel(int rols, int cols, boolean hasBorder, Color borderColor) {
+		setLayout(new GridLayout(rols, cols));
 		_grids = new Grid[rols][cols];
-		for ( int i = 0; i < rols; i++ )
-			for ( int j = 0; j < cols; j++ ) {
-				_grids[i][j] = new Grid( hasBorder, borderColor );
-				add( _grids[i][j] );
+		for (int i = 0; i < rols; i++)
+			for (int j = 0; j < cols; j++)
+			{
+				_grids[i][j] = new Grid(hasBorder, borderColor);
+				add(_grids[i][j]);
 			}
 	}
 
@@ -1014,88 +1044,91 @@ class GridPanel
 		return _grids[0].length;
 	}
 
-	public void setModel( IntMatrix model )
+	public void setModel(IntMatrix model)
 	{
 		reset();
 		int colBegin = 0;
-		if ( model.getWidth() < getCols() ) {
-			colBegin = ( getCols() - model.getWidth() ) / 2;
+		if (model.getWidth() < getCols())
+		{
+			colBegin = (getCols() - model.getWidth()) / 2;
 		}
 		int rowBegin = 0;
-		if ( model.getHeight() < getRows() ) {
-			rowBegin = ( getRows() - model.getHeight() ) / 2;
+		if (model.getHeight() < getRows())
+		{
+			rowBegin = (getRows() - model.getHeight()) / 2;
 		}
-		for ( int i = 0; i < model.getHeight(); i++ )
-			for ( int j = 0; j < model.getWidth(); j++ ) {
-				_grids[i + rowBegin][j + colBegin].set( model.get( i, j ) );
+		for (int i = 0; i < model.getHeight(); i++)
+			for (int j = 0; j < model.getWidth(); j++)
+			{
+				_grids[i + rowBegin][j + colBegin].set(model.get(i, j));
 			}
 		repaint();
 	}
 
 	public void reset()
 	{
-		for ( int i = 0; i < getRows(); i++ )
-			for ( int j = 0; j < getCols(); j++ )
-				_grids[i][j].set( 0 );
+		for (int i = 0; i < getRows(); i++)
+			for (int j = 0; j < getCols(); j++)
+				_grids[i][j].set(0);
 	}
 
-	public void blink( int row[], int count )
+	public void blink(int row[], int count)
 	{
-		try {
-			setRowsColor( row, count, Color.CYAN );
+		try
+		{
+			setRowsColor(row, count, Color.CYAN);
 			repaint();
-			Thread.sleep( 150 );
-			setRowsColor( row, count, Color.BLUE );
+			Thread.sleep(150);
+			setRowsColor(row, count, Color.BLUE);
 			repaint();
-			Thread.sleep( 150 );
-			setRowsColor( row, count, Color.CYAN );
+			Thread.sleep(150);
+			setRowsColor(row, count, Color.CYAN);
 			repaint();
-			Thread.sleep( 150 );
-			setRowsColor( row, count, Color.BLUE );
+			Thread.sleep(150);
+			setRowsColor(row, count, Color.BLUE);
 			repaint();
-		}
-		catch ( InterruptedException e ) {}
+		} catch (InterruptedException e)
+		{}
 	}
 
-	private void setRowsColor( int row[], int count, Color color )
+	private void setRowsColor(int row[], int count, Color color)
 	{
-		for ( int i = 0; i < count; i++ )
-			for ( int j = 0; j < getCols(); j++ ) {
-				_grids[row[i]][j].setColor( color );
+		for (int i = 0; i < count; i++)
+			for (int j = 0; j < getCols(); j++)
+			{
+				_grids[row[i]][j].setColor(color);
 			}
 	}
 
-	static class Grid
-		extends JComponent
+	static class Grid extends JComponent
 	{
 
-		public Grid( boolean hasBorder, Color borderColor )
-		{
-			if ( hasBorder )
-				setBorder( new LineBorder( borderColor ) );
+		public Grid(boolean hasBorder, Color borderColor) {
+			if (hasBorder)
+				setBorder(new LineBorder(borderColor));
 		}
 
 		@Override
-		public void paintComponent( Graphics g )
+		public void paintComponent(Graphics g)
 		{
-			super.paintComponent( g );
+			super.paintComponent(g);
 			int w = this.getWidth();
 			int h = this.getHeight();
 
-			g.setColor( _color );
-			if ( _on > 0 )
-				g.fillRect( 0, 0, w, h );
+			g.setColor(_color);
+			if (_on > 0)
+				g.fillRect(0, 0, w, h);
 			else
-				g.clearRect( 0, 0, w, h );
+				g.clearRect(0, 0, w, h);
 		}
 
 		@Override
 		public Dimension getPreferredSize()
 		{
-			return new Dimension( 40, 40 );
+			return new Dimension(40, 40);
 		}
 
-		public void set( int value )
+		public void set(int value)
 		{
 			_on = value;
 		}
@@ -1105,7 +1138,7 @@ class GridPanel
 			return _on;
 		}
 
-		public void setColor( Color color )
+		public void setColor(Color color)
 		{
 			_color = color;
 		}
@@ -1118,35 +1151,33 @@ class GridPanel
 	private final Grid[][] _grids;
 }
 
-@SuppressWarnings( "serial" )
-class ScorePanel
-	extends JPanel
+@SuppressWarnings("serial")
+class ScorePanel extends JPanel
 {
 
-	public ScorePanel()
-	{
-		_format = new java.text.DecimalFormat( "#####" );
-		_format.setMaximumIntegerDigits( _numberCount );
-		_format.setMinimumIntegerDigits( _numberCount );
+	public ScorePanel() {
+		_format = new java.text.DecimalFormat("#####");
+		_format.setMaximumIntegerDigits(_numberCount);
+		_format.setMinimumIntegerDigits(_numberCount);
 	}
 
 	@Override
-	public void paintComponent( Graphics g )
+	public void paintComponent(Graphics g)
 	{
-		super.paintComponent( g );
-		String str = _format.format( _score );
+		super.paintComponent(g);
+		String str = _format.format(_score);
 		int w = this.getWidth();
 		int h = this.getHeight();
-		g.clearRect( 0, 0, w, h );
-		g.setColor( Color.RED );
-		g.setFont( new Font( "Courier", Font.BOLD, 25 ) );
+		g.clearRect(0, 0, w, h);
+		g.setColor(Color.RED);
+		g.setFont(new Font("Courier", Font.BOLD, 25));
 		FontMetrics fm = g.getFontMetrics();
-		int fw = fm.stringWidth( str );
+		int fw = fm.stringWidth(str);
 		int fh = fm.getAscent();
-		g.drawString( str, w / 2 - fw / 2, h / 2 + fh / 4 );
+		g.drawString(str, w / 2 - fw / 2, h / 2 + fh / 4);
 	}
 
-	public void setScore( int score )
+	public void setScore(int score)
 	{
 		_score = score;
 		repaint();
@@ -1159,37 +1190,36 @@ class ScorePanel
 	private final java.text.DecimalFormat _format;
 }
 
-@SuppressWarnings( "serial" )
-public class Tetris
-	extends JDialog
+@SuppressWarnings("serial")
+public class Tetris extends JDialog
 {
 
-	public Tetris( String title )
-	{
+	public Tetris(String title) {
 		super();
-		setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
-		setResizable( false );
-		setTitle( "GTC Tetris" );
-		setModalityType( ModalityType.APPLICATION_MODAL );
-		SimpleView view = new SimpleView( 15, 10 );
-		final TetrisModel russia = new TetrisModel( 15, 10 );
-		russia.setView( view );
-		getContentPane().add( view, BorderLayout.CENTER );
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		setResizable(false);
+		setTitle("GTC Tetris");
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		SimpleView view = new SimpleView(15, 10);
+		final TetrisModel russia = new TetrisModel(15, 10);
+		russia.setView(view);
+		getContentPane().add(view, BorderLayout.CENTER);
 
-		this.addWindowListener( new WindowAdapter() {
+		this.addWindowListener(new WindowAdapter()
+		{
 			@Override
-			public void windowClosing( WindowEvent arg0 )
+			public void windowClosing(WindowEvent arg0)
 			{
 				russia._stopped = true;
 			}
-		} );
+		});
 	}
 
 	public static void intit()
 	{
-		Tetris t = new Tetris( "Tetris" );
+		Tetris t = new Tetris("Tetris");
 		t.pack();
-		t.setLocation( 100, 100 );
-		t.setVisible( true );
+		t.setLocation(100, 100);
+		t.setVisible(true);
 	}
 }

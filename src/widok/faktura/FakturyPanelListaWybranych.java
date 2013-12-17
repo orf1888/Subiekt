@@ -16,153 +16,154 @@ import utils.UserShowException;
 import widok.abstrakt.ModelTabeli;
 import widok.abstrakt.PanelOgolnyParametry;
 
-public class FakturyPanelListaWybranych
-	extends FakturyPanelListaWybranychAbstrakt
+public class FakturyPanelListaWybranych extends
+		FakturyPanelListaWybranychAbstrakt
 {
 	private static final long serialVersionUID = 4068527048205276262L;
 
-	private final ActionListener usunListener = new ActionListener() {
+	private final ActionListener usunListener = new ActionListener()
+	{
 
 		@Override
-		public void actionPerformed( ActionEvent e )
+		public void actionPerformed(ActionEvent e)
 		{
-			try {
+			try
+			{
 				int numerUsuwanegoWiersza = pobierzNumerZaznaczonegoWiersza();
 
-				int usuwanyProduktLP =
-					Integer.parseInt( (String) getModelValueAt( numerUsuwanegoWiersza, 0 ) );
-				fakturyPanel.usunProduktZListy( usuwanyProduktLP );
+				int usuwanyProduktLP = Integer
+						.parseInt((String) getModelValueAt(
+								numerUsuwanegoWiersza, 0));
+				fakturyPanel.usunProduktZListy(usuwanyProduktLP);
 
-				tabelaUsunWiersz( numerUsuwanegoWiersza );
+				tabelaUsunWiersz(numerUsuwanegoWiersza);
 				--globalny_lp;
-				fakturyPanel.aktualizujProdukty_LP( usuwanyProduktLP );
-				aktualizujProdukty_LP_formatka( usuwanyProduktLP );
-			}
-			catch ( Exception e1 ) {
-				MojeUtils.showPrintError( e1 );
+				fakturyPanel.aktualizujProdukty_LP(usuwanyProduktLP);
+				aktualizujProdukty_LP_formatka(usuwanyProduktLP);
+			} catch (Exception e1)
+			{
+				MojeUtils.showPrintError(e1);
 			}
 
 		}
 
-		private void aktualizujProdukty_LP_formatka( int usuwanyProduktLP )
+		private void aktualizujProdukty_LP_formatka(int usuwanyProduktLP)
 		{
-			for ( int i = 0; i < getModelRows(); ++i ) {
-				int lp_formatki = Integer.parseInt( (String) getModelValueAt( i, 0 ) );
-				if ( lp_formatki > usuwanyProduktLP ) {
-					setModelValueAt( "" + ( lp_formatki - 1 ), i, 0 );
+			for (int i = 0; i < getModelRows(); ++i)
+			{
+				int lp_formatki = Integer.parseInt((String) getModelValueAt(i,
+						0));
+				if (lp_formatki > usuwanyProduktLP)
+				{
+					setModelValueAt("" + (lp_formatki - 1), i, 0);
 				}
 			}
 		}
 	};
 
-	private final TableModelListener listaWybranychListener = new TableModelListener() {
+	private final TableModelListener listaWybranychListener = new TableModelListener()
+	{
 
 		@Override
-		public void tableChanged( TableModelEvent e )
+		public void tableChanged(TableModelEvent e)
 		{
 			int row = e.getFirstRow();
 			int column = e.getColumn();
-			if ( row < 0 )
+			if (row < 0)
 				return;
-			if ( column < 2 || column > 3 )
+			if (column < 2 || column > 3)
 				return;
-
 
 			TableModel model = (TableModel) e.getSource();
-			String data = (String) model.getValueAt( row, column );
-			int edytowanyProduktLP = Integer.parseInt( (String) model.getValueAt( row, 0 ) );
-			ProduktWFakturze zmienionyProdukt =
-				fakturyPanel.pobierzProduktZListy( edytowanyProduktLP );
+			String data = (String) model.getValueAt(row, column);
+			int edytowanyProduktLP = Integer.parseInt((String) model
+					.getValueAt(row, 0));
+			ProduktWFakturze zmienionyProdukt = fakturyPanel
+					.pobierzProduktZListy(edytowanyProduktLP);
 
-			if ( column == 2 ) {
-				String staraWartosc =
-					MojeUtils.utworzWartoscZlotowki( zmienionyProdukt._cena_jednostkowa );
+			if (column == 2)
+			{
+				String staraWartosc = MojeUtils
+						.utworzWartoscZlotowki(zmienionyProdukt._cena_jednostkowa);
 
-				// 2 cena
+				/* 2 cena */
 				int grosze = 0;
-				try {
-					grosze = MojeUtils.utworzWartoscGrosze( data, "" );
-				}
-				catch ( Exception exc ) {
-					model.setValueAt( staraWartosc, row, column );
+				try
+				{
+					grosze = MojeUtils.utworzWartoscGrosze(data, "");
+				} catch (Exception exc)
+				{
+					model.setValueAt(staraWartosc, row, column);
 					return;
 				}
 
 				zmienionyProdukt._cena_jednostkowa = grosze;
-			}
-			else if ( column == 3 ) {
-				try {
-					// 3 ilosc
-					// weryfikuj zmodyfikowana komorke
-					if ( !MojeUtils.isNumer( data ) )
-						throw new UserShowException( "Wprowadź poprawną liczbę!" );
+			} else if (column == 3)
+			{
+				try
+				{
+					/* 3 ilosc */
+					/* weryfikuj zmodyfikowana komorke */
+					if (!MojeUtils.isNumer(data))
+						throw new UserShowException("Wprowadź poprawną liczbę!");
 
-					// sprawdz czy nie pobieramy za duzo
+					/* sprawdz czy nie pobieramy za duzo */
+					int nowa_wartosc = Integer.parseInt(data);
 
-					int nowa_wartosc = Integer.parseInt( data );
-
-					fakturyPanel.aktualizujIloscProduktow_panelMagazyn( zmienionyProdukt,
-						nowa_wartosc, fakturyPanel.rodzajFaktury );
+					fakturyPanel.aktualizujIloscProduktow_panelMagazyn(
+							zmienionyProdukt, nowa_wartosc,
+							fakturyPanel.rodzajFaktury);
 
 					zmienionyProdukt.ilosc_produktu = nowa_wartosc;
-				}
-				catch ( Exception ex ) {
-					MojeUtils.showError( ex );
-					// zla wartosc - przywroc stara
+				} catch (Exception ex)
+				{
+					MojeUtils.showError(ex);
+					/* zla wartosc - przywroc stara */
 					String staraWartosc = "" + zmienionyProdukt.ilosc_produktu;
-					model.setValueAt( staraWartosc, row, column );
+					model.setValueAt(staraWartosc, row, column);
 					return;
 				}
 			}
-
-			/*int narzut_mnoznik = 0;
-			// pobieranie narzutu
-			Kontrachent k = fakturyPanelEdytujDodaj.pobierzKontrachenta();
-			if ( k != null )
-				narzut_mnoznik = k.cena_mnoznik;*/
-
-			// przelicz wartosc
+			/* przelicz wartosc */
 			int wartosc = zmienionyProdukt.liczWartoscZNarzutem();
-			model.setValueAt( MojeUtils.utworzWartoscZlotowki( wartosc ), row, 4 );
+			model.setValueAt(MojeUtils.utworzWartoscZlotowki(wartosc), row, 4);
 		}
 	};
 
-	public FakturyPanelListaWybranych( FakturyPanelEdytujDodaj fakturyPanelEdytujDodaj )
-	{
-		try {
+	public FakturyPanelListaWybranych(
+			FakturyPanelEdytujDodaj fakturyPanelEdytujDodaj) {
+		try
+		{
 			globalny_lp = 0;
 			this.fakturyPanel = fakturyPanelEdytujDodaj;
-			// TODO
-			// TEN POPUP MA MIEC USUWAAAAANIEEE
-			// FIXME
 			JPopupMenu popupMenu = new JPopupMenu();
-			JMenuItem itemUsun = new JMenuItem( "Usuń", null );
-			popupMenu.add( itemUsun );
-			itemUsun.setHorizontalTextPosition( SwingConstants.RIGHT );
-			//usunListener = _tworzUsunListener();
-			itemUsun.addActionListener( usunListener );
+			JMenuItem itemUsun = new JMenuItem("Usuń", null);
+			popupMenu.add(itemUsun);
+			itemUsun.setHorizontalTextPosition(SwingConstants.RIGHT);
+			itemUsun.addActionListener(usunListener);
 
-			PanelOgolnyParametry params =
-				PanelOgolnyParametry.createMinimalParametry( tworzModelFuktor(), (Integer) null,
-					popupMenu, null, new String[] { "L.p.", "Nazwa", "Cena", "Ilość", "Wartość" } );
-			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu( this );
-			init( params );
-			zmienEditableFunktor( listaWybranychEditableFunktor );
-			dodajListener( listaWybranychListener );
-			zmienDwuklikFunktor( new FunktorDwuklikTabelaWybieraniaProduktu( this ) );
+			PanelOgolnyParametry params = PanelOgolnyParametry
+					.createMinimalParametry(tworzModelFuktor(), (Integer) null,
+							popupMenu, null, new String[]
+							{ "L.p.", "Nazwa", "Cena", "Ilość", "Wartość" });
+			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu(
+					this);
+			init(params);
+			zmienEditableFunktor(listaWybranychEditableFunktor);
+			dodajListener(listaWybranychListener);
+			zmienDwuklikFunktor(new FunktorDwuklikTabelaWybieraniaProduktu(this));
 			setSortDisabled();
-		}
-		catch ( Exception e ) {
-			MojeUtils.showPrintError( e );
+		} catch (Exception e)
+		{
+			MojeUtils.showPrintError(e);
 		}
 	}
 
 	@Override
-	protected void ustawTabele( ModelTabeli model, Integer columnToDelete )
+	protected void ustawTabele(ModelTabeli model, Integer columnToDelete)
 	{
-		super.ustawTabele( model, columnToDelete );
-		zmienEditableFunktor( listaWybranychEditableFunktor );
-		dodajListener( listaWybranychListener );
+		super.ustawTabele(model, columnToDelete);
+		zmienEditableFunktor(listaWybranychEditableFunktor);
+		dodajListener(listaWybranychListener);
 	}
-
 }

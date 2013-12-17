@@ -1,6 +1,5 @@
 package widok.wysylka;
 
-
 import java.sql.SQLException;
 
 import javax.swing.JMenuItem;
@@ -16,21 +15,19 @@ import widok.abstrakt.PanelEdytujDodajObiekt;
 import widok.abstrakt.PanelOgolnyParametry;
 import widok.abstrakt.PanelOgolnyPrzyciski;
 
-public class WysylkaPanel
-	extends PanelOgolnyPrzyciski
+public class WysylkaPanel extends PanelOgolnyPrzyciski
 {
-
 
 	private static final long serialVersionUID = -2449361381185126706L;
 
 	private JPopupMenu tworzMenuPopup()
 	{
 		JPopupMenu result = new JPopupMenu();
-		JMenuItem itemCosTam = new JMenuItem( "Edytuj", null /*new ImageIcon( "1.gif" )*/);
-		result.add( itemCosTam );
-		itemCosTam.setHorizontalTextPosition( SwingConstants.RIGHT );
+		JMenuItem itemCosTam = new JMenuItem("Edytuj", null);
+		result.add(itemCosTam);
+		itemCosTam.setHorizontalTextPosition(SwingConstants.RIGHT);
 		edytujListener = tworzEdytujListener();
-		itemCosTam.addActionListener( edytujListener );
+		itemCosTam.addActionListener(edytujListener);
 
 		return result;
 	}
@@ -41,40 +38,41 @@ public class WysylkaPanel
 		return result;
 	}
 
-	public WysylkaPanel()
-		throws SQLException
-	{
-		try {
+	public WysylkaPanel() throws SQLException {
+		try
+		{
 			JPopupMenu popupTabeliMagazynu = tworzPopupMagazynWysylce();
-			warunki = new ObiektWyszukanieWarunki( new Wysylka() );
+			warunki = new ObiektWyszukanieWarunki(new Wysylka());
 			PanelEdytujDodajObiekt panelDwukliku = new WyswietlPDFPanel();
 
-			PanelOgolnyParametry params =
-				new PanelOgolnyParametry( tworzModelFuktor(), Wysylka.kolumnyWyswietlane.length - 1,
-						tworzMenuPopup(), new WysylkaBaza(), new WysylkaPanelEdytujDodaj( "Dodaj", true,
-								popupTabeliMagazynu ), new WysylkaPanelEdytujDodaj( "Edytuj", true,
-								popupTabeliMagazynu ), panelDwukliku, false, Wysylka.kolumnyWyswietlane );
-			params.setBounds( 1150, 550 );
-			init( params );
-		}
-		catch ( Exception e ) {
-			MojeUtils.showPrintError( e );
+			PanelOgolnyParametry params = new PanelOgolnyParametry(
+					tworzModelFuktor(), Wysylka.kolumnyWyswietlane.length - 1,
+					tworzMenuPopup(), new WysylkaBaza(),
+					new WysylkaPanelEdytujDodaj("Dodaj", true,
+							popupTabeliMagazynu), new WysylkaPanelEdytujDodaj(
+							"Edytuj", true, popupTabeliMagazynu),
+					panelDwukliku, false, Wysylka.kolumnyWyswietlane);
+			params.setBounds(1150, 550);
+			init(params);
+		} catch (Exception e)
+		{
+			MojeUtils.showPrintError(e);
 		}
 	}
 
-	//private InitModelFunktor initModelFunktor;
-
 	public InitModelFunktor tworzModelFuktor()
 	{
-		return new InitModelFunktor() {
+		return new InitModelFunktor()
+		{
 			@Override
 			public String[][] getBeginningData()
 			{
-				try {
-					return obiektBazaManager.pobierzWierszeZBazy( warunki );
-				}
-				catch ( Exception e ) {
-					MojeUtils.showPrintError( e );
+				try
+				{
+					return obiektBazaManager.pobierzWierszeZBazy(warunki);
+				} catch (Exception e)
+				{
+					MojeUtils.showPrintError(e);
 					return null;
 				}
 			}

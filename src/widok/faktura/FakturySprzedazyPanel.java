@@ -6,15 +6,12 @@ import javax.swing.JPopupMenu;
 
 import model.Faktura;
 
-public class FakturySprzedazyPanel
-	extends FakturyGeneralPanel
+public class FakturySprzedazyPanel extends FakturyGeneralPanel
 {
 	private static final long serialVersionUID = -527809025862409241L;
 
-	public FakturySprzedazyPanel()
-		throws SQLException
-	{
-		super( tworzPopupMagazynWFakturySprzedazy(), Faktura.SPRZEDAZ );
+	public FakturySprzedazyPanel() throws SQLException {
+		super(tworzPopupMagazynWFakturySprzedazy(), Faktura.SPRZEDAZ);
 	}
 
 	/**

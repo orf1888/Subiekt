@@ -8,13 +8,14 @@ import widok.abstrakt.PanelOgolnyTabela.InitModelFunktor;
 public class PanelOgolnyParametry
 {
 
-
-	public PanelOgolnyParametry( InitModelFunktor initModelFunktor, Integer columnToDelete,
-			JPopupMenu popupMenu, ObiektBazaManager obiektBazaManager,
-			PanelEdytujDodajObiekt panelDodaj, PanelEdytujDodajObiekt panelEdytuj,
-			PanelEdytujDodajObiekt panelWyswietl, boolean pokazBtnUsun, String[] obiektKolumny )
-	{
-		setBounds( 550, 425 );
+	public PanelOgolnyParametry(InitModelFunktor initModelFunktor,
+			Integer columnToDelete, JPopupMenu popupMenu,
+			ObiektBazaManager obiektBazaManager,
+			PanelEdytujDodajObiekt panelDodaj,
+			PanelEdytujDodajObiekt panelEdytuj,
+			PanelEdytujDodajObiekt panelWyswietl, boolean pokazBtnUsun,
+			String[] obiektKolumny) {
+		setBounds(550, 425);
 		this.initModelFunktor = initModelFunktor;
 		this.columnToDelete = columnToDelete;
 		this.popupMenu = popupMenu;
@@ -26,14 +27,14 @@ public class PanelOgolnyParametry
 		this.pokazBtnUsun = pokazBtnUsun;
 	}
 
-	private PanelOgolnyParametry()
-	{
-		setBounds( 550, 425 );
+	private PanelOgolnyParametry() {
+		setBounds(550, 425);
 	}
 
-	public static PanelOgolnyParametry createMinimalParametry( InitModelFunktor initModelFunktor,
-			Integer columnToDelete, JPopupMenu popupMenu, PanelEdytujDodajObiekt panelWyswietl,
-			String[] obiektKolumny )
+	public static PanelOgolnyParametry createMinimalParametry(
+			InitModelFunktor initModelFunktor, Integer columnToDelete,
+			JPopupMenu popupMenu, PanelEdytujDodajObiekt panelWyswietl,
+			String[] obiektKolumny)
 	{
 		PanelOgolnyParametry res = new PanelOgolnyParametry();
 		res.initModelFunktor = initModelFunktor;
@@ -48,7 +49,7 @@ public class PanelOgolnyParametry
 		return res;
 	}
 
-	public void setBounds( int sizeX, int sizeY )
+	public void setBounds(int sizeX, int sizeY)
 	{
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;

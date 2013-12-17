@@ -1,6 +1,5 @@
 package widok;
 
-
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
@@ -12,68 +11,57 @@ import utils.MojeUtils;
 import widok.abstrakt.PanelOgolnyParametry;
 import widok.abstrakt.PanelOgolnyPrzyciski;
 
-public class KontrachentPanel
-	extends PanelOgolnyPrzyciski
+public class KontrachentPanel extends PanelOgolnyPrzyciski
 {
 	private static final long serialVersionUID = 13019692222387680L;
 
 	private JPopupMenu tworzMenuPopup()
 	{
 		JPopupMenu result = new JPopupMenu();
-		JMenuItem itemEdytuj = new JMenuItem( "Edytuj", null /*new ImageIcon( "1.gif" )*/);
-		result.add( itemEdytuj );
-		itemEdytuj.setHorizontalTextPosition( SwingConstants.RIGHT );
+		JMenuItem itemEdytuj = new JMenuItem("Edytuj", null);
+		result.add(itemEdytuj);
+		itemEdytuj.setHorizontalTextPosition(SwingConstants.RIGHT);
 		edytujListener = tworzEdytujListener();
-		itemEdytuj.addActionListener( edytujListener );
+		itemEdytuj.addActionListener(edytujListener);
 
-		JMenuItem itemUsun = new JMenuItem( "Usuń", null /*new ImageIcon( "1.gif" )*/);
-		result.add( itemUsun );
-		itemUsun.setHorizontalTextPosition( SwingConstants.RIGHT );
+		JMenuItem itemUsun = new JMenuItem("Usuń", null);
+		result.add(itemUsun);
+		itemUsun.setHorizontalTextPosition(SwingConstants.RIGHT);
 		usunListener = tworzUsunListener();
-		itemUsun.addActionListener( usunListener );
-		/*// costam
-		   JMenuItem itemCosTam = new JMenuItem( "Edytuj", null new ImageIcon( "1.gif" ));
-		   result.add( itemCosTam );
-		   itemCosTam.setHorizontalTextPosition( JMenuItem.RIGHT );
-		   itemCosTam.addActionListener( edytujListener );
-		// costam
-		   JMenuItem itemCosTam = new JMenuItem( "Edytuj", null new ImageIcon( "1.gif" ));
-		   result.add( itemCosTam );
-		   itemCosTam.setHorizontalTextPosition( JMenuItem.RIGHT );
-		   itemCosTam.addActionListener( edytujListener );*/
+		itemUsun.addActionListener(usunListener);
 		return result;
 	}
 
-	/**
-	 * Create the panel.
-	 */
-	public KontrachentPanel()
-	{
-		try {
-			warunki = new ObiektWyszukanieWarunki( new Kontrachent() );
-			init( new PanelOgolnyParametry( initModelFunktor, Kontrachent.kolumny.length - 1,
-					tworzMenuPopup(), new KontrachentBaza(), new KontrachentPanelEdytujDodaj( "Dodaj",
-							true ), new KontrachentPanelEdytujDodaj( "Edytuj", true ),
-					new KontrachentPanelEdytujDodaj( "Dane", false ), true, Kontrachent.kolumny ) );
-		}
-		catch ( Exception e ) {
-			MojeUtils.showPrintError( e );
+	public KontrachentPanel() {
+		try
+		{
+			warunki = new ObiektWyszukanieWarunki(new Kontrachent());
+			init(new PanelOgolnyParametry(initModelFunktor,
+					Kontrachent.kolumny.length - 1, tworzMenuPopup(),
+					new KontrachentBaza(), new KontrachentPanelEdytujDodaj(
+							"Dodaj", true), new KontrachentPanelEdytujDodaj(
+							"Edytuj", true), new KontrachentPanelEdytujDodaj(
+							"Dane", false), true, Kontrachent.kolumny));
+		} catch (Exception e)
+		{
+			MojeUtils.showPrintError(e);
 		}
 	}
 
-	private final InitModelFunktor initModelFunktor = new InitModelFunktor() {
+	private final InitModelFunktor initModelFunktor = new InitModelFunktor()
+	{
 		@Override
 		public String[][] getBeginningData()
 		{
-			try {
-				warunki.dodajWarunek( 1, "widoczny" );
-				return obiektBazaManager.pobierzWierszeZBazy( warunki );
-			}
-			catch ( Exception e ) {
-				MojeUtils.showPrintError( e );
+			try
+			{
+				warunki.dodajWarunek(1, "widoczny");
+				return obiektBazaManager.pobierzWierszeZBazy(warunki);
+			} catch (Exception e)
+			{
+				MojeUtils.showPrintError(e);
 				return null;
 			}
 		}
 	};
-
 }

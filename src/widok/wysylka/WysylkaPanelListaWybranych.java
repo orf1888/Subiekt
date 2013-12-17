@@ -21,8 +21,7 @@ import widok.abstrakt.ModelTabeli.IsCellEditableFunktor;
 import widok.abstrakt.PanelOgolnyParametry;
 import widok.abstrakt.PanelOgolnyTabela;
 
-public class WysylkaPanelListaWybranych
-	extends PanelOgolnyTabela
+public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 {
 
 	private static final long serialVersionUID = -5296564424835896434L;
@@ -31,78 +30,88 @@ public class WysylkaPanelListaWybranych
 
 	WysylkaPanelEdytujDodaj wysylkaPanelEdytujDodaj;
 
-	private final ActionListener usunListener = new ActionListener() {
+	private final ActionListener usunListener = new ActionListener()
+	{
 
 		@Override
-		public void actionPerformed( ActionEvent e )
+		public void actionPerformed(ActionEvent e)
 		{
-			try {
+			try
+			{
 				int numerUsuwanegoWiersza = pobierzNumerZaznaczonegoWiersza();
 
-				int usuwanyProduktLP =
-					Integer.parseInt( (String) getModelValueAt( numerUsuwanegoWiersza, 0 ) );
-				wysylkaPanelEdytujDodaj.usunProduktZListy( usuwanyProduktLP );
+				int usuwanyProduktLP = Integer
+						.parseInt((String) getModelValueAt(
+								numerUsuwanegoWiersza, 0));
+				wysylkaPanelEdytujDodaj.usunProduktZListy(usuwanyProduktLP);
 
-				tabelaUsunWiersz( numerUsuwanegoWiersza );
+				tabelaUsunWiersz(numerUsuwanegoWiersza);
 				--globalny_lp;
-				wysylkaPanelEdytujDodaj.aktualizujProdukty_LP( usuwanyProduktLP );
-				aktualizujProdukty_LP_formatka( usuwanyProduktLP );
-			}
-			catch ( Exception e1 ) {
-				MojeUtils.showPrintError( e1 );
+				wysylkaPanelEdytujDodaj.aktualizujProdukty_LP(usuwanyProduktLP);
+				aktualizujProdukty_LP_formatka(usuwanyProduktLP);
+			} catch (Exception e1)
+			{
+				MojeUtils.showPrintError(e1);
 			}
 
 		}
 
-		private void aktualizujProdukty_LP_formatka( int usuwanyProduktLP )
+		private void aktualizujProdukty_LP_formatka(int usuwanyProduktLP)
 		{
-			for ( int i = 0; i < getModelRows(); ++i ) {
-				int lp_formatki = Integer.parseInt( (String) getModelValueAt( i, 0 ) );
-				if ( lp_formatki > usuwanyProduktLP ) {
-					setModelValueAt( "" + ( lp_formatki - 1 ), i, 0 );
+			for (int i = 0; i < getModelRows(); ++i)
+			{
+				int lp_formatki = Integer.parseInt((String) getModelValueAt(i,
+						0));
+				if (lp_formatki > usuwanyProduktLP)
+				{
+					setModelValueAt("" + (lp_formatki - 1), i, 0);
 				}
 			}
 		}
 	};
 
-	private final TableModelListener listaWybranychListener = new TableModelListener() {
+	private final TableModelListener listaWybranychListener = new TableModelListener()
+	{
 
 		@Override
-		public void tableChanged( TableModelEvent e )
+		public void tableChanged(TableModelEvent e)
 		{
 			int row = e.getFirstRow();
 			int column = e.getColumn();
-			if ( row < 0 )
+			if (row < 0)
 				return;
-			if ( column != 3 )
+			if (column != 3)
 				return;
-
 
 			TableModel model = (TableModel) e.getSource();
-			String data = (String) model.getValueAt( row, column );
-			int edytowanyProduktLP = Integer.parseInt( (String) model.getValueAt( row, 0 ) );
-			ProduktWWysylce zmienionyProdukt =
-				wysylkaPanelEdytujDodaj.pobierzProduktZListy( edytowanyProduktLP );
+			String data = (String) model.getValueAt(row, column);
+			int edytowanyProduktLP = Integer.parseInt((String) model
+					.getValueAt(row, 0));
+			ProduktWWysylce zmienionyProdukt = wysylkaPanelEdytujDodaj
+					.pobierzProduktZListy(edytowanyProduktLP);
 
-			if ( column == 3 ) {
-				try {
-					// 3 ilosc
-					// weryfikuj zmodyfikowana komorke
-					if ( !MojeUtils.isNumer( data ) )
-						throw new UserShowException( "Wprowadź poprawną liczbę!" );
+			if (column == 3)
+			{
+				try
+				{
+					/* 3 ilosc */
+					/* weryfikuj zmodyfikowana komorke */
+					if (!MojeUtils.isNumer(data))
+						throw new UserShowException("Wprowadź poprawną liczbę!");
 
-					int nowa_wartosc = Integer.parseInt( data );
+					int nowa_wartosc = Integer.parseInt(data);
 
-					wysylkaPanelEdytujDodaj.aktualizujIloscProduktow_panelMagazyn( zmienionyProdukt,
-						nowa_wartosc );
+					wysylkaPanelEdytujDodaj
+							.aktualizujIloscProduktow_panelMagazyn(
+									zmienionyProdukt, nowa_wartosc);
 
 					zmienionyProdukt.ilosc_produktu = nowa_wartosc;
-				}
-				catch ( Exception ex ) {
-					MojeUtils.showError( ex );
-					// zla wartosc - przywroc stara
+				} catch (Exception ex)
+				{
+					MojeUtils.showError(ex);
+					/* zla wartosc - przywroc stara */
 					String staraWartosc = "" + zmienionyProdukt.ilosc_produktu;
-					model.setValueAt( staraWartosc, row, column );
+					model.setValueAt(staraWartosc, row, column);
 					return;
 				}
 			}
@@ -110,97 +119,90 @@ public class WysylkaPanelListaWybranych
 		}
 	};
 
-	public WysylkaPanelListaWybranych( WysylkaPanelEdytujDodaj wysylkaPanelEdytujDodaj )
-	{
-		try {
+	public WysylkaPanelListaWybranych(
+			WysylkaPanelEdytujDodaj wysylkaPanelEdytujDodaj) {
+		try
+		{
 			globalny_lp = 0;
 			this.wysylkaPanelEdytujDodaj = wysylkaPanelEdytujDodaj;
-			// TODO
-			// TEN POPUP MA MIEC USUWAAAAANIEEE
-			// FIXME
 			JPopupMenu popupMenu = new JPopupMenu();
-			JMenuItem itemUsun = new JMenuItem( "Usuń", null );
-			popupMenu.add( itemUsun );
-			itemUsun.setHorizontalTextPosition( SwingConstants.RIGHT );
-			//usunListener = _tworzUsunListener();
-			itemUsun.addActionListener( usunListener );
+			JMenuItem itemUsun = new JMenuItem("Usuń", null);
+			popupMenu.add(itemUsun);
+			itemUsun.setHorizontalTextPosition(SwingConstants.RIGHT);
+			itemUsun.addActionListener(usunListener);
 
-			PanelOgolnyParametry params =
-				PanelOgolnyParametry.createMinimalParametry( tworzModelFuktor(), (Integer) null,
-					popupMenu, null, new String[] { "L.p.", "Kod", "Nazwa", "Ilość" } );
-			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu( this );
-			init( params );
-			zmienEditableFunktor( listaWybranychEditableFunktor );
-			dodajListener( listaWybranychListener );
-			zmienDwuklikFunktor( new FunktorDwuklikTabelaWybieraniaProduktu( this ) );
-		}
-		catch ( Exception e ) {
-			MojeUtils.showPrintError( e );
+			PanelOgolnyParametry params = PanelOgolnyParametry
+					.createMinimalParametry(tworzModelFuktor(), (Integer) null,
+							popupMenu, null, new String[]
+							{ "L.p.", "Kod", "Nazwa", "Ilość" });
+			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu(
+					this);
+			init(params);
+			zmienEditableFunktor(listaWybranychEditableFunktor);
+			dodajListener(listaWybranychListener);
+			zmienDwuklikFunktor(new FunktorDwuklikTabelaWybieraniaProduktu(this));
+		} catch (Exception e)
+		{
+			MojeUtils.showPrintError(e);
 		}
 	}
 
 	@Override
-	protected void ustawTabele( ModelTabeli model, Integer columnToDelete )
+	protected void ustawTabele(ModelTabeli model, Integer columnToDelete)
 	{
-		super.ustawTabele( model, columnToDelete );
-		zmienEditableFunktor( listaWybranychEditableFunktor );
-		dodajListener( listaWybranychListener );
+		super.ustawTabele(model, columnToDelete);
+		zmienEditableFunktor(listaWybranychEditableFunktor);
+		dodajListener(listaWybranychListener);
 	}
 
 	public InitModelFunktor tworzModelFuktor()
 	{
-		return new InitModelFunktor() {
+		return new InitModelFunktor()
+		{
 			@Override
 			public String[][] getBeginningData()
 			{
-				try {
+				try
+				{
 					Wysylka wysylka = wysylkaPanelEdytujDodaj.getWysylka();
-					if ( wysylka == null )
-						return new String[][] {};
+					if (wysylka == null)
+						return new String[][]
+						{};
 
 					String[][] data = new String[wysylka.produkty.size()][];
-					for ( int i = 0; i < wysylka.produkty.size(); ++i )
-						data[i] = wysylka.produkty.get( i ).pisz();
+					for (int i = 0; i < wysylka.produkty.size(); ++i)
+						data[i] = wysylka.produkty.get(i).pisz();
 
 					return data;
-				}
-				catch ( Exception e ) {
-					MojeUtils.showPrintError( e );
+				} catch (Exception e)
+				{
+					MojeUtils.showPrintError(e);
 					return null;
 				}
 			}
 		};
 	}
 
-	public static class FunktorDwuklikTabelaWybieraniaProduktu
-		extends FunktorDwuklikTabela
+	public static class FunktorDwuklikTabelaWybieraniaProduktu extends
+			FunktorDwuklikTabela
 	{
 		protected WysylkaPanelListaWybranych parent;
 
-		FunktorDwuklikTabelaWybieraniaProduktu( WysylkaPanelListaWybranych parent )
-		{
+		FunktorDwuklikTabelaWybieraniaProduktu(WysylkaPanelListaWybranych parent) {
 			this.parent = parent;
 		}
 
 		@Override
-		public void run( ObiektWiersz wiersz, int row )
-		{
-			/*parent.oknoModalne =
-				new DialogEdytujDodaj( parent.anulujListener, parent.anulujListener,
-						parent.panelWyswietl );
-
-			parent.wstawDaneDoFormatki( wiersz );
-
-			parent.oknoModalne.setDefaultCloseOperation( WindowConstants.DISPOSE_ON_CLOSE );
-			parent.oknoModalne.setVisible( true );*/
-		}
+		public void run(ObiektWiersz wiersz, int row)
+		{}
 	}
 
-	public static IsCellEditableFunktor listaWybranychEditableFunktor = new IsCellEditableFunktor() {
+	public static IsCellEditableFunktor listaWybranychEditableFunktor = new IsCellEditableFunktor()
+	{
 		@Override
-		public boolean isCellEditable( int row, int column )
+		public boolean isCellEditable(int row, int column)
 		{
-			// nieedytowalne: pierwsza (lp) i druga (nazwa)
+			/* nieedytowalne: pierwsza (lp) i druga (nazwa) */
 			return column == 3;
 		}
 	};
@@ -213,15 +215,18 @@ public class WysylkaPanelListaWybranych
 	public void czysc() throws SQLException
 	{
 		globalny_lp = 0;
-		przeladujTabele( new String[][] {}, editableFunktor );
+		przeladujTabele(new String[][]
+		{}, editableFunktor);
 	}
 
 	public void zaladujListeWysylki()
 	{
-		try {
-			przeladujTabele( tworzModelFuktor().getBeginningData(), editableFunktor );
-		}
-		catch ( SQLException e ) {
+		try
+		{
+			przeladujTabele(tworzModelFuktor().getBeginningData(),
+					editableFunktor);
+		} catch (SQLException e)
+		{
 			e.printStackTrace();
 		}
 		globalny_lp = pobierzIloscWierszy();
