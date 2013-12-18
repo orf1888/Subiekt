@@ -452,7 +452,8 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			terminPlatnosciButtonListener.ukryj();
 			dataWystawieniaFakturyButtonListener.ukryj();
 			listaProduktow.clear();
-			comboKontrachenci.setModel(MojeUtils.odswiezCombo(false));
+			comboKontrachenci.setModel(MojeUtils.odswiezDaneWCombo(false,
+					KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 		} catch (SQLException e)
 		{
 			e.printStackTrace();

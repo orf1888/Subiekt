@@ -17,7 +17,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import kontroler.KontrachentBaza;
 import model.ObiektWiersz;
 
 public class MojeUtils
@@ -383,24 +382,22 @@ public class MojeUtils
 			return true;
 	}
 
-	public static ComboBoxModel<Object> odswiezCombo(boolean z_pustym_elementem)
-			throws SQLException
+	public static ComboBoxModel<Object> odswiezDaneWCombo(
+			boolean z_pustym_elementem, String[] dane) throws SQLException
 	{
 		JComboBox<Object> tmp;
 		if (z_pustym_elementem)
 		{
-			String[] tmp_s = KontrachentBaza.pobierzWszystkieNazwyZBazy();
-			String[] data = new String[tmp_s.length + 1];
-			for (int i = 0; i < tmp_s.length; ++i)
-				data[1 + i] = tmp_s[i];
+			String[] data = new String[dane.length + 1];
+			for (int i = 0; i < dane.length; ++i)
+				data[1 + i] = dane[i];
 			data[0] = "";
 			tmp = new JComboBox<Object>(data);
 			return tmp.getModel();
 
 		} else
 		{
-			tmp = new JComboBox<Object>(
-					KontrachentBaza.pobierzWszystkieNazwyZBazy());
+			tmp = new JComboBox<Object>(dane);
 			return tmp.getModel();
 		}
 	}
