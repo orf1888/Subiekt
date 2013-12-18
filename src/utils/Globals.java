@@ -12,5 +12,5 @@ public class Globals
 
 	public final static boolean SzukajRownaSie = false;
 
-	public final static String wersjaAplikacji = "Subiekt GTC v.1.2.36";
+	public final static String WersjaAplikacji = "Subiekt GTC v.1.2.36";
 }

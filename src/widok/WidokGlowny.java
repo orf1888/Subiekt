@@ -81,7 +81,7 @@ public class WidokGlowny extends JFrame
 
 	public WidokGlowny() throws SQLException, ClassNotFoundException,
 			IOException {
-		setTitle(Globals.wersjaAplikacji);
+		setTitle(Globals.WersjaAplikacji);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/* Ustaw full screen */
 		setExtendedState(Frame.MAXIMIZED_BOTH);

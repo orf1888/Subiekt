@@ -299,7 +299,7 @@ public class MojeUtils
 				.showMessageDialog(
 						null,
 						"                                 "
-								+ Globals.wersjaAplikacji
+								+ Globals.WersjaAplikacji
 								+ "\nWysyłając sms o terści \"POMAGAM\" na nr 7322 za 1,23 PLN"
 								+ "\nuzyskujesz dostęp do jedynej działającej wersji oraz pomagasz"
 								+ "\nautorowi przetrwać zimę.",
