@@ -1,6 +1,7 @@
 package widok;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -83,6 +84,8 @@ public class WidokGlowny extends JFrame
 			IOException {
 		setTitle(Globals.WersjaAplikacji);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		/* Ustaw rozmiar okna - nie full screen */
+		setMinimumSize(new Dimension(800, 550));
 		/* Ustaw full screen */
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		/* Menu bar */
