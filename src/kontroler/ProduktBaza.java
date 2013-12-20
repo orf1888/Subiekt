@@ -469,40 +469,7 @@ public class ProduktBaza implements ObiektBazaManager
 
 		// przeladowanie panelu Magazynu, zeby byly aktualne ilosci produktow
 		panel.przeladujTabele();
-		System.out.println("2xprzeladujTabele");
 	}
-
-	/*
-	 * public static void zmienIloscProduktyZMagazynuKorekta( List<? extends
-	 * ProduktNaSztuki> produkty, List<ProduktWFakturze> produktyKorekta,
-	 * boolean dodaj ) throws SQLException { StringBuilder sql = new
-	 * StringBuilder(); sql.append( "UPDATE " ).append( Produkt.tableName
-	 * ).append( " set ilosc = CASE id_produkt " ); for ( ProduktNaSztuki pr :
-	 * produktyKorekta ) { // brak liczby porzadkowej = jest to korekta
-	 * sql.append( " WHEN " ).append( pr.produkt.id_produkt ).append(
-	 * " THEN ilosc" ).append( ( dodaj ? "+" : "-" ) ).append( SqlUtils.popraw(
-	 * pr.ilosc_produktu ) ); } for ( ProduktNaSztuki pr : produkty ) { //
-	 * liczba porzadkowa - stary wpis, cofniecie (odwrocona flaga 'dodaj')
-	 * sql.append( " WHEN " ).append( pr.produkt.id_produkt ).append(
-	 * " THEN ilosc" ).append( ( !dodaj ? "+" : "-" ) ).append( SqlUtils.popraw(
-	 * pr.ilosc_produktu ) ); } sql.append( " END WHERE id_produkt in (" ); for
-	 * ( ProduktNaSztuki pr : produkty ) { sql.append( pr.produkt.id_produkt
-	 * ).append( ',' ); } for ( ProduktNaSztuki pr : produktyKorekta ) {
-	 * sql.append( pr.produkt.id_produkt ).append( ',' ); } sql.deleteCharAt(
-	 * sql.length() - 1 ); sql.append( ")" );
-	 * BazaDanych.getInstance().aktualizacja( sql.toString() ); }
-	 */
-
-	/*
-	 * 
-	 * public static void zmienIloscProduktyZMagazynu_wysylka(
-	 * List<ProduktWWysylce> produkty, boolean dodaj ) throws SQLException { for
-	 * ( ProduktWWysylce pr : produkty ) {
-	 * BazaDanych.getInstance().aktualizacja( "UPDATE " + Produkt.tableName +
-	 * " set ilosc = ilosc " + ( dodaj ? "+" : "-" ) + SqlUtils.popraw(
-	 * pr.ilosc_produktu ) + " WHERE id_produkt = " + SqlUtils.popraw(
-	 * pr.produkt.id_produkt ) ); } }
-	 */
 
 	@SuppressWarnings("unchecked")
 	public static List<ProduktWWysylce> pobierzDlaWysylki(int id)

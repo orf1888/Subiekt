@@ -433,7 +433,6 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		{
 			/* long to int (jebana JAVA) */
 			int tmp = Integer.parseInt(faktura.waluta.toString());
-			System.err.println(tmp - 1);
 			comboWaluta.setSelectedIndex(tmp - 1);
 		}
 		panelDatyWystawFaktury.setDate(faktura.data_wystawienia);
@@ -576,7 +575,6 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	{
 		if (comboWaluta.getSelectedIndex() < 0)
 			return -1L;
-		System.err.println("Zmieniłem");
 		return WalutaManager.pobierzIdZBazy(comboWaluta.getSelectedItem()
 				.toString(), Waluta.tabelaWaluta);
 

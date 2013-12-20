@@ -116,7 +116,6 @@ public class ZestawieniaPanel extends JPanel
 			return;
 		if (comboBoxKontrachentDluznicy.getSelectedItem().toString().isEmpty())
 		{
-			System.out.println(comboBoxKontrachentDluznicy.getSelectedIndex());
 			warunekKontrachent = null;
 		} else
 		{
