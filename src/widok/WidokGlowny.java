@@ -32,7 +32,7 @@ import kontroler.ProduktBaza;
 import utils.BazaDanych;
 import utils.Globals;
 import utils.MojeUtils;
-import utils.WczytajExcell;
+import utils.FakturaZPliku;
 import widok.faktura.FakturySprzedazyPanel;
 import widok.faktura.FakturyZakupuPanel;
 import widok.wysylka.WysylkaPanel;
@@ -259,7 +259,7 @@ public class WidokGlowny extends JFrame
 		{
 			try
 			{
-				if (WczytajExcell.wczytajTowaryZFS())
+				if (FakturaZPliku.wczytajTowaryZFS())
 					MojeUtils
 							.showMsg("Faktura wczytana poprawnie. Pamiętaj o wstawieniu kontrahenta!");
 

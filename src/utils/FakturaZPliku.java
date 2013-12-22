@@ -15,7 +15,7 @@ import model.produkt.Produkt;
 import model.produkt.ProduktWFakturze;
 import widok.WidokGlowny;
 
-public class WczytajExcell
+public class FakturaZPliku
 {
 
 	public static boolean wczytajTowaryZFS() throws Exception
