@@ -45,8 +45,6 @@ public class InformatorBaza
 								data.substring(6), false), data,
 						"" + result.getInt(3),
 						KontrachentBaza.pobierzNazweZBazy(result.getInt(4)), };
-				System.out.println(wiersz[0] + " " + wiersz[1] + " "
-						+ wiersz[2] + " " + wiersz[3]);
 				wynik.add(wiersz);
 			}
 			return wynik;
@@ -91,8 +89,6 @@ public class InformatorBaza
 				String[] wiersz =
 				{ "Wysyłka nr. " + result.getInt(1), data,
 						"" + result.getInt(3) };
-				System.out.println(wiersz[0] + " " + wiersz[1] + " "
-						+ wiersz[2]);
 				wynik.add(wiersz);
 			}
 			return wynik;
