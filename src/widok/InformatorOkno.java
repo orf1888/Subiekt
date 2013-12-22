@@ -1,8 +1,8 @@
 package widok;
 
 import java.awt.BorderLayout;
-import java.awt.Dialog.ModalExclusionType;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 import kontroler.InformatorBaza;
 
-public class InformatorOkno extends JFrame
+public class InformatorOkno extends JDialog
 {
 
 	private static final long serialVersionUID = -6195767829553617471L;
@@ -23,7 +23,7 @@ public class InformatorOkno extends JFrame
 
 	public InformatorOkno(String nazwa, String[][] data_sprzedaz,
 			String[][] data_wysylki) {
-		setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
+		setModalityType(ModalityType.APPLICATION_MODAL);
 		setTitle("Informator - " + nazwa);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
