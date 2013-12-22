@@ -482,7 +482,7 @@ public class ProduktBaza implements ObiektBazaManager
 					+ " P JOIN "
 					+ Produkt.tableLaczacaWysylka
 					+ " P_W ON P.id_produkt=P_W.id_produkt WHERE P_W.id_wysylka= "
-					+ SqlUtils.popraw(id);
+					+ SqlUtils.popraw(id) + " ORDER BY lp";
 
 			MojeUtils.println(querySql);
 
