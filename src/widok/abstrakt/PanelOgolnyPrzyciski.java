@@ -338,7 +338,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 		};
 	}
 
-	/* USUN---------------------------------------- */
+	/* INFORMATOR---------------------------------------- */
 	protected ActionListener tworzInformatorListener()
 	{
 		return new ActionListener()
