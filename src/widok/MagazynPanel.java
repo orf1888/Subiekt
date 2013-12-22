@@ -51,6 +51,12 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 		itemCosTam.setHorizontalTextPosition(SwingConstants.RIGHT);
 		usunListener = tworzUsunListener();
 		itemCosTam.addActionListener(usunListener);
+		/* Guzik informator */
+		JMenuItem itemInformator = new JMenuItem("Informator", null);
+		result.add(itemInformator);
+		itemInformator.setHorizontalTextPosition(SwingConstants.RIGHT);
+		informatorListener = tworzInformatorListener();
+		itemInformator.addActionListener(informatorListener);
 		/*
 		 * Tu powinna znajdować się reszta funkcjonalności menu kontekstowego
 		 */

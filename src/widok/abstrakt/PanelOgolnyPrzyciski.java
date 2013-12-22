@@ -15,10 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import kontroler.InformatorBaza;
+import kontroler.ProduktBaza;
 import model.ObiektWiersz;
 import model.ObiektZId;
 import utils.MojeUtils;
 import utils.UserShowException;
+import widok.InformatorOkno;
 
 public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 {
@@ -35,6 +38,8 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 	protected ActionListener dodajListener;
 
 	protected ActionListener usunListener;
+
+	protected ActionListener informatorListener;
 
 	protected JPanel panel_przycikow;
 
@@ -325,6 +330,39 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 						tabelaUsunWiersz(numerEdytowanegoWiersza);
 						ukryjModalneOkno();
 					}
+				} catch (Exception e)
+				{
+					MojeUtils.showPrintError(e);
+				}
+			}
+		};
+	}
+
+	/* USUN---------------------------------------- */
+	protected ActionListener tworzInformatorListener()
+	{
+		return new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				try
+				{
+					ObiektWiersz wiersz = new ObiektWiersz(
+							pobierzZaznaczonyWiersz());
+					InformatorOkno
+							.init(ProduktBaza
+									.getNazwaFromWiersz(pobierzZaznaczonyWiersz()),
+									InformatorBaza
+											.instance()
+											.pobierzSrzedazZBazy(
+													(ProduktBaza
+															.getIdFromWiersz(wiersz))),
+									InformatorBaza
+											.instance()
+											.pobierzWysylekZBazy(
+													(ProduktBaza
+															.getIdFromWiersz(wiersz))));
 				} catch (Exception e)
 				{
 					MojeUtils.showPrintError(e);
