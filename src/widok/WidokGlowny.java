@@ -30,9 +30,10 @@ import javax.swing.border.EmptyBorder;
 
 import kontroler.ProduktBaza;
 import utils.BazaDanych;
+import utils.FakturaZPliku;
 import utils.Globals;
 import utils.MojeUtils;
-import utils.FakturaZPliku;
+import utils.SprawdzMagazyn;
 import widok.faktura.FakturySprzedazyPanel;
 import widok.faktura.FakturyZakupuPanel;
 import widok.wysylka.WysylkaPanel;
@@ -109,6 +110,10 @@ public class WidokGlowny extends JFrame
 				JMenuItem mntmWczytajTowary = new JMenuItem("Dodaj FS z pliku");
 				mnPlik.add(mntmWczytajTowary);
 				mntmWczytajTowary.addActionListener(dodajFSListener);
+
+				JMenuItem mntmSprawdzOstatki = new JMenuItem("Sprawdź ostatki");
+				mnPlik.add(mntmSprawdzOstatki);
+				mntmSprawdzOstatki.addActionListener(sprawdzOstatkiListener);
 
 				JMenuItem mntmZakocz = new JMenuItem("Zakończ");
 				mnPlik.add(mntmZakocz);
@@ -270,4 +275,24 @@ public class WidokGlowny extends JFrame
 			}
 		}
 	};
+
+	private final ActionListener sprawdzOstatkiListener = new ActionListener()
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			try
+			{
+				OstatkiOkno okno = new OstatkiOkno(
+						SprawdzMagazyn.stworzOstatki());
+				okno.setVisible(true);
+			} catch (Exception e1)
+			{
+				MojeUtils.showError("Coś poszło nie tak");
+				e1.printStackTrace();
+			}
+		}
+	};
+
 }
