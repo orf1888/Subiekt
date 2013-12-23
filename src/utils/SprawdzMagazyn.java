@@ -66,23 +66,31 @@ public class SprawdzMagazyn
 		List<String[]> data = new ArrayList<>();
 		for (int i = 0; i < magazyn.size(); i++)
 		{
+			boolean znaleziony = false;
+			String[] data_tmp = new String[4];
+			data_tmp[0] = magazyn.get(i)[0];
+			data_tmp[1] = magazyn.get(i)[1];
+			data_tmp[2] = magazyn.get(i)[2];
 			for (int j = 0; j < magazyn_plik.size(); j++)
 			{
 				if (magazyn.get(i)[0].equals(magazyn_plik.get(j)[0]))
 				{
-					String[] data_tmp = new String[4];
-					data_tmp[0] = magazyn.get(i)[0];
-					data_tmp[1] = magazyn.get(i)[1];
-					data_tmp[2] = magazyn.get(i)[2];
+					znaleziony = true;
 					if (Integer.parseInt(magazyn_plik.get(j)[1]) == Integer
 							.parseInt(magazyn.get(i)[2]))
 						data_tmp[3] = "OK";
-					else
-						data_tmp[3] = "SPRAWDŹ!";
-					data.add(data_tmp);
+					if (Integer.parseInt(magazyn_plik.get(j)[1]) > Integer
+							.parseInt(magazyn.get(i)[2]))
+						data_tmp[3] = "ZA DUŻO W MAGAZYNIE!";
+					if (Integer.parseInt(magazyn_plik.get(j)[1]) < Integer
+							.parseInt(magazyn.get(i)[2]))
+						data_tmp[3] = "ZA MAŁO W MAGAZYNIE!";
 					break;
 				}
 			}
+			if (!znaleziony)
+				data_tmp[3] = "Brak";
+			data.add(data_tmp);
 		}
 		return data.toArray(new String[data.size()][]);
 	}
