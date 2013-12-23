@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import kontroler.InformatorBaza;
 import kontroler.ProduktBaza;
 import model.ObiektWiersz;
 import model.ObiektZId;
@@ -350,19 +349,9 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 				{
 					ObiektWiersz wiersz = new ObiektWiersz(
 							pobierzZaznaczonyWiersz());
-					InformatorOkno
-							.init(ProduktBaza
-									.getNazwaFromWiersz(pobierzZaznaczonyWiersz()),
-									InformatorBaza
-											.instance()
-											.pobierzSrzedazZBazy(
-													(ProduktBaza
-															.getIdFromWiersz(wiersz))),
-									InformatorBaza
-											.instance()
-											.pobierzWysylekZBazy(
-													(ProduktBaza
-															.getIdFromWiersz(wiersz))));
+					InformatorOkno.init(ProduktBaza
+							.getNazwaFromWiersz(pobierzZaznaczonyWiersz()),
+							wiersz);
 				} catch (Exception e)
 				{
 					MojeUtils.showPrintError(e);

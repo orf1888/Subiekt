@@ -26,6 +26,9 @@ public class InformatorBaza
 	public static String[] kolumny_sprzedaz =
 	{ "Numer faktury", "Data wystawienia", "Ilość produktu", "Kontrahent" };
 
+	public static String[] kolumny_sprzedaz_ilosc =
+	{ "Kod", "Nazwa", "Ilość sprzedanych" };
+
 	public static String[] kolumny_wysylki =
 	{ "Numer wysyłki", "Data wysyłki", "Ilość produktu" };
 
@@ -45,6 +48,43 @@ public class InformatorBaza
 								data.substring(6), false), data,
 						"" + result.getInt(3),
 						KontrachentBaza.pobierzNazweZBazy(result.getInt(4)), };
+				wynik.add(wiersz);
+			}
+			return wynik;
+		}
+	};
+
+	BazaStatementFunktor pobieranieWierszaFunktorWysylek = new BazaStatementFunktor()
+	{
+		@Override
+		public List<String[]> operacja(ResultSet result) throws SQLException
+		{
+			List<String[]> wynik = new ArrayList<String[]>();
+			// dodajemy do tabeli kolejne pobrane wiersze
+			while (result.next())
+			{
+				String data = MojeUtils.formatujDate(result.getString(2));
+				String[] wiersz =
+				{ "Wysyłka nr. " + result.getInt(1), data,
+						"" + result.getInt(3) };
+				wynik.add(wiersz);
+			}
+			return wynik;
+		}
+	};
+
+	BazaStatementFunktor pobieranieIlosciSprzedazyFunktor = new BazaStatementFunktor()
+	{
+		@Override
+		public List<String[]> operacja(ResultSet result) throws SQLException
+		{
+			List<String[]> wynik = new ArrayList<String[]>();
+			// dodajemy do tabeli kolejne pobrane wiersze
+			while (result.next())
+			{
+				String[] wiersz =
+				{ result.getString(1), result.getString(2),
+						"" + result.getInt(3) };
 				wynik.add(wiersz);
 			}
 			return wynik;
@@ -72,28 +112,8 @@ public class InformatorBaza
 						/* sql do pobrania */querySql,
 						/* operacja na pobranych danych */pobieranieWierszaFunktorSprzedazy);
 
-		/* druga i trzecia wartosc to daty wynik[1] */
 		return wynik.toArray(new String[wynik.size()][]);
 	}
-
-	BazaStatementFunktor pobieranieWierszaFunktorWysylek = new BazaStatementFunktor()
-	{
-		@Override
-		public List<String[]> operacja(ResultSet result) throws SQLException
-		{
-			List<String[]> wynik = new ArrayList<String[]>();
-			// dodajemy do tabeli kolejne pobrane wiersze
-			while (result.next())
-			{
-				String data = MojeUtils.formatujDate(result.getString(2));
-				String[] wiersz =
-				{ "Wysyłka nr. " + result.getInt(1), data,
-						"" + result.getInt(3) };
-				wynik.add(wiersz);
-			}
-			return wynik;
-		}
-	};
 
 	@SuppressWarnings("unchecked")
 	public String[][] pobierzWysylekZBazy(int id_produkt) throws SQLException
@@ -115,8 +135,32 @@ public class InformatorBaza
 						/* sql do pobrania */querySql,
 						/* operacja na pobranych danych */pobieranieWierszaFunktorWysylek);
 
-		/* druga i trzecia wartosc to daty wynik[1] */
 		return wynik.toArray(new String[wynik.size()][]);
 	}
 
+	@SuppressWarnings("unchecked")
+	public String[][] pobierzIloscSprzedazZBazy(int id_produkt, String data_od,
+			String data_do) throws SQLException
+	{
+		String querySql = "SELECT produkt.kod, produkt.nazwa, SUM(c_faktura_produkt.ilosc_produktu) FROM "
+				+ Produkt.tableName
+				+ ", "
+				+ Produkt.tableLaczacaFaktura
+				+ ", "
+				+ Faktura.tableName;
+
+		querySql += " WHERE produkt.id_produkt=" + id_produkt
+				+ " and produkt.id_produkt=c_faktura_produkt.id_produkt"
+				+ " AND faktura.data_wystawienia BETWEEN '" + data_od
+				+ "' AND '" + data_do + "'"
+				+ " AND faktura.id_faktura=c_faktura_produkt.id_faktura";
+
+		List<String[]> wynik = (List<String[]>) BazaDanych
+				.getInstance()
+				.zapytanie(
+						/* sql do pobrania */querySql,
+						/* operacja na pobranych danych */pobieranieIlosciSprzedazyFunktor);
+
+		return wynik.toArray(new String[wynik.size()][]);
+	}
 }
