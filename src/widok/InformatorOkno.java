@@ -105,8 +105,8 @@ public class InformatorOkno extends JDialog
 
 		/* Ilosc wysłanych */
 		panelIloscWyslanych = new JPanel();
-		tabbedPane.addTab("Ilość wysłanych okres", null, panelIloscWyslanych,
-				null);
+		tabbedPane.addTab("Ilość wysłanych za okres", null,
+				panelIloscWyslanych, null);
 		panelIloscWyslanych.setLayout(new BorderLayout(0, 0));
 		scrollPaneIloscWyslanych = new JScrollPane();
 		panelIloscWyslanych.add(scrollPaneIloscWyslanych, BorderLayout.CENTER);

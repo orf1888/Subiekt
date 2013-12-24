@@ -273,6 +273,6 @@ public class InformatorBaza
 		wynik.addAll(Arrays.asList(wysylki));
 		wynik.addAll(Arrays.asList(faktury));
 		MojeUtils.sortujPoDacie(wynik);
-		return wynik.toArray(new String[wynik.size()][]);
+		return MojeUtils.foratujDate(wynik.toArray(new String[wynik.size()][]));
 	}
 }

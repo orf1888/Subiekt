@@ -190,6 +190,15 @@ public class MojeUtils
 		}
 	}
 
+	public static String[][] foratujDate(String[][] data)
+	{
+		for (int i = 0; i < data.length; i++)
+		{
+			data[i][1] = formatujDate(data[i][1]);
+		}
+		return data;
+	}
+
 	public static Date parsujDate(String string)
 	{
 		@SuppressWarnings("deprecation")
@@ -412,6 +421,7 @@ public class MojeUtils
 
 	public static List<String[]> sortujPoDacie(List<String[]> lista)
 	{
+		/* bubble sort */
 		for (int i = 0; i < lista.size(); i++)
 		{
 			for (int j = 0; j < lista.size() - 1 - i; j++)
