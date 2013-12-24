@@ -24,18 +24,30 @@ public class InformatorOkno extends JDialog
 
 	private static final long serialVersionUID = -6195767829553617471L;
 	private final JPanel contentPane;
+	/* Tabele */
 	private final JTable tableWysylki;
 	private final JTable tableSprzedaz;
-	private final JPanel panelIloscSprzedazy;
-	private final JScrollPane scrollPaneIloscSprzedazy;
+	private final JTable tableIloscWyslanych;
 	private final JTable tableIloscSprzedazy;
+	private final JTable tableRuchTowaru;
+	/* Panele przyciskow */
 	private final PanelPrzyciskowInformator panelPrzyciskowSprzedazIlosc;
 	private final PanelPrzyciskowInformator panelPrzyciskowWysylki;
 	private final PanelPrzyciskowInformator panelPrzyciskowSprzedaz;
+	private final PanelPrzyciskowInformator panelPrzyciskowWyslanychIlosc;
+	private final PanelPrzyciskowInformator panelPrzyciskowRuchTowaru;
+	/* Panele glowne */
+	private final JPanel panelIloscSprzedazy;
 	private final JPanel panelWysylki;
 	private final JPanel panelSprzedazy;
+	private final JPanel panelIloscWyslanych;
+	private final JPanel panelRuchTowaru;
+	/* ScrollPane'y */
+	private final JScrollPane scrollPaneIloscSprzedazy;
 	private final JScrollPane scrollPaneWysylki;
 	private final JScrollPane scrollPaneSprzedazy;
+	private final JScrollPane scrollPaneIloscWyslanych;
+	private final JScrollPane scrollPaneRuchTowaru;
 
 	public ObiektWiersz wiersz;
 
@@ -67,7 +79,7 @@ public class InformatorOkno extends JDialog
 		panelWysylki.add(panelPrzyciskowWysylki, BorderLayout.NORTH);
 		/* Sprzedaż */
 		panelSprzedazy = new JPanel();
-		tabbedPane.addTab("Sprzedaż", null, panelSprzedazy, null);
+		tabbedPane.addTab("Sprzedaż za okres", null, panelSprzedazy, null);
 		panelSprzedazy.setLayout(new BorderLayout(0, 0));
 		scrollPaneSprzedazy = new JScrollPane();
 		panelSprzedazy.add(scrollPaneSprzedazy, BorderLayout.CENTER);
@@ -79,7 +91,8 @@ public class InformatorOkno extends JDialog
 
 		/* Ilosc sprzedaży */
 		panelIloscSprzedazy = new JPanel();
-		tabbedPane.addTab("Ilość sprzedaży", null, panelIloscSprzedazy, null);
+		tabbedPane.addTab("Ilość sprzedaży za okres", null,
+				panelIloscSprzedazy, null);
 		panelIloscSprzedazy.setLayout(new BorderLayout(0, 0));
 		scrollPaneIloscSprzedazy = new JScrollPane();
 		panelIloscSprzedazy.add(scrollPaneIloscSprzedazy, BorderLayout.CENTER);
@@ -89,6 +102,33 @@ public class InformatorOkno extends JDialog
 				pokazSprzedazIloscListener);
 		panelIloscSprzedazy.add(panelPrzyciskowSprzedazIlosc,
 				BorderLayout.NORTH);
+
+		/* Ilosc wysłanych */
+		panelIloscWyslanych = new JPanel();
+		tabbedPane.addTab("Ilość wysłanych okres", null, panelIloscWyslanych,
+				null);
+		panelIloscWyslanych.setLayout(new BorderLayout(0, 0));
+		scrollPaneIloscWyslanych = new JScrollPane();
+		panelIloscWyslanych.add(scrollPaneIloscWyslanych, BorderLayout.CENTER);
+		tableIloscWyslanych = new JTable();
+		scrollPaneIloscWyslanych.setViewportView(tableIloscWyslanych);
+		panelPrzyciskowWyslanychIlosc = new PanelPrzyciskowInformator(
+				pokazWyslanychIloscListener);
+		panelIloscWyslanych.add(panelPrzyciskowWyslanychIlosc,
+				BorderLayout.NORTH);
+
+		/* Ruch towaru */
+		panelRuchTowaru = new JPanel();
+		tabbedPane.addTab("Ruch towaru za okres", null, panelRuchTowaru, null);
+		panelRuchTowaru.setLayout(new BorderLayout(0, 0));
+		scrollPaneRuchTowaru = new JScrollPane();
+		panelRuchTowaru.add(scrollPaneRuchTowaru, BorderLayout.CENTER);
+		tableRuchTowaru = new JTable();
+		scrollPaneRuchTowaru.setViewportView(tableRuchTowaru);
+		panelPrzyciskowRuchTowaru = new PanelPrzyciskowInformator(
+				pokazRuchTowaruListener);
+		panelRuchTowaru.add(panelPrzyciskowRuchTowaru, BorderLayout.NORTH);
+
 	}
 
 	ActionListener pokazWysylkiListener = new ActionListener()
@@ -99,9 +139,17 @@ public class InformatorOkno extends JDialog
 		{
 			try
 			{
-				String[][] data = InformatorBaza.instance()
+				@SuppressWarnings("deprecation")
+				String[][] data = InformatorBaza
+						.instance()
 						.pobierzWysylekZBazy(
-								(ProduktBaza.getIdFromWiersz(wiersz)));
+								(ProduktBaza.getIdFromWiersz(wiersz)),
+								MojeUtils
+										.poprawDate(panelPrzyciskowWysylki.dataOd
+												.getDate().toGMTString()),
+								MojeUtils
+										.poprawDate(panelPrzyciskowWysylki.dataDo
+												.getDate().toGMTString()), true);
 				/* Ustaw model */
 				DefaultTableModel model_wysylki = new DefaultTableModel(data,
 						InformatorBaza.kolumny_sprzedaz_ilosc);
@@ -122,9 +170,17 @@ public class InformatorOkno extends JDialog
 		{
 			try
 			{
-				String[][] data = InformatorBaza.instance()
+				@SuppressWarnings("deprecation")
+				String[][] data = InformatorBaza
+						.instance()
 						.pobierzSrzedazZBazy(
-								(ProduktBaza.getIdFromWiersz(wiersz)));
+								(ProduktBaza.getIdFromWiersz(wiersz)),
+								MojeUtils
+										.poprawDate(panelPrzyciskowSprzedaz.dataOd
+												.getDate().toGMTString()),
+								MojeUtils
+										.poprawDate(panelPrzyciskowSprzedaz.dataDo
+												.getDate().toGMTString()), true);
 				/* Ustaw model */
 				DefaultTableModel model_sprzedaz = new DefaultTableModel(data,
 						InformatorBaza.kolumny_sprzedaz_ilosc);
@@ -146,17 +202,82 @@ public class InformatorOkno extends JDialog
 			try
 			{
 				@SuppressWarnings("deprecation")
-				String[][] data = InformatorBaza.instance()
+				String[][] data = InformatorBaza
+						.instance()
 						.pobierzIloscSprzedazZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								panelPrzyciskowSprzedazIlosc.dataOd.getDate()
-										.toGMTString(),
-								panelPrzyciskowSprzedazIlosc.dataDo.getDate()
-										.toGMTString());
+								MojeUtils
+										.poprawDate(panelPrzyciskowSprzedazIlosc.dataOd
+												.getDate().toGMTString()),
+								MojeUtils
+										.poprawDate(panelPrzyciskowSprzedazIlosc.dataDo
+												.getDate().toGMTString()));
 				/* Ustaw model */
 				DefaultTableModel model_sprzedaz_ilosc = new DefaultTableModel(
 						data, InformatorBaza.kolumny_sprzedaz_ilosc);
 				tableIloscSprzedazy.setModel(model_sprzedaz_ilosc);
+			} catch (SQLException e1)
+			{
+				MojeUtils.showError("Coś nie tak.");
+				e1.printStackTrace();
+			}
+		}
+	};
+
+	ActionListener pokazWyslanychIloscListener = new ActionListener()
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			try
+			{
+				@SuppressWarnings("deprecation")
+				String[][] data = InformatorBaza
+						.instance()
+						.pobierzIloscWyslanychZBazy(
+								(ProduktBaza.getIdFromWiersz(wiersz)),
+								MojeUtils
+										.poprawDate(panelPrzyciskowWyslanychIlosc.dataOd
+												.getDate().toGMTString()),
+								MojeUtils
+										.poprawDate(panelPrzyciskowWyslanychIlosc.dataDo
+												.getDate().toGMTString()));
+				/* Ustaw model */
+				DefaultTableModel model_sprzedaz_ilosc = new DefaultTableModel(
+						data, InformatorBaza.kolumny_wyslane_ilosc);
+				tableIloscWyslanych.setModel(model_sprzedaz_ilosc);
+			} catch (SQLException e1)
+			{
+				MojeUtils.showError("Coś nie tak.");
+				e1.printStackTrace();
+			}
+		}
+	};
+
+	ActionListener pokazRuchTowaruListener = new ActionListener()
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			try
+			{
+				@SuppressWarnings("deprecation")
+				String[][] data = InformatorBaza
+						.instance()
+						.pobierzRuchTowaruZBazy(
+								(ProduktBaza.getIdFromWiersz(wiersz)),
+								MojeUtils
+										.poprawDate(panelPrzyciskowRuchTowaru.dataOd
+												.getDate().toGMTString()),
+								MojeUtils
+										.poprawDate(panelPrzyciskowRuchTowaru.dataDo
+												.getDate().toGMTString()));
+				/* Ustaw model */
+				DefaultTableModel model_ruch_towaru = new DefaultTableModel(
+						data, InformatorBaza.kolumny_ruch_towaru);
+				tableRuchTowaru.setModel(model_ruch_towaru);
 			} catch (SQLException e1)
 			{
 				MojeUtils.showError("Coś nie tak.");

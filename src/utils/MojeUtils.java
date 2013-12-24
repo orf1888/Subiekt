@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.ComboBoxModel;
@@ -400,5 +401,31 @@ public class MojeUtils
 			tmp = new JComboBox<Object>(dane);
 			return tmp.getModel();
 		}
+	}
+
+	public static String poprawDate(String data)
+	{
+		if (data.length() == 23)
+			return new String(0 + data);
+		return data;
+	}
+
+	public static List<String[]> sortujPoDacie(List<String[]> lista)
+	{
+		for (int i = 0; i < lista.size(); i++)
+		{
+			for (int j = 0; j < lista.size() - 1 - i; j++)
+			{
+				Date el = parsujDate(lista.get(j)[1]);
+				Date el2 = parsujDate(lista.get(j + 1)[1]);
+				if (el.after(el2))
+				{
+					String[] tmp = lista.get(j + 1);
+					lista.set(j + 1, lista.get(j));
+					lista.set(i, tmp);
+				}
+			}
+		}
+		return lista;
 	}
 }
