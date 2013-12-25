@@ -31,6 +31,7 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 
 	private JComboBox<Object> comboBoxFiltrowanieProducent = null;
 
+	@SuppressWarnings("rawtypes")
 	private static List<JComboBox> listaComboBoxowFiltrProducenta = new ArrayList<JComboBox>();
 
 	/**
