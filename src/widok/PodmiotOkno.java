@@ -23,7 +23,7 @@ public class PodmiotOkno extends JFrame
 	private final PodmiotPanel panelPol;
 
 	public PodmiotOkno() throws SQLException {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(450, 300);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
