@@ -468,7 +468,7 @@ public class ProduktBaza implements ObiektBazaManager
 		BazaDanych.getInstance().aktualizacja(sql.toString());
 
 		// przeladowanie panelu Magazynu, zeby byly aktualne ilosci produktow
-		panel.przeladujTabele();
+		panel.przeladujTabele(false);
 	}
 
 	@SuppressWarnings("unchecked")

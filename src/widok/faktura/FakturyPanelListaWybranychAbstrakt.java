@@ -52,7 +52,7 @@ public class FakturyPanelListaWybranychAbstrakt extends PanelOgolnyTabela
 	{
 		globalny_lp = 0;
 		przeladujTabele(new String[][]
-		{}, editableFunktor);
+		{}, editableFunktor, true);
 	}
 
 	public void zaladujListeFaktury()
@@ -60,7 +60,7 @@ public class FakturyPanelListaWybranychAbstrakt extends PanelOgolnyTabela
 		try
 		{
 			przeladujTabele(tworzModelFuktor().getBeginningData(),
-					editableFunktor);
+					editableFunktor, true);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();

@@ -18,6 +18,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import kontroler.ManagerTabeli;
 import kontroler.ObiektBazaManager;
 import kontroler.ObiektWyszukanieWarunki;
 import model.ObiektWiersz;
@@ -95,7 +96,8 @@ public abstract class PanelOgolnyTabela extends JPanel
 	 *            -- opcjonalne, numer kolumny do ukrycia
 	 * @throws Exception
 	 */
-	protected void init(PanelOgolnyParametry params) throws Exception
+	protected void init(PanelOgolnyParametry params,
+			boolean ustawWielkoscKolumny) throws Exception
 	{
 		/* ASSERT */
 		if (funktorDwuklikTabela == null)
@@ -113,7 +115,7 @@ public abstract class PanelOgolnyTabela extends JPanel
 		this.columnToDeleteCache = params.columnToDelete;
 		this.panelWyswietl = params.panelWyswietl;
 
-		wczytajTabele();
+		wczytajTabele(ustawWielkoscKolumny);
 		setLayout(new BorderLayout(0, 0));
 
 		{
@@ -140,9 +142,10 @@ public abstract class PanelOgolnyTabela extends JPanel
 		}
 	}
 
-	public void wczytajTabele() throws SQLException
+	public void wczytajTabele(boolean ustawWielkoscKolumny) throws SQLException
 	{
-		przeladujTabele(initModelFunktor.getBeginningData(), editableFunktor);
+		przeladujTabele(initModelFunktor.getBeginningData(), editableFunktor,
+				ustawWielkoscKolumny);
 	}
 
 	public void wyczyscTabele()
@@ -168,6 +171,9 @@ public abstract class PanelOgolnyTabela extends JPanel
 	public void tabelaDodajWiersz(String[] wiersz)
 	{
 		model.insertRow(model.getRowCount(), wiersz);
+		ManagerTabeli manager = new ManagerTabeli(_table);
+		manager.adjustColumn(1);
+		manager.adjustColumn(2);
 	}
 
 	public String[] pobierzZaznaczonyWiersz()
@@ -191,11 +197,11 @@ public abstract class PanelOgolnyTabela extends JPanel
 		return _table.getRowCount();
 	}
 
-	public void tabelaEdytujWiersz(int numerEdytowanegoWiersza, String[] wiersz)
-			throws SQLException
+	public void tabelaEdytujWiersz(int numerEdytowanegoWiersza,
+			String[] wiersz, boolean ustawWielkoscKolumny) throws SQLException
 	{
 		model.edytujWiersz(numerEdytowanegoWiersza, wiersz);
-		przeladujTabele();
+		przeladujTabele(ustawWielkoscKolumny);
 	}
 
 	public void tabelaUsunWiersz(int wiersz)
@@ -218,19 +224,28 @@ public abstract class PanelOgolnyTabela extends JPanel
 		_table.setRowSorter(null);
 	}
 
-	public void przeladujTabele() throws SQLException
+	public void przeladujTabele(boolean ustawWielkoscKolumny)
+			throws SQLException
 	{
-		przeladujTabele(null/* default */, editableFunktor);
+		przeladujTabele(null/* default */, editableFunktor,
+				ustawWielkoscKolumny);
 	}
 
 	public void przeladujTabele(String[][] data,
-			IsCellEditableFunktor editableFunktor) throws SQLException
+			IsCellEditableFunktor editableFunktor, boolean ustawWielkoscKolumny)
+			throws SQLException
 	{
 		resetujTabele();
 		if (data == null)
 			data = obiektBazaManager.pobierzWierszeZBazy(warunki);
 		model = new ModelTabeli(data, obiektKolumny, editableFunktor);
 		ustawTabele(model, columnToDeleteCache);
+		if (ustawWielkoscKolumny)
+		{
+			ManagerTabeli manager = new ManagerTabeli(_table);
+			manager.adjustColumn(1);
+			manager.adjustColumn(2);
+		}
 	}
 
 	/**

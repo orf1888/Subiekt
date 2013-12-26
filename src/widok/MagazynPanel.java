@@ -169,7 +169,7 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 					return;
 				warunki.dodajWarunek(producent_id, "id_producenta");
 			}
-			przeladujTabele();
+			przeladujTabele(false);
 		} catch (Exception e)
 		{
 			MojeUtils.showPrintError(e);

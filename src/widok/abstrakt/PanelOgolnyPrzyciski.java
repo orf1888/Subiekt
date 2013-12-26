@@ -48,7 +48,6 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 	public int sizeY;
 
-	@Override
 	public void init(PanelOgolnyParametry params) throws Exception
 	{
 		MojeUtils.println("Inicjuje " + this.getClass().getName());
@@ -72,7 +71,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			usunListener = tworzUsunListener();
 
 		funktorDwuklikTabela = new FunktorDwuklikTabelaAkcja(this);
-		super.init(params);
+		super.init(params, false);
 		initPrzyciski();
 		initWyszukiwarka();
 	}
@@ -251,7 +250,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 				obiektBazaManager.edytuj(staryObiekt, nowy);
 				tabelaEdytujWiersz(numerEdytowanegoWiersza,
-						nowy.piszWierszTabeli());
+						nowy.piszWierszTabeli(), false);
 				ukryjModalneOkno();
 			} catch (UserShowException e)
 			{
@@ -383,7 +382,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					warunki.dodajWarunekDowolnaKolumna(szukanieText);
 					data = null;
 				}
-				przeladujTabele(data, editableFunktor);
+				przeladujTabele(data, editableFunktor, false);
 			} catch (Exception e)
 			{
 				MojeUtils.showPrintError(e);
@@ -425,7 +424,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 						warunki.dodajWarunekDowolnaKolumna(szukanieText);
 						data = null;
 					}
-					przeladujTabele(data, editableFunktor);
+					przeladujTabele(data, editableFunktor, false);
 				} catch (Exception e1)
 				{
 					MojeUtils.showPrintError(e1);
@@ -439,7 +438,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					wyczyscSzukanyText();
 					try
 					{
-						przeladujTabele();
+						przeladujTabele(false);
 					} catch (SQLException e1)
 					{
 						MojeUtils.showPrintError(e1);
@@ -458,7 +457,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			wyczyscSzukanyText();
 			try
 			{
-				przeladujTabele();
+				przeladujTabele(false);
 			} catch (SQLException e1)
 			{
 				MojeUtils.showPrintError(e1);

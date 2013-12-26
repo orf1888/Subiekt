@@ -383,7 +383,6 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 					{ "" + lp, wiersz.wiersz[1],
 							MojeUtils.utworzWartoscZlotowki(cena), ilosc + "",
 							MojeUtils.utworzWartoscZlotowki(ilosc * cena) });
-
 			listaProduktow.add(new ProduktWFakturze(lp, cena, ilosc,
 					produktSlownik, false, 0));
 		}
@@ -447,7 +446,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	{
 		try
 		{
-			panelMagazynu.wczytajTabele();
+			panelMagazynu.wczytajTabele(true);
 			terminPlatnosciButtonListener.ukryj();
 			dataWystawieniaFakturyButtonListener.ukryj();
 			listaProduktow.clear();

@@ -148,7 +148,7 @@ public class FakturyPanelListaWybranych extends
 							{ "L.p.", "Nazwa", "Cena", "Ilość", "Wartość" });
 			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu(
 					this);
-			init(params);
+			init(params, true);
 			zmienEditableFunktor(listaWybranychEditableFunktor);
 			dodajListener(listaWybranychListener);
 			zmienDwuklikFunktor(new FunktorDwuklikTabelaWybieraniaProduktu(this));
