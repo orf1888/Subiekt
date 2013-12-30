@@ -35,6 +35,7 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 	private static JPopupMenu tworzPopupMagazynWysylce()
 	{
 		JPopupMenu result = new JPopupMenu();
+		result.setEnabled(false);
 		return result;
 	}
 

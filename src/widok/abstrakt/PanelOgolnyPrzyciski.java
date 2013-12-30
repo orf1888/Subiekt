@@ -38,7 +38,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 	protected ActionListener usunListener;
 
-	protected ActionListener informatorListener;
+	protected static ActionListener informatorListener;
 
 	protected JPanel panel_przycikow;
 
@@ -357,6 +357,11 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 				}
 			}
 		};
+	}
+
+	public static ActionListener setInformatorListener()
+	{
+		return informatorListener;
 	}
 
 	/* SZUKAJ-------------------------------------- */

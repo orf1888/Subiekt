@@ -35,7 +35,7 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 	private static List<JComboBox> listaComboBoxowFiltrProducenta = new ArrayList<JComboBox>();
 
 	/**
-	 * pop-up dla akcji PPM
+	 * pop-up dla akcji PPM zakładki magazyn
 	 */
 	private JPopupMenu tworzMenuPopup()
 	{
@@ -64,6 +64,18 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 		return result;
 	}
 
+	private JPopupMenu tworzPopupFakturaWysylka()
+	{
+		JPopupMenu result = new JPopupMenu();
+		/* Guzik informator */
+		JMenuItem itemInformator = new JMenuItem("Informator", null);
+		result.add(itemInformator);
+		itemInformator.setHorizontalTextPosition(SwingConstants.RIGHT);
+		informatorListener = tworzInformatorListener();
+		itemInformator.addActionListener(informatorListener);
+		return result;
+	}
+
 	/**
 	 * Create the panel.
 	 * 
@@ -77,6 +89,8 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 		{
 			if (popupMenu == null)
 				popupMenu = tworzMenuPopup();
+			if (!popupMenu.isEnabled())
+				popupMenu = tworzPopupFakturaWysylka();
 
 			warunki = new ObiektWyszukanieWarunki(new Produkt());
 			PanelEdytujDodajObiekt pWyswietl = null;

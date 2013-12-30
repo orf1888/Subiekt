@@ -305,6 +305,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			listaWybranychPanel = new FakturyPanelListaWybranych(this);
 			splitPane.setRightComponent(listaWybranychPanel);
 
+			/* init popup w fakturze */
 			panelMagazynu = new MagazynPanel( /* wyswietlButtony */false,
 					popupMagazynWFaktury);
 			panelMagazynu.zmienDwuklikFunktor(new FunktorDwuklikAkcjaFaktura(

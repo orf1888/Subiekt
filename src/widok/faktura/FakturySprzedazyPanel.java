@@ -16,10 +16,13 @@ public class FakturySprzedazyPanel extends FakturyGeneralPanel
 
 	/**
 	 * funkcja odpowiedzialna za tworzenie popupu (z PPM na tabeli magazyn)
+	 * 
+	 * jej zawartość to dokładnie how not to do... ale działa
 	 */
 	private static JPopupMenu tworzPopupMagazynWFakturySprzedazy()
 	{
 		JPopupMenu result = new JPopupMenu();
+		result.setEnabled(false);
 		return result;
 	}
 }
