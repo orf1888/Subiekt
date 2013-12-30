@@ -173,7 +173,8 @@ public abstract class PanelOgolnyTabela extends JPanel
 		model.insertRow(model.getRowCount(), wiersz);
 		ManagerTabeli manager = new ManagerTabeli(_table);
 		manager.adjustColumn(1);
-		manager.adjustColumn(2);
+		if (_table.getColumnCount() > 2)
+			manager.adjustColumn(2);
 	}
 
 	public String[] pobierzZaznaczonyWiersz()
