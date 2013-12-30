@@ -648,9 +648,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			nowa_wartosc = (_ilosc_magazyn + wartoscZmiany);
 		} else
 		{
-			if (_ilosc_magazyn - wartoscZmiany < 0)
-				throw new UserShowException(
-						"Nie można odjąć tyle produktów z magazynu!");
+			/* Przy zakupie możemy kupować, gdy stan magazynowy jest ujemny */
 			nowa_wartosc = (_ilosc_magazyn - wartoscZmiany);
 		}
 		panelMagazynu.setModelValueAt("" + nowa_wartosc, rowIndex, columnIndex);
