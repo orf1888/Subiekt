@@ -293,8 +293,12 @@ public class WidokGlowny extends JFrame
 				okno.setVisible(true);
 			} catch (Exception e1)
 			{
-				MojeUtils.showError("Coś poszło nie tak");
-				e1.printStackTrace();
+				if (!e1.getMessage().equals("Anulowano"))
+				{
+					MojeUtils
+							.showError("Wybrany plik ma niekompatybilną strukturę wewnętrzną!\nNie można utworzyć ostatków!");
+				}
+				/* else przemilcz;) */
 			}
 		}
 	};

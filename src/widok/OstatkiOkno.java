@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import kontroler.ManagerTabeli;
 import utils.Globals;
 import utils.SprawdzMagazyn;
 
@@ -18,6 +19,7 @@ public class OstatkiOkno extends JDialog
 	private static final long serialVersionUID = 7519881534302364256L;
 	private final JPanel contentPane;
 	private final JTable tableOstatki;
+	private final ManagerTabeli manager;
 
 	public OstatkiOkno(String[][] data) {
 		setAlwaysOnTop(true);
@@ -38,6 +40,9 @@ public class OstatkiOkno extends JDialog
 				SprawdzMagazyn.kolumny);
 		tableOstatki = new JTable();
 		tableOstatki.setModel(model_ostatki);
+		manager = new ManagerTabeli(tableOstatki);
+		manager.adjustColumn(1);
+		manager.adjustColumn(2);
 		scrollPane.setViewportView(tableOstatki);
 	}
 

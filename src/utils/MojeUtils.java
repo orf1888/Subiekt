@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import model.FChooserPL;
 import model.ObiektWiersz;
 import widok.WidokGlowny;
 
@@ -248,15 +249,15 @@ public class MojeUtils
 	public static void zapiszPlik(File plik, String rozszerzenie, boolean backup)
 			throws Exception
 	{
-		JFileChooser chooser = new JFileChooser(".");
-		chooser.setAcceptAllFileFilterUsed(false);
-		chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
-		int retrival = chooser.showSaveDialog(WidokGlowny.frame);
+		FChooserPL c = new FChooserPL();
+		c.chooser.setAcceptAllFileFilterUsed(false);
+		c.chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
+		int retrival = c.chooser.showSaveDialog(WidokGlowny.frame);
 		if (retrival == JFileChooser.APPROVE_OPTION)
 		{
 			try
 			{
-				String s = chooser.getSelectedFile().toString();
+				String s = c.chooser.getSelectedFile().toString();
 				if (!s.endsWith("." + rozszerzenie))
 					if (backup)
 						s += "-" + formatujDate(pobierzAktualnaDate()) + "."
@@ -330,15 +331,15 @@ public class MojeUtils
 
 	public static File wczytajPlik(String rozszerzenie) throws Exception
 	{
-		JFileChooser chooser = new JFileChooser(".");
-		chooser.setAcceptAllFileFilterUsed(false);
-		chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
-		int retrival = chooser.showOpenDialog(WidokGlowny.frame);
+		FChooserPL c = new FChooserPL();
+		c.chooser.setAcceptAllFileFilterUsed(false);
+		c.chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
+		int retrival = c.chooser.showOpenDialog(WidokGlowny.frame);
 		if (retrival == JFileChooser.APPROVE_OPTION)
 		{
 			try
 			{
-				String s = chooser.getSelectedFile().toString();
+				String s = c.chooser.getSelectedFile().toString();
 				if (!s.endsWith("." + rozszerzenie))
 					s += "." + rozszerzenie;
 				return new File(s);

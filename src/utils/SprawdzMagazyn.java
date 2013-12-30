@@ -27,7 +27,7 @@ public class SprawdzMagazyn
 		return lista_m;
 	}
 
-	public static List<String[]> pobierzMagazynZPliku() throws Exception
+	public static List<String[]> pobierzProduktyZPliku() throws Exception
 	{
 		File plik_magazyn = null;
 		Sheet arkusz = null;
@@ -39,7 +39,11 @@ public class SprawdzMagazyn
 			plik_magazyn = MojeUtils.wczytajPlik("xls");
 		} catch (Exception e)
 		{
-			MojeUtils.showError("Błąd wczytywania pliku");
+			if (!e.getMessage().equals("Anulowano"))
+			{
+				MojeUtils.showError("Błąd wczytywania pliku");
+			} else
+				throw new Exception("Anulowano");
 		}
 		arkusz = FakturaZPliku.pobierzArkuszXLS(plik_magazyn);
 		kody_p = arkusz.getColumn(0);
@@ -98,7 +102,7 @@ public class SprawdzMagazyn
 	public static String[][] stworzOstatki() throws Exception
 	{
 		List<String[]> magazyn = pobierzMagazyn();
-		List<String[]> magazyn_plik = pobierzMagazynZPliku();
+		List<String[]> magazyn_plik = pobierzProduktyZPliku();
 		return porownajMagazyny(magazyn, magazyn_plik);
 	}
 }
