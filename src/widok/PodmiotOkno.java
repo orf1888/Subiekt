@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import kontroler.PodmiotBaza;
+import utils.Globals;
 import utils.MojeUtils;
 
 public class PodmiotOkno extends JFrame
@@ -24,6 +25,7 @@ public class PodmiotOkno extends JFrame
 
 	public PodmiotOkno() throws SQLException {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setIconImage(Globals.IkonaAplikacji.getImage());
 		setSize(450, 300);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();

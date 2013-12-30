@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import kontroler.InformatorBaza;
 import kontroler.ProduktBaza;
 import model.ObiektWiersz;
+import utils.Globals;
 import utils.MojeUtils;
 
 public class InformatorOkno extends JDialog
@@ -55,6 +56,7 @@ public class InformatorOkno extends JDialog
 		this.wiersz = wiersz;
 
 		setModalityType(ModalityType.APPLICATION_MODAL);
+		setIconImage(Globals.IkonaAplikacji.getImage());
 		setTitle("Informator - " + nazwa);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(750, 600);

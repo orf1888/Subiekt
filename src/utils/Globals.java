@@ -1,5 +1,7 @@
 package utils;
 
+import javax.swing.ImageIcon;
+
 public class Globals
 {
 	public final static boolean Widoczny = true;
@@ -13,4 +15,7 @@ public class Globals
 	public final static boolean SzukajRownaSie = false;
 
 	public final static String WersjaAplikacji = "Subiekt GTC v.1.5.36";
+
+	public final static ImageIcon IkonaAplikacji = new ImageIcon(
+			"icons\\sGTC.gif");
 }

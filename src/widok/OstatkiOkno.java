@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import utils.Globals;
 import utils.SprawdzMagazyn;
 
 public class OstatkiOkno extends JDialog
@@ -21,6 +22,7 @@ public class OstatkiOkno extends JDialog
 	public OstatkiOkno(String[][] data) {
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setIconImage(Globals.IkonaAplikacji.getImage());
 		setTitle("Sprawdź ostatki");
 		setSize(750, 600);
 		setLocationRelativeTo(null);

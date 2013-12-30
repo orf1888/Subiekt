@@ -19,6 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import model.ObiektWiersz;
+import widok.WidokGlowny;
 
 public class MojeUtils
 {
@@ -250,7 +251,7 @@ public class MojeUtils
 		JFileChooser chooser = new JFileChooser(".");
 		chooser.setAcceptAllFileFilterUsed(false);
 		chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
-		int retrival = chooser.showSaveDialog(null);
+		int retrival = chooser.showSaveDialog(WidokGlowny.frame);
 		if (retrival == JFileChooser.APPROVE_OPTION)
 		{
 			try
@@ -306,7 +307,7 @@ public class MojeUtils
 	{
 		JOptionPane
 				.showMessageDialog(
-						null,
+						WidokGlowny.frame,
 						"                                 "
 								+ Globals.WersjaAplikacji
 								+ "\nWysyłając sms o terści \"POMAGAM\" na nr 7322 za 1,23 PLN"
@@ -317,9 +318,9 @@ public class MojeUtils
 
 	public static void oAutorach()
 	{
-		JOptionPane.showMessageDialog(null, "Autorem aplikacji jest:\n\n"
-				+ "\nSerhii Khilinich\n", "O autorach...",
-				JOptionPane.INFORMATION_MESSAGE, null);
+		JOptionPane.showMessageDialog(WidokGlowny.frame,
+				"Autorem aplikacji jest:\n\n" + "\nSerhii Khilinich\n",
+				"O autorach...", JOptionPane.INFORMATION_MESSAGE, null);
 	}
 
 	public static void tetris()
@@ -332,7 +333,7 @@ public class MojeUtils
 		JFileChooser chooser = new JFileChooser(".");
 		chooser.setAcceptAllFileFilterUsed(false);
 		chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
-		int retrival = chooser.showOpenDialog(null);
+		int retrival = chooser.showOpenDialog(WidokGlowny.frame);
 		if (retrival == JFileChooser.APPROVE_OPTION)
 		{
 			try
@@ -375,10 +376,10 @@ public class MojeUtils
 	{
 		Object[] polskiePrzyciski =
 		{ "Tak", "Nie" };
-		int wybor = JOptionPane.showOptionDialog(null, komunikat_contetnt,
-				komunikat_naglowek, JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, polskiePrzyciski,
-				polskiePrzyciski[1]);
+		int wybor = JOptionPane.showOptionDialog(WidokGlowny.frame,
+				komunikat_contetnt, komunikat_naglowek,
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				polskiePrzyciski, polskiePrzyciski[1]);
 		return wybor;
 	}
 

@@ -83,7 +83,11 @@ public class WidokGlowny extends JFrame
 
 	public WidokGlowny() throws SQLException, ClassNotFoundException,
 			IOException {
+		/* Ustaw ikonę */
+		setIconImage(Globals.IkonaAplikacji.getImage());
+		/* Wersja aplikacji */
 		setTitle(Globals.WersjaAplikacji);
+		/* Zamukanie obsługuje odrębna metoda */
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		/* Ustaw rozmiar okna - nie full screen */
 		setMinimumSize(new Dimension(800, 550));
