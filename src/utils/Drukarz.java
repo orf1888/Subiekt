@@ -31,9 +31,9 @@ public class Drukarz
 {
 	static BaseFont helvetica;
 
-	static Font helvetica16;
+	static Font helvetica14;
 
-	static Font helvetica12;
+	static Font helvetica10;
 
 	static HeaderFooter narzedzieDoNaglowkaStopki = new HeaderFooter();
 
@@ -110,8 +110,8 @@ public class Drukarz
 		{
 			helvetica = BaseFont.createFont(BaseFont.HELVETICA,
 					BaseFont.CP1250, BaseFont.EMBEDDED);
-			helvetica16 = new Font(helvetica, 16);
-			helvetica12 = new Font(helvetica, 12);
+			helvetica14 = new Font(helvetica, 14);
+			helvetica10 = new Font(helvetica, 12);
 		}
 		document.open();
 		return document;
@@ -127,18 +127,18 @@ public class Drukarz
 		{
 			PdfPTable tabelka_dat = new PdfPTable(3);
 			tabelka_dat.addCell(newCellWysrodkowanySzary("Data wystawienia",
-					helvetica12));
+					helvetica10));
 			tabelka_dat.addCell(newSeparator());
 			tabelka_dat.addCell(newCellWysrodkowanySzary("Termin płatności",
-					helvetica12));
+					helvetica10));
 			// newline
 			tabelka_dat.addCell(newCellWysrodkowany(MojeUtils
 					.formatujDate(faktura.data_wystawienia.toGMTString()),
-					helvetica12));
+					helvetica10));
 			tabelka_dat.addCell(newSeparator());
 			tabelka_dat.addCell(newCellWysrodkowany(MojeUtils
 					.formatujDate(faktura.termin_platnosci.toGMTString()),
-					helvetica12));
+					helvetica10));
 			// settings
 
 			tabelka_dat.setWidths(szerokosci);
@@ -151,7 +151,7 @@ public class Drukarz
 		{
 			Paragraph nazwa_dokumentu = new Paragraph("Faktura "
 					+ (faktura.isKorekta ? "korygująca " : "VAT ")
-					+ faktura.piszNumerFaktury(), helvetica16);
+					+ faktura.piszNumerFaktury(), helvetica14);
 			nazwa_dokumentu.setSpacingBefore(50);
 			nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
 			doc.add(nazwa_dokumentu);
@@ -161,10 +161,10 @@ public class Drukarz
 		{
 			PdfPTable tabelka_kontrachenci = new PdfPTable(3);
 			tabelka_kontrachenci.addCell(newCellWysrodkowanySzary(
-					"Sprzedawca:", helvetica12));
+					"Sprzedawca:", helvetica10));
 			tabelka_kontrachenci.addCell(newSeparator());
 			tabelka_kontrachenci.addCell(newCellWysrodkowanySzary("Nabywca:",
-					helvetica12));
+					helvetica10));
 			// newline
 			tabelka_kontrachenci.addCell(newCellPodkreslony(
 					PodmiotBaza.pobierzPodmiot().nazwa + "\n"
@@ -172,11 +172,11 @@ public class Drukarz
 							+ PodmiotBaza.pobierzPodmiot().kod_pocztowy + " "
 							+ PodmiotBaza.pobierzPodmiot().miasto + "\n"
 							+ "NIP:" + PodmiotBaza.pobierzPodmiot().nip,
-					helvetica12));
+					helvetica10));
 			tabelka_kontrachenci.addCell(newSeparator());
 			tabelka_kontrachenci.addCell(newCellPodkreslony(
 					(faktura.kontrahent == null ? "" : faktura.kontrahent
-							.piszDoFaktury()), helvetica12));
+							.piszDoFaktury()), helvetica10));
 			// settings
 			tabelka_kontrachenci.setWidths(szerokosci);
 			Paragraph kontrachenci = new Paragraph();
@@ -197,7 +197,7 @@ public class Drukarz
 			for (String naglowek : naglowki)
 			{
 				PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
-						helvetica12));
+						helvetica10));
 				komorka_lp.setBackgroundColor(new BaseColor(244, 244, 244));
 				tabelka_produkty.addCell(komorka_lp);
 			}
@@ -205,17 +205,17 @@ public class Drukarz
 			// // wiersze
 			for (ProduktWFakturze p : faktura.produkty)
 			{
-				tabelka_produkty.addCell(new Phrase(p.lp + "", helvetica12));
+				tabelka_produkty.addCell(new Phrase(p.lp + "", helvetica10));
 				tabelka_produkty.addCell(new Phrase(p.produkt.nazwa,
-						helvetica12));
+						helvetica10));
 				tabelka_produkty.addCell(newCellDoPrawej(
 						MojeUtils.utworzWartoscZlotowki(p._cena_jednostkowa),
-						helvetica12));
+						helvetica10));
 				tabelka_produkty.addCell(newCellDoPrawej("" + p.ilosc_produktu,
-						helvetica12));
+						helvetica10));
 				tabelka_produkty.addCell(newCellDoPrawej(MojeUtils
 						.utworzWartoscZlotowki(p.liczWartoscZNarzutem()),
-						helvetica12));
+						helvetica10));
 
 				for (ProduktWFakturze pKorekta : faktura.produktyKorekta)
 					if (p.produkt.nazwa.equals(pKorekta.produkt.nazwa))
@@ -226,27 +226,27 @@ public class Drukarz
 								.addCell(newCellDoPrawej(
 										MojeUtils
 												.utworzWartoscZlotowki(pKorekta._cena_jednostkowa),
-										helvetica12));
+										helvetica10));
 						tabelka_produkty.addCell(newCellDoPrawej(""
-								+ pKorekta.ilosc_produktu, helvetica12));
+								+ pKorekta.ilosc_produktu, helvetica10));
 						tabelka_produkty
 								.addCell(newCellDoPrawej(
 										MojeUtils
 												.utworzWartoscZlotowki(pKorekta.wartoscPoKorekcie),
-										helvetica12));
+										helvetica10));
 					}
 			}
 			// // ostatni wiersz
 			tabelka_produkty.addCell(newSeparator());
 			tabelka_produkty.addCell(newSeparator());
 			tabelka_produkty.addCell(newSeparator());
-			tabelka_produkty.addCell(new Phrase("Razem:", helvetica12));
+			tabelka_produkty.addCell(new Phrase("Razem:", helvetica10));
 			tabelka_produkty.addCell(newCellDoPrawej(
 					MojeUtils.utworzWartoscZlotowki(faktura.wartosc_z_narzutem)
 							+ " "
 							+ WalutaManager.pobierzNazweZBazy(
 									faktura.waluta - 1, Waluta.tabelaWaluta),
-					helvetica12));
+					helvetica10));
 
 			// settings
 			float[] columnWidths = new float[]
@@ -261,14 +261,14 @@ public class Drukarz
 			PdfPTable tabelka_podpisy = new PdfPTable(3);
 
 			tabelka_podpisy.addCell(newCellWysrodkowanySzary("Wystawił",
-					helvetica12));
+					helvetica10));
 			tabelka_podpisy.addCell(newSeparator());
 			tabelka_podpisy.addCell(newCellWysrodkowanySzary("Odebrał",
-					helvetica12));
+					helvetica10));
 			// newline
-			tabelka_podpisy.addCell(newCellPodkreslony("", helvetica12));
+			tabelka_podpisy.addCell(newCellPodkreslony("", helvetica10));
 			tabelka_podpisy.addCell(newSeparator());
-			tabelka_podpisy.addCell(newCellPodkreslony("", helvetica12));
+			tabelka_podpisy.addCell(newCellPodkreslony("", helvetica10));
 
 			Paragraph podpisy = new Paragraph();
 			podpisy.setSpacingBefore(50);
@@ -290,13 +290,13 @@ public class Drukarz
 		{
 			PdfPTable tabelka_dat = new PdfPTable(3);
 			tabelka_dat.addCell(newCellWysrodkowanySzary("Data wysyłki",
-					helvetica12));
+					helvetica10));
 			tabelka_dat.addCell(newSeparator());
 			tabelka_dat.addCell(newSeparator());
 			// newline
 			tabelka_dat.addCell(newCellWysrodkowany(
 					MojeUtils.formatujDate(wysylka.data_wysylki.toGMTString()),
-					helvetica12));
+					helvetica10));
 			tabelka_dat.addCell(newSeparator());
 			tabelka_dat.addCell(newSeparator());
 			// settings
@@ -309,7 +309,7 @@ public class Drukarz
 			// ///////////////////NAZWA DOKUMENTU///////////////////////////////
 			{
 				Paragraph nazwa_dokumentu = new Paragraph("Wysyłka "
-						+ wysylka.getNumer(), helvetica16);
+						+ wysylka.getNumer(), helvetica14);
 				nazwa_dokumentu.setSpacingBefore(50);
 				nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
 				doc.add(nazwa_dokumentu);
@@ -326,7 +326,7 @@ public class Drukarz
 				for (String naglowek : naglowki)
 				{
 					PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
-							helvetica12));
+							helvetica10));
 					komorka_lp.setBackgroundColor(new BaseColor(244, 244, 244));
 					tabelka_produkty.addCell(komorka_lp);
 				}
@@ -335,13 +335,13 @@ public class Drukarz
 				for (ProduktWWysylce p : wysylka.produkty)
 				{
 					tabelka_produkty
-							.addCell(new Phrase(p.lp + "", helvetica12));
+							.addCell(new Phrase(p.lp + "", helvetica10));
 					tabelka_produkty.addCell(new Phrase(p.produkt.kod,
-							helvetica12));
+							helvetica10));
 					tabelka_produkty.addCell(new Phrase(p.produkt.nazwa,
-							helvetica12));
+							helvetica10));
 					tabelka_produkty.addCell(newCellDoPrawej(""
-							+ p.ilosc_produktu, helvetica12));
+							+ p.ilosc_produktu, helvetica10));
 				}
 				// settings
 				float[] columnWidths = new float[]
@@ -356,14 +356,14 @@ public class Drukarz
 				PdfPTable tabelka_podpisy = new PdfPTable(3);
 
 				tabelka_podpisy.addCell(newCellWysrodkowanySzary("Wystawił",
-						helvetica12));
+						helvetica10));
 				tabelka_podpisy.addCell(newSeparator());
 				tabelka_podpisy.addCell(newCellWysrodkowanySzary("Odebrał",
-						helvetica12));
+						helvetica10));
 				// newline
-				tabelka_podpisy.addCell(newCellPodkreslony("", helvetica12));
+				tabelka_podpisy.addCell(newCellPodkreslony("", helvetica10));
 				tabelka_podpisy.addCell(newSeparator());
-				tabelka_podpisy.addCell(newCellPodkreslony("", helvetica12));
+				tabelka_podpisy.addCell(newCellPodkreslony("", helvetica10));
 
 				Paragraph podpisy = new Paragraph();
 				podpisy.setSpacingBefore(50);
@@ -392,14 +392,14 @@ public class Drukarz
 			{
 				PdfPTable tabelka_dat = new PdfPTable(3);
 				tabelka_dat.addCell(newCellWysrodkowanySzary(
-						"Data utworzenia raportu", helvetica12));
+						"Data utworzenia raportu", helvetica10));
 				tabelka_dat.addCell(newSeparator());
 				tabelka_dat.addCell(newSeparator());
 				// newline
 				tabelka_dat
 						.addCell(newCellWysrodkowany(MojeUtils
 								.formatujDate(MojeUtils.pobierzAktualnaDate()),
-								helvetica12));
+								helvetica10));
 				tabelka_dat.addCell(newSeparator());
 				tabelka_dat.addCell(newSeparator());
 				// settings
@@ -423,7 +423,7 @@ public class Drukarz
 
 				Paragraph nazwa_dokumentu = new Paragraph(
 						"Raport długów dla kontrahenta\n" + nazwa_kontrachenta,
-						helvetica16);
+						helvetica14);
 				nazwa_dokumentu.setSpacingBefore(50);
 				nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
 				doc.add(nazwa_dokumentu);
@@ -444,7 +444,7 @@ public class Drukarz
 					for (String naglowek : naglowki)
 					{
 						PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
-								helvetica12));
+								helvetica10));
 						komorka_lp.setBackgroundColor(new BaseColor(244, 244,
 								244));
 						tabelka_PLN.addCell(komorka_lp);
@@ -453,12 +453,12 @@ public class Drukarz
 					for (int i = 0; i < PLN.length; i++)
 					{
 						tabelka_PLN.addCell(new Phrase((i + 1) + "",
-								helvetica12));
-						tabelka_PLN.addCell(new Phrase(PLN[i][0], helvetica12));
-						tabelka_PLN.addCell(new Phrase(PLN[i][1], helvetica12));
-						tabelka_PLN.addCell(new Phrase(PLN[i][2], helvetica12));
+								helvetica10));
+						tabelka_PLN.addCell(new Phrase(PLN[i][0], helvetica10));
+						tabelka_PLN.addCell(new Phrase(PLN[i][1], helvetica10));
+						tabelka_PLN.addCell(new Phrase(PLN[i][2], helvetica10));
 						tabelka_PLN.addCell(newCellDoPrawej(PLN[i][4],
-								helvetica12));
+								helvetica10));
 					}
 					// ostatni wiersz z sumą
 					tabelka_PLN.addCell(newSeparator());
@@ -469,7 +469,7 @@ public class Drukarz
 							"Suma długu PLN\n"
 									+ MojeUtils
 											.zliczWartoscFakturDoRaportu(PLN),
-							helvetica12));
+							helvetica10));
 
 					// settings
 					float[] columnWidths = new float[]
@@ -498,7 +498,7 @@ public class Drukarz
 					for (String naglowek : naglowki)
 					{
 						PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
-								helvetica12));
+								helvetica10));
 						komorka_lp.setBackgroundColor(new BaseColor(244, 244,
 								244));
 						tabelka_EUR.addCell(komorka_lp);
@@ -507,12 +507,12 @@ public class Drukarz
 					for (int i = 0; i < EUR.length; i++)
 					{
 						tabelka_EUR.addCell(new Phrase((i + 1) + "",
-								helvetica12));
-						tabelka_EUR.addCell(new Phrase(EUR[i][0], helvetica12));
-						tabelka_EUR.addCell(new Phrase(EUR[i][1], helvetica12));
-						tabelka_EUR.addCell(new Phrase(EUR[i][2], helvetica12));
+								helvetica10));
+						tabelka_EUR.addCell(new Phrase(EUR[i][0], helvetica10));
+						tabelka_EUR.addCell(new Phrase(EUR[i][1], helvetica10));
+						tabelka_EUR.addCell(new Phrase(EUR[i][2], helvetica10));
 						tabelka_EUR.addCell(newCellDoPrawej(EUR[i][4],
-								helvetica12));
+								helvetica10));
 					}
 					// ostatni wiersz z sumą
 					tabelka_EUR.addCell(newSeparator());
@@ -523,7 +523,7 @@ public class Drukarz
 							"Suma długu EUR\n"
 									+ MojeUtils
 											.zliczWartoscFakturDoRaportu(EUR),
-							helvetica12));
+							helvetica10));
 
 					// settings
 					float[] columnWidths = new float[]
@@ -552,7 +552,7 @@ public class Drukarz
 					for (String naglowek : naglowki)
 					{
 						PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
-								helvetica12));
+								helvetica10));
 						komorka_lp.setBackgroundColor(new BaseColor(244, 244,
 								244));
 						tabelka_USD.addCell(komorka_lp);
@@ -561,12 +561,12 @@ public class Drukarz
 					for (int i = 0; i < USD.length; i++)
 					{
 						tabelka_USD.addCell(new Phrase((i + 1) + "",
-								helvetica12));
-						tabelka_USD.addCell(new Phrase(USD[i][0], helvetica12));
-						tabelka_USD.addCell(new Phrase(USD[i][1], helvetica12));
-						tabelka_USD.addCell(new Phrase(USD[i][2], helvetica12));
+								helvetica10));
+						tabelka_USD.addCell(new Phrase(USD[i][0], helvetica10));
+						tabelka_USD.addCell(new Phrase(USD[i][1], helvetica10));
+						tabelka_USD.addCell(new Phrase(USD[i][2], helvetica10));
 						tabelka_USD.addCell(newCellDoPrawej(USD[i][4],
-								helvetica12));
+								helvetica10));
 					}
 					// ostatni wiersz z sumą
 					tabelka_USD.addCell(newSeparator());
@@ -577,7 +577,7 @@ public class Drukarz
 							"Suma długu USD\n"
 									+ MojeUtils
 											.zliczWartoscFakturDoRaportu(USD),
-							helvetica12));
+							helvetica10));
 
 					// settings
 					float[] columnWidths = new float[]
@@ -606,7 +606,7 @@ public class Drukarz
 					for (String naglowek : naglowki)
 					{
 						PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
-								helvetica12));
+								helvetica10));
 						komorka_lp.setBackgroundColor(new BaseColor(244, 244,
 								244));
 						tabelka_UAH.addCell(komorka_lp);
@@ -615,12 +615,12 @@ public class Drukarz
 					for (int i = 0; i < UAH.length; i++)
 					{
 						tabelka_UAH.addCell(new Phrase((i + 1) + "",
-								helvetica12));
-						tabelka_UAH.addCell(new Phrase(UAH[i][0], helvetica12));
-						tabelka_UAH.addCell(new Phrase(UAH[i][1], helvetica12));
-						tabelka_UAH.addCell(new Phrase(UAH[i][2], helvetica12));
+								helvetica10));
+						tabelka_UAH.addCell(new Phrase(UAH[i][0], helvetica10));
+						tabelka_UAH.addCell(new Phrase(UAH[i][1], helvetica10));
+						tabelka_UAH.addCell(new Phrase(UAH[i][2], helvetica10));
 						tabelka_UAH.addCell(newCellDoPrawej(UAH[i][4],
-								helvetica12));
+								helvetica10));
 					}
 					// ostatni wiersz z sumą
 					tabelka_UAH.addCell(newSeparator());
@@ -631,7 +631,7 @@ public class Drukarz
 							"Suma długu UAH\n"
 									+ MojeUtils
 											.zliczWartoscFakturDoRaportu(UAH),
-							helvetica12));
+							helvetica10));
 
 					// settings
 					float[] columnWidths = new float[]
