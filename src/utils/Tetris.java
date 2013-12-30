@@ -1182,7 +1182,8 @@ public class Tetris extends JDialog
 	{
 		Tetris t = new Tetris("Tetris");
 		t.pack();
-		t.setLocation(100, 100);
+		t.setIconImage(Globals.IkonaAplikacji.getImage());
+		t.setLocationRelativeTo(null);
 		t.setVisible(true);
 	}
 }

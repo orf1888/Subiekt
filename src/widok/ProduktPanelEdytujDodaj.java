@@ -36,7 +36,7 @@ public class ProduktPanelEdytujDodaj extends PanelEdytujDodajObiekt
 
 	private final JLabel lblProducent;
 
-	private final JComboBox<String> comboProducent;
+	private final JComboBox<Object> comboProducent;
 
 	private final JLabel lblDomylnaCenaZakupu;
 
@@ -112,9 +112,7 @@ public class ProduktPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		gbc_lblProducent.gridy = 2;
 		add(lblProducent, gbc_lblProducent);
 
-		String[] producenci = SlownikManager.pobierzWszystkieZBazy(
-				SlownikElement.tabelaProducent, false);
-		comboProducent = new JComboBox<String>(producenci);
+		comboProducent = new JComboBox<Object>();
 		GridBagConstraints gbc_comboProducent = new GridBagConstraints();
 		gbc_comboProducent.insets = new Insets(0, 0, 5, 0);
 		gbc_comboProducent.fill = GridBagConstraints.HORIZONTAL;
@@ -190,6 +188,15 @@ public class ProduktPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		textDomyslnaCenaZakupu.setText("" + (produkt.cena_zakupu / 100) + ","
 				+ (produkt.cena_zakupu % 100));
 		textIlosc.setText("" + produkt.ilosc);
+		try
+		{
+			comboProducent.setModel(MojeUtils.odswiezDaneWCombo(false,
+					SlownikManager.pobierzWszystkieZBazy(
+							SlownikElement.tabelaProducent, false)));
+		} catch (Exception e)
+		{
+			MojeUtils.showError("Nie udało się pobrać producentów");
+		}
 		comboProducent.setSelectedItem(((SlownikElement) SlownikManager
 				.pobierzZBazy(produkt.id_producenta,
 						SlownikElement.tabelaProducent)).wartosc);
@@ -215,9 +222,13 @@ public class ProduktPanelEdytujDodaj extends PanelEdytujDodajObiekt
 
 		if (textIlosc.getText().isEmpty())
 			textIlosc.setText("0");
-
-		int id_producenta = SlownikManager.pobierzIdZBazy(
-				comboProducent.getSelectedItem().toString(),
+		/* Walidacja wartości z combo */
+		String id_z_combo = comboProducent.getSelectedItem().toString();
+		if (id_z_combo.equals(""))
+		{
+			throw new UserShowException("Nie wybrano kontrachenta!");
+		}
+		int id_producenta = SlownikManager.pobierzIdZBazy(id_z_combo,
 				SlownikElement.tabelaProducent).intValue();
 
 		int ilosc = Walidator.parsujInteger(textIlosc.getText(), "Ilość");
@@ -369,5 +380,14 @@ public class ProduktPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		textNazwa.setText("");
 		textDomyslnaCenaZakupu.setText("");
 		textIlosc.setText("");
+		try
+		{
+			comboProducent.setModel(MojeUtils.odswiezDaneWCombo(true,
+					SlownikManager.pobierzWszystkieZBazy(
+							SlownikElement.tabelaProducent, false)));
+		} catch (Exception e)
+		{
+			MojeUtils.showError("Nie udało się pobrać producentów");
+		}
 	}
 }

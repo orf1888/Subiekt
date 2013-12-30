@@ -5,6 +5,5 @@ import java.sql.SQLException;
 
 public abstract class BazaStatementFunktor
 {
-
-	public abstract Object operacja( ResultSet result ) throws SQLException;
+	public abstract Object operacja(ResultSet result) throws SQLException;
 }

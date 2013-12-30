@@ -1,6 +1,7 @@
 package widok;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -29,9 +30,10 @@ import javax.swing.border.EmptyBorder;
 
 import kontroler.ProduktBaza;
 import utils.BazaDanych;
+import utils.FakturaZPliku;
 import utils.Globals;
 import utils.MojeUtils;
-import utils.WczytajExcell;
+import utils.SprawdzMagazyn;
 import widok.faktura.FakturySprzedazyPanel;
 import widok.faktura.FakturyZakupuPanel;
 import widok.wysylka.WysylkaPanel;
@@ -81,8 +83,14 @@ public class WidokGlowny extends JFrame
 
 	public WidokGlowny() throws SQLException, ClassNotFoundException,
 			IOException {
-		setTitle(Globals.wersjaAplikacji);
+		/* Ustaw ikonę */
+		setIconImage(Globals.IkonaAplikacji.getImage());
+		/* Wersja aplikacji */
+		setTitle(Globals.WersjaAplikacji);
+		/* Zamukanie obsługuje odrębna metoda */
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		/* Ustaw rozmiar okna - nie full screen */
+		setMinimumSize(new Dimension(800, 550));
 		/* Ustaw full screen */
 		setExtendedState(Frame.MAXIMIZED_BOTH);
 		/* Menu bar */
@@ -106,6 +114,10 @@ public class WidokGlowny extends JFrame
 				JMenuItem mntmWczytajTowary = new JMenuItem("Dodaj FS z pliku");
 				mnPlik.add(mntmWczytajTowary);
 				mntmWczytajTowary.addActionListener(dodajFSListener);
+
+				JMenuItem mntmSprawdzOstatki = new JMenuItem("Sprawdź ostatki");
+				mnPlik.add(mntmSprawdzOstatki);
+				mntmSprawdzOstatki.addActionListener(sprawdzOstatkiListener);
 
 				JMenuItem mntmZakocz = new JMenuItem("Zakończ");
 				mnPlik.add(mntmZakocz);
@@ -256,7 +268,7 @@ public class WidokGlowny extends JFrame
 		{
 			try
 			{
-				if (WczytajExcell.wczytajTowaryZFS())
+				if (FakturaZPliku.wczytajTowaryZFS())
 					MojeUtils
 							.showMsg("Faktura wczytana poprawnie. Pamiętaj o wstawieniu kontrahenta!");
 
@@ -267,4 +279,28 @@ public class WidokGlowny extends JFrame
 			}
 		}
 	};
+
+	private final ActionListener sprawdzOstatkiListener = new ActionListener()
+	{
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			try
+			{
+				OstatkiOkno okno = new OstatkiOkno(
+						SprawdzMagazyn.stworzOstatki());
+				okno.setVisible(true);
+			} catch (Exception e1)
+			{
+				if (!e1.getMessage().equals("Anulowano"))
+				{
+					MojeUtils
+							.showError("Wybrany plik ma niekompatybilną strukturę wewnętrzną!\nNie można utworzyć ostatków!");
+				}
+				/* else przemilcz;) */
+			}
+		}
+	};
+
 }

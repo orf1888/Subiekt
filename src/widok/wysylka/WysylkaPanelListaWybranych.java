@@ -137,7 +137,7 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 							{ "L.p.", "Kod", "Nazwa", "Ilość" });
 			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu(
 					this);
-			init(params);
+			init(params, true);
 			zmienEditableFunktor(listaWybranychEditableFunktor);
 			dodajListener(listaWybranychListener);
 			zmienDwuklikFunktor(new FunktorDwuklikTabelaWybieraniaProduktu(this));
@@ -216,7 +216,7 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 	{
 		globalny_lp = 0;
 		przeladujTabele(new String[][]
-		{}, editableFunktor);
+		{}, editableFunktor, true);
 	}
 
 	public void zaladujListeWysylki()
@@ -224,7 +224,7 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 		try
 		{
 			przeladujTabele(tworzModelFuktor().getBeginningData(),
-					editableFunktor);
+					editableFunktor, true);
 		} catch (SQLException e)
 		{
 			e.printStackTrace();

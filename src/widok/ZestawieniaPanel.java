@@ -116,7 +116,6 @@ public class ZestawieniaPanel extends JPanel
 			return;
 		if (comboBoxKontrachentDluznicy.getSelectedItem().toString().isEmpty())
 		{
-			System.out.println(comboBoxKontrachentDluznicy.getSelectedIndex());
 			warunekKontrachent = null;
 		} else
 		{
@@ -125,7 +124,8 @@ public class ZestawieniaPanel extends JPanel
 							.getSelectedItem().toString())).getId();
 		}
 		dluznicy();
-		comboBoxKontrachentDluznicy.setModel(MojeUtils.odswiezCombo(true));
+		comboBoxKontrachentDluznicy.setModel(MojeUtils.odswiezDaneWCombo(true,
+				KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 	}
 
 	// //
@@ -144,7 +144,8 @@ public class ZestawieniaPanel extends JPanel
 					.pobierzObiektZBazy(comboBoxRaportDluznika
 							.getSelectedItem().toString())).getId();
 		}
-		comboBoxRaportDluznika.setModel(MojeUtils.odswiezCombo(false));
+		comboBoxRaportDluznika.setModel(MojeUtils.odswiezDaneWCombo(false,
+				KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 		raportDlugi();
 	}
 
@@ -163,7 +164,8 @@ public class ZestawieniaPanel extends JPanel
 		}
 
 		dlugi();
-		comboBoxKontrachentDlugi.setModel(MojeUtils.odswiezCombo(true));
+		comboBoxKontrachentDlugi.setModel(MojeUtils.odswiezDaneWCombo(true,
+				KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 	}
 
 	public void raportDlugi() throws SQLException
@@ -285,7 +287,8 @@ public class ZestawieniaPanel extends JPanel
 
 			{
 				comboBoxKontrachentDlugi = new JComboBox<Object>(
-						MojeUtils.odswiezCombo(true));
+						MojeUtils.odswiezDaneWCombo(true,
+								KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 				GridBagConstraints gbc_comboBox = new GridBagConstraints();
 				gbc_comboBox.insets = new Insets(0, 0, 0, 5);
 				gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -309,7 +312,8 @@ public class ZestawieniaPanel extends JPanel
 			}
 			{
 				comboBoxKontrachentDluznicy = new JComboBox<Object>(
-						MojeUtils.odswiezCombo(true));
+						MojeUtils.odswiezDaneWCombo(true,
+								KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 				GridBagConstraints gbc_comboBoxKontrachent_1 = new GridBagConstraints();
 				gbc_comboBoxKontrachent_1.fill = GridBagConstraints.HORIZONTAL;
 				gbc_comboBoxKontrachent_1.insets = new Insets(0, 0, 0, 5);
@@ -335,7 +339,8 @@ public class ZestawieniaPanel extends JPanel
 			}
 			{
 				comboBoxRaportDluznika = new JComboBox<Object>(
-						MojeUtils.odswiezCombo(false));
+						MojeUtils.odswiezDaneWCombo(false,
+								KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 				GridBagConstraints gbc_comboBoxRaportDluznika = new GridBagConstraints();
 				gbc_comboBoxRaportDluznika.fill = GridBagConstraints.HORIZONTAL;
 				gbc_comboBoxRaportDluznika.gridx = 2;

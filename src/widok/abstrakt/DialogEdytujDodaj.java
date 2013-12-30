@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import model.ObiektZId;
+import utils.Globals;
 
 public class DialogEdytujDodaj extends JDialog
 {
@@ -25,6 +26,7 @@ public class DialogEdytujDodaj extends JDialog
 	public DialogEdytujDodaj(ActionListener potwierdzListener,
 			ActionListener cancelListener,
 			PanelEdytujDodajObiekt panelEdytujDodaj, int sizeX, int sizeY) {
+		setIconImage(Globals.IkonaAplikacji.getImage());
 		this.panelEdytujDodaj = panelEdytujDodaj;
 		setModal(true);
 		setBounds(100, 100, sizeX, sizeY);

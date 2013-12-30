@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.ComboBoxModel;
@@ -17,8 +18,9 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import kontroler.KontrachentBaza;
+import model.FChooserPL;
 import model.ObiektWiersz;
+import widok.WidokGlowny;
 
 public class MojeUtils
 {
@@ -190,6 +192,15 @@ public class MojeUtils
 		}
 	}
 
+	public static String[][] foratujDate(String[][] data)
+	{
+		for (int i = 0; i < data.length; i++)
+		{
+			data[i][1] = formatujDate(data[i][1]);
+		}
+		return data;
+	}
+
 	public static Date parsujDate(String string)
 	{
 		@SuppressWarnings("deprecation")
@@ -238,15 +249,15 @@ public class MojeUtils
 	public static void zapiszPlik(File plik, String rozszerzenie, boolean backup)
 			throws Exception
 	{
-		JFileChooser chooser = new JFileChooser(".");
-		chooser.setAcceptAllFileFilterUsed(false);
-		chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
-		int retrival = chooser.showSaveDialog(null);
+		FChooserPL c = new FChooserPL();
+		c.chooser.setAcceptAllFileFilterUsed(false);
+		c.chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
+		int retrival = c.chooser.showSaveDialog(WidokGlowny.frame);
 		if (retrival == JFileChooser.APPROVE_OPTION)
 		{
 			try
 			{
-				String s = chooser.getSelectedFile().toString();
+				String s = c.chooser.getSelectedFile().toString();
 				if (!s.endsWith("." + rozszerzenie))
 					if (backup)
 						s += "-" + formatujDate(pobierzAktualnaDate()) + "."
@@ -297,9 +308,9 @@ public class MojeUtils
 	{
 		JOptionPane
 				.showMessageDialog(
-						null,
+						WidokGlowny.frame,
 						"                                 "
-								+ Globals.wersjaAplikacji
+								+ Globals.WersjaAplikacji
 								+ "\nWysyłając sms o terści \"POMAGAM\" na nr 7322 za 1,23 PLN"
 								+ "\nuzyskujesz dostęp do jedynej działającej wersji oraz pomagasz"
 								+ "\nautorowi przetrwać zimę.",
@@ -308,9 +319,9 @@ public class MojeUtils
 
 	public static void oAutorach()
 	{
-		JOptionPane.showMessageDialog(null, "Autorem aplikacji jest:\n\n"
-				+ "\nSerhii Khilinich\n", "O autorach...",
-				JOptionPane.INFORMATION_MESSAGE, null);
+		JOptionPane.showMessageDialog(WidokGlowny.frame,
+				"Autorem aplikacji jest:\n\n" + "\nSerhii Khilinich\n",
+				"O autorach...", JOptionPane.INFORMATION_MESSAGE, null);
 	}
 
 	public static void tetris()
@@ -320,15 +331,15 @@ public class MojeUtils
 
 	public static File wczytajPlik(String rozszerzenie) throws Exception
 	{
-		JFileChooser chooser = new JFileChooser(".");
-		chooser.setAcceptAllFileFilterUsed(false);
-		chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
-		int retrival = chooser.showOpenDialog(null);
+		FChooserPL c = new FChooserPL();
+		c.chooser.setAcceptAllFileFilterUsed(false);
+		c.chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
+		int retrival = c.chooser.showOpenDialog(WidokGlowny.frame);
 		if (retrival == JFileChooser.APPROVE_OPTION)
 		{
 			try
 			{
-				String s = chooser.getSelectedFile().toString();
+				String s = c.chooser.getSelectedFile().toString();
 				if (!s.endsWith("." + rozszerzenie))
 					s += "." + rozszerzenie;
 				return new File(s);
@@ -366,10 +377,10 @@ public class MojeUtils
 	{
 		Object[] polskiePrzyciski =
 		{ "Tak", "Nie" };
-		int wybor = JOptionPane.showOptionDialog(null, komunikat_contetnt,
-				komunikat_naglowek, JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, polskiePrzyciski,
-				polskiePrzyciski[1]);
+		int wybor = JOptionPane.showOptionDialog(WidokGlowny.frame,
+				komunikat_contetnt, komunikat_naglowek,
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				polskiePrzyciski, polskiePrzyciski[1]);
 		return wybor;
 	}
 
@@ -383,25 +394,50 @@ public class MojeUtils
 			return true;
 	}
 
-	public static ComboBoxModel<Object> odswiezCombo(boolean z_pustym_elementem)
-			throws SQLException
+	public static ComboBoxModel<Object> odswiezDaneWCombo(
+			boolean z_pustym_elementem, String[] dane) throws SQLException
 	{
 		JComboBox<Object> tmp;
 		if (z_pustym_elementem)
 		{
-			String[] tmp_s = KontrachentBaza.pobierzWszystkieNazwyZBazy();
-			String[] data = new String[tmp_s.length + 1];
-			for (int i = 0; i < tmp_s.length; ++i)
-				data[1 + i] = tmp_s[i];
+			String[] data = new String[dane.length + 1];
+			for (int i = 0; i < dane.length; ++i)
+				data[1 + i] = dane[i];
 			data[0] = "";
 			tmp = new JComboBox<Object>(data);
 			return tmp.getModel();
 
 		} else
 		{
-			tmp = new JComboBox<Object>(
-					KontrachentBaza.pobierzWszystkieNazwyZBazy());
+			tmp = new JComboBox<Object>(dane);
 			return tmp.getModel();
 		}
+	}
+
+	public static String poprawDate(String data)
+	{
+		if (data.length() == 23)
+			return new String(0 + data);
+		return data;
+	}
+
+	public static List<String[]> sortujPoDacie(List<String[]> lista)
+	{
+		/* bubble sort */
+		for (int i = 0; i < lista.size(); i++)
+		{
+			for (int j = 0; j < lista.size() - 1 - i; j++)
+			{
+				Date el = parsujDate(lista.get(j)[1]);
+				Date el2 = parsujDate(lista.get(j + 1)[1]);
+				if (el.after(el2))
+				{
+					String[] tmp = lista.get(j + 1);
+					lista.set(j + 1, lista.get(j));
+					lista.set(i, tmp);
+				}
+			}
+		}
+		return lista;
 	}
 }

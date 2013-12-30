@@ -70,7 +70,8 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 					continue;
 				try
 				{
-					listaWybranychPanel.tabelaEdytujWiersz(i, _produkt.pisz());
+					listaWybranychPanel.tabelaEdytujWiersz(i, _produkt.pisz(),
+							true);
 				} catch (Exception e)
 				{}
 			}

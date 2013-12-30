@@ -31,6 +31,7 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 
 	private JComboBox<Object> comboBoxFiltrowanieProducent = null;
 
+	@SuppressWarnings("rawtypes")
 	private static List<JComboBox> listaComboBoxowFiltrProducenta = new ArrayList<JComboBox>();
 
 	/**
@@ -51,6 +52,12 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 		itemCosTam.setHorizontalTextPosition(SwingConstants.RIGHT);
 		usunListener = tworzUsunListener();
 		itemCosTam.addActionListener(usunListener);
+		/* Guzik informator */
+		JMenuItem itemInformator = new JMenuItem("Informator", null);
+		result.add(itemInformator);
+		itemInformator.setHorizontalTextPosition(SwingConstants.RIGHT);
+		informatorListener = tworzInformatorListener();
+		itemInformator.addActionListener(informatorListener);
 		/*
 		 * Tu powinna znajdować się reszta funkcjonalności menu kontekstowego
 		 */
@@ -162,7 +169,7 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 					return;
 				warunki.dodajWarunek(producent_id, "id_producenta");
 			}
-			przeladujTabele();
+			przeladujTabele(false);
 		} catch (Exception e)
 		{
 			MojeUtils.showPrintError(e);

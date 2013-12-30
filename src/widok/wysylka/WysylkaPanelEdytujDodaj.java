@@ -247,7 +247,7 @@ public class WysylkaPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	{
 		try
 		{
-			panelMagazynu.wczytajTabele();
+			panelMagazynu.wczytajTabele(true);
 			dataButtonListener.ukryj();
 			listaProduktow.clear();
 		} catch (SQLException e)

@@ -15,10 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import kontroler.ProduktBaza;
 import model.ObiektWiersz;
 import model.ObiektZId;
 import utils.MojeUtils;
 import utils.UserShowException;
+import widok.InformatorOkno;
 
 public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 {
@@ -36,6 +38,8 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 	protected ActionListener usunListener;
 
+	protected ActionListener informatorListener;
+
 	protected JPanel panel_przycikow;
 
 	protected JTextField pole_wyszukiwania;
@@ -44,7 +48,6 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 	public int sizeY;
 
-	@Override
 	public void init(PanelOgolnyParametry params) throws Exception
 	{
 		MojeUtils.println("Inicjuje " + this.getClass().getName());
@@ -68,7 +71,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			usunListener = tworzUsunListener();
 
 		funktorDwuklikTabela = new FunktorDwuklikTabelaAkcja(this);
-		super.init(params);
+		super.init(params, false);
 		initPrzyciski();
 		initWyszukiwarka();
 	}
@@ -247,7 +250,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 				obiektBazaManager.edytuj(staryObiekt, nowy);
 				tabelaEdytujWiersz(numerEdytowanegoWiersza,
-						nowy.piszWierszTabeli());
+						nowy.piszWierszTabeli(), false);
 				ukryjModalneOkno();
 			} catch (UserShowException e)
 			{
@@ -333,6 +336,29 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 		};
 	}
 
+	/* INFORMATOR---------------------------------------- */
+	protected ActionListener tworzInformatorListener()
+	{
+		return new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				try
+				{
+					ObiektWiersz wiersz = new ObiektWiersz(
+							pobierzZaznaczonyWiersz());
+					InformatorOkno.init(ProduktBaza
+							.getNazwaFromWiersz(pobierzZaznaczonyWiersz()),
+							wiersz);
+				} catch (Exception e)
+				{
+					MojeUtils.showPrintError(e);
+				}
+			}
+		};
+	}
+
 	/* SZUKAJ-------------------------------------- */
 	protected ActionListener szukajListener = new ActionListener()
 	{
@@ -356,7 +382,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					warunki.dodajWarunekDowolnaKolumna(szukanieText);
 					data = null;
 				}
-				przeladujTabele(data, editableFunktor);
+				przeladujTabele(data, editableFunktor, false);
 			} catch (Exception e)
 			{
 				MojeUtils.showPrintError(e);
@@ -398,7 +424,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 						warunki.dodajWarunekDowolnaKolumna(szukanieText);
 						data = null;
 					}
-					przeladujTabele(data, editableFunktor);
+					przeladujTabele(data, editableFunktor, false);
 				} catch (Exception e1)
 				{
 					MojeUtils.showPrintError(e1);
@@ -412,7 +438,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					wyczyscSzukanyText();
 					try
 					{
-						przeladujTabele();
+						przeladujTabele(false);
 					} catch (SQLException e1)
 					{
 						MojeUtils.showPrintError(e1);
@@ -431,7 +457,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			wyczyscSzukanyText();
 			try
 			{
-				przeladujTabele();
+				przeladujTabele(false);
 			} catch (SQLException e1)
 			{
 				MojeUtils.showPrintError(e1);

@@ -383,7 +383,6 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 					{ "" + lp, wiersz.wiersz[1],
 							MojeUtils.utworzWartoscZlotowki(cena), ilosc + "",
 							MojeUtils.utworzWartoscZlotowki(ilosc * cena) });
-
 			listaProduktow.add(new ProduktWFakturze(lp, cena, ilosc,
 					produktSlownik, false, 0));
 		}
@@ -433,7 +432,6 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		{
 			/* long to int (jebana JAVA) */
 			int tmp = Integer.parseInt(faktura.waluta.toString());
-			System.err.println(tmp - 1);
 			comboWaluta.setSelectedIndex(tmp - 1);
 		}
 		panelDatyWystawFaktury.setDate(faktura.data_wystawienia);
@@ -448,11 +446,12 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	{
 		try
 		{
-			panelMagazynu.wczytajTabele();
+			panelMagazynu.wczytajTabele(true);
 			terminPlatnosciButtonListener.ukryj();
 			dataWystawieniaFakturyButtonListener.ukryj();
 			listaProduktow.clear();
-			comboKontrachenci.setModel(MojeUtils.odswiezCombo(false));
+			comboKontrachenci.setModel(MojeUtils.odswiezDaneWCombo(false,
+					KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -575,7 +574,6 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	{
 		if (comboWaluta.getSelectedIndex() < 0)
 			return -1L;
-		System.err.println("Zmieniłem");
 		return WalutaManager.pobierzIdZBazy(comboWaluta.getSelectedItem()
 				.toString(), Waluta.tabelaWaluta);
 
