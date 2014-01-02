@@ -1,5 +1,6 @@
 package kontroler;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -219,7 +220,7 @@ public class FakturaBaza implements ObiektBazaManager
 
 	public static Faktura nowaFaktura(int rodzajFaktury, int numer,
 			List<ProduktWFakturze> listaProduktow, Long waluta)
-			throws UserShowException
+			throws UserShowException, IOException
 	{
 		if (rodzajFaktury == Faktura.ZAKUP)
 		{

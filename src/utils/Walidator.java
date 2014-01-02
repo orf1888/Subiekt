@@ -1,5 +1,7 @@
 package utils;
 
+import java.io.IOException;
+
 public class Walidator
 {
 	public static class WalidatorAlgorytmy
@@ -113,11 +115,11 @@ public class Walidator
 	}
 
 	public static void walidujNrKonta(String numerKonta)
-			throws UserShowException
+			throws UserShowException, IOException
 	{
 		if (!MojeUtils.isNumer(numerKonta))
 			throw new UserShowException(
-					"Nuemr konta powinien składać się wyłącznie z cyfr!");
+					"Numer konta powinien składać się wyłącznie z cyfr!");
 		if (numerKonta.length() != 26)
 			throw new UserShowException("Numer konta powinien mieć 26 cyfr!");
 	}
