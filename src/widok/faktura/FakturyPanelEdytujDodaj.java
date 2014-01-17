@@ -316,23 +316,30 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 
 	protected void zmienKontrachent()
 	{
-		if (tmpNieZmieniaKontrachenta)
-			return;
-		Kontrachent k = pobierzKontrachenta();
-
-		if (k != null)
+		/* Przy fakturach zakuku nie uwzględniaj rabatów kontrahenta */
+		if (rodzajFaktury == Faktura.SPRZEDAZ)
 		{
-			listaWybranychPanel.wyczyscTabele();
+			if (tmpNieZmieniaKontrachenta)
+				return;
+			Kontrachent k = pobierzKontrachenta();
 
-			for (ProduktWFakturze _produkt : listaProduktow)
+			if (k != null)
 			{
-				double mnoznik = 100;
-				mnoznik += k._cena_mnoznik;
-				/* Prawidłowe zaokrąglenie */
-				double tmp = ((_produkt.produkt.cena_zakupu) * mnoznik / 100);
-				_produkt._cena_jednostkowa = (int) Math.round(tmp);
-				listaWybranychPanel.tabelaDodajWiersz(_produkt.pisz());
-			}
+				listaWybranychPanel.wyczyscTabele();
+
+				for (ProduktWFakturze _produkt : listaProduktow)
+				{
+					double mnoznik = 100;
+					mnoznik += k._cena_mnoznik;
+					/* Prawidłowe zaokrąglenie */
+					double cena_zaokraglona = ((_produkt.produkt.cena_zakupu)
+							* mnoznik / 100);
+					_produkt._cena_jednostkowa = (int) Math
+							.round(cena_zaokraglona);
+					listaWybranychPanel.tabelaDodajWiersz(_produkt.pisz());
+				}
+			} else
+				return;
 		} else
 			return;
 	}
@@ -376,10 +383,11 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 					.pobierzObiektZBazy(id_produktu);
 			int cena = produktSlownik.cena_zakupu;
 			int lp = listaWybranych.zwiekszLP();
-			int mnoznik = 100;
+			double mnoznik = 100;
 			if (parent.pobierzKontrachenta() != null)
 				mnoznik += parent.pobierzKontrachenta()._cena_mnoznik;
-			cena = ((cena) * mnoznik / 100);
+			double cena_zaokraglona = ((cena) * mnoznik / 100);
+			cena = (int) Math.round(cena_zaokraglona);
 			listaWybranych
 					.tabelaDodajWiersz(new String[]
 					{ "" + lp, wiersz.wiersz[1],
