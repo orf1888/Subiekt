@@ -326,10 +326,11 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 
 			for (ProduktWFakturze _produkt : listaProduktow)
 			{
-				int mnoznik = 100;
+				double mnoznik = 100;
 				mnoznik += k._cena_mnoznik;
-				_produkt._cena_jednostkowa = ((_produkt.produkt.cena_zakupu)
-						* mnoznik / 100);
+				/* Prawidłowe zaokrąglenie */
+				double tmp = ((_produkt.produkt.cena_zakupu) * mnoznik / 100);
+				_produkt._cena_jednostkowa = (int) Math.round(tmp);
 				listaWybranychPanel.tabelaDodajWiersz(_produkt.pisz());
 			}
 		} else

@@ -59,9 +59,12 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 
 		for (ProduktWFakturze _produkt : listaProduktowKorekta)
 		{
-			int mnoznik = 100 + k._cena_mnoznik;
-			_produkt._cena_jednostkowa = ((_produkt.produkt.cena_zakupu)
-					* mnoznik / 100);
+			double mnoznik = 100;
+			mnoznik += k._cena_mnoznik;
+			/* Prawidłowe zaokrąglenie */
+			double tmp = ((_produkt.produkt.cena_zakupu) * mnoznik / 100);
+			_produkt._cena_jednostkowa = (int) Math.round(tmp);
+			System.err.println((int) Math.round(tmp));
 			for (int i = 0; i < listaWybranychPanel.getModelRows(); ++i)
 			{
 				if (listaWybranychPanel.getModelValueAt(i, 0) != null

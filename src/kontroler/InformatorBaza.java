@@ -155,7 +155,7 @@ public class InformatorBaza
 				+ " AND faktura.data_wystawienia BETWEEN '" + data_od
 				+ "' AND '" + data_do + "'"
 				+ "and kontrachent.id_kontrachent=faktura.id_kontrachent"
-				+ " and faktura.rodzaj=1";
+				+ " and faktura.rodzaj=" + Faktura.SPRZEDAZ;
 
 		List<String[]> wynik = null;
 		if (z_data)
@@ -193,6 +193,7 @@ public class InformatorBaza
 				+ "and wysylka.data BETWEEN '" + data_od + "' AND '" + data_do
 				+ "'" + " and wysylka.id=c_wysylka_produkt.id_wysylka";
 
+		System.out.println(querySql);
 		List<String[]> wynik = null;
 		if (z_data)
 		{
