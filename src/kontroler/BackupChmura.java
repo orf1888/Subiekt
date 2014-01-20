@@ -66,8 +66,9 @@ public class BackupChmura
 		DbxEntry.File uploadedFile;
 		try
 		{
-			uploadedFile = client.uploadFile("/" + bazaTmp.getName(),
-					DbxWriteMode.add(), bazaTmp.length(), inputStream);
+			uploadedFile = client.uploadFile("/" + bazaTmp.getName() + "_"
+					+ MojeUtils.pobierzAktualnaDate(), DbxWriteMode.add(),
+					bazaTmp.length(), inputStream);
 		} finally
 		{
 			inputStream.close();
