@@ -14,7 +14,7 @@ public class Globals
 
 	public final static boolean SzukajRownaSie = false;
 
-	public final static String WersjaAplikacji = "Subiekt GTC v.1.7.51";
+	public final static String WersjaAplikacji = "Subiekt GTC v.1.8.51";
 
 	public final static ImageIcon IkonaAplikacji = new ImageIcon(
 			"icons\\sGTC.gif");

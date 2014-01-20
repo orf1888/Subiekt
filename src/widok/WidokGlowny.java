@@ -28,7 +28,9 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
 
+import kontroler.BackupChmura;
 import kontroler.ProduktBaza;
+import model.Chmura;
 import utils.BazaDanych;
 import utils.FakturaZPliku;
 import utils.Globals;
@@ -219,7 +221,21 @@ public class WidokGlowny extends JFrame
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			MojeUtils.backup();
+			if (MojeUtils.dialogTakNie("Archiwizacja bazy danych",
+					"Czy archiwizować w chmurze?") == 0)
+				try
+				{
+					BackupChmura.archiwizuj(new Chmura());
+				} catch (Exception e1)
+				{
+					if (e1.getMessage().equals("Anulowano"))
+						return;
+					else
+						MojeUtils.showError(e1.getMessage()
+								+ "\nArchiwizuj plik na dysku lokalnym!");
+				}
+			else
+				MojeUtils.backup();
 		}
 	};
 

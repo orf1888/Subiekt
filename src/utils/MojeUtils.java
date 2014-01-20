@@ -17,10 +17,13 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import kontroler.BackupChmura;
+import model.Chmura;
 import model.FChooserPL;
 import model.ObiektWiersz;
 import widok.WidokGlowny;
@@ -315,8 +318,37 @@ public class MojeUtils
 
 	public static void zamknijSystem()
 	{
-		int wybor = dialogTakNie("Kończenie pracy",
-				"Czy chcesz przeprowadzić backup bazy danych przed zamknięciem programu?");
+		Object[] polskiePrzyciski =
+		{ "Tak", "Nie" };
+		JCheckBox chmura = new JCheckBox("Archiwizuj w chmurze?");
+		Object[] params_chmura =
+		{ "Czy chcesz przeprowadzić archiwizację przed zamknięciem systemu?",
+				chmura };
+		int wybor = JOptionPane.showOptionDialog(WidokGlowny.frame,
+				params_chmura, "Kończenie pracy", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, polskiePrzyciski,
+				polskiePrzyciski[1]);
+
+		/*
+		 * = dialogTakNie( "Kończenie pracy",
+		 * "Czy chcesz przeprowadzić backup bazy danych przed zamknięciem programu?"
+		 * , true);
+		 */
+		if (wybor == 0 && chmura.isSelected())
+		{
+			try
+			{
+				BackupChmura.archiwizuj(new Chmura());
+				System.exit(0);
+			} catch (Exception e)
+			{
+				if (e.getMessage().equals("Anulowano"))
+					return;
+				else
+					showError(e.getMessage()
+							+ "\nArchiwizuj plik na dysku lokalnym!");
+			}
+		}
 		if (wybor == 0)
 		{
 			if (MojeUtils.backup())
