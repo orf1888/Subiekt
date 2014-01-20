@@ -39,7 +39,8 @@ public class Wysylka implements ObiektZId
 	{
 		String[] wiersz = new String[3];
 		wiersz[0] = getNumer();
-		wiersz[1] = MojeUtils.formatujDate(data_wysylki.toString());
+		wiersz[1] = MojeUtils.formatujDate(MojeUtils.stringToDate_format
+				.format(data_wysylki));
 		wiersz[wierszIndeks_wartoscId] = "" + id;
 		return wiersz;
 	}

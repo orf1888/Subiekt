@@ -141,17 +141,15 @@ public class InformatorOkno extends JDialog
 		{
 			try
 			{
-				@SuppressWarnings("deprecation")
-				String[][] data = InformatorBaza
-						.instance()
+				String[][] data = InformatorBaza.instance()
 						.pobierzWysylekZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils
-										.poprawDate(panelPrzyciskowWysylki.dataOd
-												.getDate().toGMTString()),
-								MojeUtils
-										.poprawDate(panelPrzyciskowWysylki.dataDo
-												.getDate().toGMTString()), true);
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowWysylki.dataOd
+												.getDate()),
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowWysylki.dataDo
+												.getDate()), true);
 				/* Ustaw model */
 				DefaultTableModel model_wysylki = new DefaultTableModel(data,
 						InformatorBaza.kolumny_sprzedaz_ilosc);
@@ -172,17 +170,15 @@ public class InformatorOkno extends JDialog
 		{
 			try
 			{
-				@SuppressWarnings("deprecation")
-				String[][] data = InformatorBaza
-						.instance()
+				String[][] data = InformatorBaza.instance()
 						.pobierzSrzedazZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils
-										.poprawDate(panelPrzyciskowSprzedaz.dataOd
-												.getDate().toGMTString()),
-								MojeUtils
-										.poprawDate(panelPrzyciskowSprzedaz.dataDo
-												.getDate().toGMTString()), true);
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowSprzedaz.dataOd
+												.getDate()),
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowSprzedaz.dataDo
+												.getDate()), true);
 				/* Ustaw model */
 				DefaultTableModel model_sprzedaz = new DefaultTableModel(data,
 						InformatorBaza.kolumny_sprzedaz_ilosc);
@@ -203,17 +199,16 @@ public class InformatorOkno extends JDialog
 		{
 			try
 			{
-				@SuppressWarnings("deprecation")
 				String[][] data = InformatorBaza
 						.instance()
 						.pobierzIloscSprzedazZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils
-										.poprawDate(panelPrzyciskowSprzedazIlosc.dataOd
-												.getDate().toGMTString()),
-								MojeUtils
-										.poprawDate(panelPrzyciskowSprzedazIlosc.dataDo
-												.getDate().toGMTString()));
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowSprzedazIlosc.dataOd
+												.getDate()),
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowSprzedazIlosc.dataDo
+												.getDate()));
 				/* Ustaw model */
 				DefaultTableModel model_sprzedaz_ilosc = new DefaultTableModel(
 						data, InformatorBaza.kolumny_sprzedaz_ilosc);
@@ -234,17 +229,16 @@ public class InformatorOkno extends JDialog
 		{
 			try
 			{
-				@SuppressWarnings("deprecation")
 				String[][] data = InformatorBaza
 						.instance()
 						.pobierzIloscWyslanychZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils
-										.poprawDate(panelPrzyciskowWyslanychIlosc.dataOd
-												.getDate().toGMTString()),
-								MojeUtils
-										.poprawDate(panelPrzyciskowWyslanychIlosc.dataDo
-												.getDate().toGMTString()));
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowWyslanychIlosc.dataOd
+												.getDate()),
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowWyslanychIlosc.dataDo
+												.getDate()));
 				/* Ustaw model */
 				DefaultTableModel model_sprzedaz_ilosc = new DefaultTableModel(
 						data, InformatorBaza.kolumny_wyslane_ilosc);
@@ -265,17 +259,16 @@ public class InformatorOkno extends JDialog
 		{
 			try
 			{
-				@SuppressWarnings("deprecation")
 				String[][] data = InformatorBaza
 						.instance()
 						.pobierzRuchTowaruZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils
-										.poprawDate(panelPrzyciskowRuchTowaru.dataOd
-												.getDate().toGMTString()),
-								MojeUtils
-										.poprawDate(panelPrzyciskowRuchTowaru.dataDo
-												.getDate().toGMTString()));
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowRuchTowaru.dataOd
+												.getDate()),
+								MojeUtils.stringToDate_format
+										.format(panelPrzyciskowRuchTowaru.dataDo
+												.getDate()));
 				/* Ustaw model */
 				DefaultTableModel model_ruch_towaru = new DefaultTableModel(
 						data, InformatorBaza.kolumny_ruch_towaru);

@@ -256,7 +256,10 @@ public class FakturaBaza implements ObiektBazaManager
 	 */
 	public void dodaj_encje_faktura(Faktura nowaFaktura) throws Exception
 	{
-		@SuppressWarnings("deprecation")
+		String data_wystawienia_faktury_nowej = MojeUtils.stringToDate_format
+				.format(nowaFaktura.data_wystawienia);
+		String termin_platnosci_faktury_nowej = MojeUtils.stringToDate_format
+				.format(nowaFaktura.termin_platnosci);
 		int generatedId = BazaDanych
 				.getInstance()
 				.wstaw("INSERT INTO  "
@@ -265,11 +268,9 @@ public class FakturaBaza implements ObiektBazaManager
 						+ ") VALUES ('"
 						+ SqlUtils.popraw(nowaFaktura.numer)
 						+ "','"
-						+ SqlUtils.popraw(nowaFaktura.data_wystawienia
-								.toGMTString())
+						+ SqlUtils.popraw(data_wystawienia_faktury_nowej)
 						+ "','"
-						+ SqlUtils.popraw(nowaFaktura.termin_platnosci
-								.toGMTString())
+						+ SqlUtils.popraw(termin_platnosci_faktury_nowej)
 						+ "','"
 						+ SqlUtils.popraw((nowaFaktura.zaplacona ? 1 : 0))
 						+ "',"
@@ -297,7 +298,6 @@ public class FakturaBaza implements ObiektBazaManager
 						+ SqlUtils.popraw(faktura.id_faktura));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void edytuj(Object stara, Object nowa) throws Exception
 	{
@@ -327,18 +327,19 @@ public class FakturaBaza implements ObiektBazaManager
 				MojeUtils.showError("Znaleziono taki sam numer: "
 						+ getNumerFromWiersz(znalezioneWiersze[0]));
 		}
-
+		String data_wystawienia_faktury_nowej = MojeUtils.stringToDate_format
+				.format(nowaFaktura.data_wystawienia);
+		String termin_platnosci_faktury_nowej = MojeUtils.stringToDate_format
+				.format(nowaFaktura.termin_platnosci);
 		BazaDanych.getInstance().aktualizacja(
 				"UPDATE "
 						+ Faktura.tableName
 						+ " set numer= '"
 						+ SqlUtils.popraw(nowaFaktura.numer)
 						+ "', data_wystawienia= '"
-						+ SqlUtils.popraw(nowaFaktura.data_wystawienia
-								.toGMTString())
+						+ SqlUtils.popraw(data_wystawienia_faktury_nowej)
 						+ "', termin_platnosci= '"
-						+ SqlUtils.popraw(nowaFaktura.termin_platnosci
-								.toGMTString())
+						+ SqlUtils.popraw(termin_platnosci_faktury_nowej)
 						+ "', zaplacona= '"
 						+ SqlUtils.popraw((nowaFaktura.zaplacona ? 1 : 0))
 						+ "', rodzaj= '"

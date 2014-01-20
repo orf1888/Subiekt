@@ -8,9 +8,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -240,7 +244,17 @@ public class WysylkaPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		wysylka = (Wysylka) obiekt;
 		listaWybranychPanel.zaladujListeWysylki();
 		listaProduktow.addAll(wysylka.getProdukty_copy());
-		panelData.setDate(wysylka.data_wysylki);
+		try
+		{
+			DateFormat dateToString_format = new SimpleDateFormat("dd-MM-yyyy",
+					Locale.US);
+			Date data_wystawienia_wysylki = dateToString_format.parse(MojeUtils.dateToString_format
+					.format(wysylka.data_wysylki));
+			panelData.setDate(data_wystawienia_wysylki);
+		} catch (ParseException e)
+		{
+			MojeUtils.showError(e);
+		}
 	}
 
 	private void init()

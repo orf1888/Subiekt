@@ -8,9 +8,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -444,8 +448,24 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			int tmp = Integer.parseInt(faktura.waluta.toString());
 			comboWaluta.setSelectedIndex(tmp - 1);
 		}
-		panelDatyWystawFaktury.setDate(faktura.data_wystawienia);
-		panelTerminPlatnosci.setDate(faktura.termin_platnosci);
+		DateFormat dateToString_format = new SimpleDateFormat("dd-MM-yyyy",
+				Locale.US);
+		Date data_wystawienia_faktury = null;
+		Date termin_platnosci_faktury = null;
+		try
+		{
+			data_wystawienia_faktury = dateToString_format
+					.parse(MojeUtils.dateToString_format
+							.format(faktura.data_wystawienia));
+			termin_platnosci_faktury = dateToString_format
+					.parse(MojeUtils.dateToString_format
+							.format(faktura.termin_platnosci));
+		} catch (ParseException e)
+		{
+			MojeUtils.showError(e);
+		}
+		panelDatyWystawFaktury.setDate(data_wystawienia_faktury);
+		panelTerminPlatnosci.setDate(termin_platnosci_faktury);
 		if (rodzajFaktury == Faktura.ZAKUP)
 		{
 			numerField.setText("" + faktura.numer);

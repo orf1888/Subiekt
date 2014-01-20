@@ -117,7 +117,6 @@ public class Drukarz
 		return document;
 	}
 
-	@SuppressWarnings("deprecation")
 	private static void wypelnijFakturaPdf(Faktura faktura, Document doc)
 			throws Exception
 	{
@@ -132,13 +131,13 @@ public class Drukarz
 			tabelka_dat.addCell(newCellWysrodkowanySzary("Termin płatności",
 					helvetica10));
 			// newline
-			tabelka_dat.addCell(newCellWysrodkowany(MojeUtils
-					.formatujDate(faktura.data_wystawienia.toGMTString()),
-					helvetica10));
+			tabelka_dat.addCell(newCellWysrodkowany(
+					MojeUtils.dateToString_format
+							.format(faktura.data_wystawienia), helvetica10));
 			tabelka_dat.addCell(newSeparator());
-			tabelka_dat.addCell(newCellWysrodkowany(MojeUtils
-					.formatujDate(faktura.termin_platnosci.toGMTString()),
-					helvetica10));
+			tabelka_dat.addCell(newCellWysrodkowany(
+					MojeUtils.dateToString_format
+							.format(faktura.termin_platnosci), helvetica10));
 			// settings
 
 			tabelka_dat.setWidths(szerokosci);
@@ -280,7 +279,6 @@ public class Drukarz
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private static void wypelnijWysylkaPdf(Wysylka wysylka, Document doc)
 			throws Exception
 	{
@@ -295,7 +293,7 @@ public class Drukarz
 			tabelka_dat.addCell(newSeparator());
 			// newline
 			tabelka_dat.addCell(newCellWysrodkowany(
-					MojeUtils.formatujDate(wysylka.data_wysylki.toGMTString()),
+					MojeUtils.dateToString_format.format(wysylka.data_wysylki),
 					helvetica10));
 			tabelka_dat.addCell(newSeparator());
 			tabelka_dat.addCell(newSeparator());
@@ -396,10 +394,8 @@ public class Drukarz
 				tabelka_dat.addCell(newSeparator());
 				tabelka_dat.addCell(newSeparator());
 				// newline
-				tabelka_dat
-						.addCell(newCellWysrodkowany(MojeUtils
-								.formatujDate(MojeUtils.pobierzAktualnaDate()),
-								helvetica10));
+				tabelka_dat.addCell(newCellWysrodkowany(
+						MojeUtils.pobierzAktualnaDate(), helvetica10));
 				tabelka_dat.addCell(newSeparator());
 				tabelka_dat.addCell(newSeparator());
 				// settings

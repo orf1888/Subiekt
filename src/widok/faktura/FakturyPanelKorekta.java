@@ -64,7 +64,6 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 			/* Prawidłowe zaokrąglenie */
 			double tmp = ((_produkt.produkt.cena_zakupu) * mnoznik / 100);
 			_produkt._cena_jednostkowa = (int) Math.round(tmp);
-			System.err.println((int) Math.round(tmp));
 			for (int i = 0; i < listaWybranychPanel.getModelRows(); ++i)
 			{
 				if (listaWybranychPanel.getModelValueAt(i, 0) != null

@@ -193,7 +193,6 @@ public class InformatorBaza
 				+ "and wysylka.data BETWEEN '" + data_od + "' AND '" + data_do
 				+ "'" + " and wysylka.id=c_wysylka_produkt.id_wysylka";
 
-		System.out.println(querySql);
 		List<String[]> wynik = null;
 		if (z_data)
 		{

@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -164,21 +167,21 @@ public class MojeUtils
 			return prefix + (grosze / 100) + "," + (obcieteGrosze);
 	}
 
-	static DateFormat stringToDate_format = new SimpleDateFormat(
-			"dd MMM yyyy kk:mm:ss ZZZ", Locale.US);
+	public static DateFormat stringToDate_format = new SimpleDateFormat(
+			"yyyy-MM-dd hh:mm", Locale.US);
 
 	static DateFormat stringToDate_formatEnglish = new SimpleDateFormat(
 			"EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
 
-	static DateFormat dateToString_format = new SimpleDateFormat("dd-MM-yyyy",
-			Locale.US);
+	public static DateFormat dateToString_format = new SimpleDateFormat(
+			"dd-mm-yyyy", Locale.US);
 
 	public static String formatujDate(String string)
 	{
 		try
 		{
-			return dateToString_format
-					.format(stringToDate_format.parse(string));
+			return dateToString_format.format(dateToString_format
+					.parse(getParsableDate(string)));
 		} catch (Exception e)
 		{
 			try
@@ -203,9 +206,31 @@ public class MojeUtils
 
 	public static Date parsujDate(String string)
 	{
-		@SuppressWarnings("deprecation")
-		Date d = new Date(Date.parse(string));
+		DateFormat format = new SimpleDateFormat("dd-mm-yyyy");
+		Date d = null;
+		try
+		{
+			d = format.parse(getParsableDate(string));
+		} catch (ParseException e)
+		{
+			showError(e);
+		}
 		return d;
+	}
+
+	private static String getParsableDate(String string)
+	{
+		/* 2014-01-25 12:01 */
+		String result = new String();
+		/* getDay */
+		result += string.substring(8, 10);
+		result += "-";
+		/* getMonth */
+		result += string.substring(5, 7);
+		result += "-";
+		/* getYear */
+		result += string.substring(0, 4);
+		return result;
 	}
 
 	public static void showError(Exception e)
@@ -365,11 +390,10 @@ public class MojeUtils
 		return new String(wartosc + "").replace('.', ',');
 	}
 
-	@SuppressWarnings("deprecation")
 	public static String pobierzAktualnaDate()
 	{
 		Date d = new Date(new Date().getTime());
-		return d.toGMTString();
+		return new SimpleDateFormat("dd-MM-yyyy").format(d);
 	}
 
 	public static int dialogTakNie(String komunikat_naglowek,
@@ -424,20 +448,34 @@ public class MojeUtils
 	public static List<String[]> sortujPoDacie(List<String[]> lista)
 	{
 		/* bubble sort */
-		for (int i = 0; i < lista.size(); i++)
+		String[][] tmp = lista.toArray(new String[lista.size()][]);
+		ArrayList<String[]> result = new ArrayList<>();
+		int size = tmp.length - 1;
+		for (int i = 0; i < tmp.length - 1; i++)
 		{
-			for (int j = 0; j < lista.size() - 1 - i; j++)
+			for (int j = 0; j < size; j++)
 			{
-				Date el = parsujDate(lista.get(j)[1]);
-				Date el2 = parsujDate(lista.get(j + 1)[1]);
+				Date el = parsujDate(tmp[j][1]);
+				Date el2 = parsujDate(tmp[j + 1][1]);
 				if (el.after(el2))
 				{
-					String[] tmp = lista.get(j + 1);
-					lista.set(j + 1, lista.get(j));
-					lista.set(i, tmp);
+					String[] temp = new String[3];
+					temp[0] = tmp[j][0];
+					temp[1] = tmp[j][1];
+					temp[2] = tmp[j][2];
+					/**/
+					tmp[j][0] = tmp[j + 1][0];
+					tmp[j][1] = tmp[j + 1][1];
+					tmp[j][2] = tmp[j + 1][2];
+					/**/
+					tmp[j + 1][0] = temp[0];
+					tmp[j + 1][1] = temp[1];
+					tmp[j + 1][2] = temp[2];
 				}
 			}
+			size--;
 		}
-		return lista;
+		result.addAll(Arrays.asList(tmp));
+		return result;
 	}
 }

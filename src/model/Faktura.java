@@ -77,8 +77,10 @@ public class Faktura implements ObiektZId
 	{
 		String[] wiersz = new String[7];
 		wiersz[0] = piszNumerFaktury();
-		wiersz[1] = MojeUtils.formatujDate(data_wystawienia.toString());
-		wiersz[2] = MojeUtils.formatujDate(termin_platnosci.toString());
+		wiersz[1] = MojeUtils.formatujDate(MojeUtils.stringToDate_format
+				.format(data_wystawienia));
+		wiersz[2] = MojeUtils.formatujDate(MojeUtils.stringToDate_format
+				.format(termin_platnosci));
 		wiersz[3] = "" + (kontrahent == null ? "Brak!" : kontrahent.nazwa);
 		wiersz[4] = MojeUtils.formatujWartosc(wartosc_z_narzutem)
 				+ " "
