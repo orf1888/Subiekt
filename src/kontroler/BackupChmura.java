@@ -61,13 +61,13 @@ public class BackupChmura
 
 	private static void zapiszPlikWChmurze() throws Exception
 	{
-		File inputFile = MojeUtils.wczytajPlik("db");
-		FileInputStream inputStream = new FileInputStream(inputFile);
+		File bazaTmp = new File("db//oksana_subiekt_gtc.db");
+		FileInputStream inputStream = new FileInputStream(bazaTmp);
 		DbxEntry.File uploadedFile;
 		try
 		{
-			uploadedFile = client.uploadFile("/" + inputFile.getName(),
-					DbxWriteMode.add(), inputFile.length(), inputStream);
+			uploadedFile = client.uploadFile("/" + bazaTmp.getName(),
+					DbxWriteMode.add(), bazaTmp.length(), inputStream);
 		} finally
 		{
 			inputStream.close();
