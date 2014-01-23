@@ -82,7 +82,7 @@ public class FakturaZPliku
 
 		long waluta = 1;
 		Faktura nowa = FakturaBaza.nowaFaktura(Faktura.SPRZEDAZ, 0,
-				listaProduktow, waluta);
+				listaProduktow, waluta, DataUtils.pobierzAktualnaDate());
 		FakturaBaza.instance().dodaj(nowa);
 
 		WidokGlowny.frame.panelFakturSprz.tabelaDodajWiersz(nowa

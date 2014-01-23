@@ -12,6 +12,7 @@ import model.Faktura;
 import model.Kontrachent;
 import model.ObiektZId;
 import model.produkt.ProduktWFakturze;
+import utils.DataUtils;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.MagazynPanel;
@@ -118,7 +119,9 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 				numer = Integer.parseInt(numerField.getText());
 			} else
 			{
-				numer = FakturaBaza.pobierzNrFaktury(rodzajFaktury) + 1;
+				numer = FakturaBaza.pobierzNrFaktury(rodzajFaktury,
+						DataUtils.stringToDate_format
+								.format(panelDatyWystawFaktury.getDate())) + 1;
 			}
 			Date data_wystawienia = panelDatyWystawFaktury.getDate();
 			Date termin_platnosci = panelTerminPlatnosci.getDate();

@@ -18,7 +18,7 @@ public class UserShowException extends Exception
 	{
 		FileWriter file = new FileWriter("log//log.txt", true);
 		BufferedWriter out = new BufferedWriter(file);
-		out.write(MojeUtils.pobierzAktualnaDate() + "--->" + getMessage()
+		out.write(DataUtils.pobierzAktualnaDate() + "--->" + getMessage()
 				+ "\n");
 		out.close();
 		file.close();

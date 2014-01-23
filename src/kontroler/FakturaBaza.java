@@ -16,6 +16,7 @@ import model.produkt.Produkt;
 import model.produkt.ProduktWFakturze;
 import utils.BazaDanych;
 import utils.BazaStatementFunktor;
+import utils.DataUtils;
 import utils.MojeUtils;
 import utils.SqlUtils;
 import utils.UserShowException;
@@ -38,14 +39,15 @@ public class FakturaBaza implements ObiektBazaManager
 			// dodajemy do tabeli kolejne pobrane wiersze
 			while (result.next())
 			{
-				String data = MojeUtils.formatujDate(result.getString(2));
+				String data = DataUtils.formatujDate(result.getString(2));
 				String[] wiersz =
 				{
 						MojeUtils.poprawNrFaktury(result.getInt(7),
-								result.getInt(1), data.substring(6),
+								result.getInt(1),
+								DataUtils.getYear(result.getString(2)),
 								result.getBoolean(8)),
 						data,
-						MojeUtils.formatujDate(result.getString(3)),
+						DataUtils.formatujDate(result.getString(3)),
 						KontrachentBaza.pobierzNazweZBazy(result.getInt(4)),
 						MojeUtils.formatujWartosc(result.getInt(5))
 								+ " "
@@ -66,7 +68,8 @@ public class FakturaBaza implements ObiektBazaManager
 	{
 		String querySql = "SELECT DISTINCT numer, data_wystawienia, termin_platnosci, id_kontrachent, wartosc, id_faktura, rodzaj, czy_korekta, waluta FROM "
 				+ Faktura.tableName;
-		querySql += warunki.generujWarunekWhere();
+		querySql += warunki.generujWarunekWhere()
+				+ " ORDER BY data_wystawienia";
 
 		MojeUtils.println(querySql);
 
@@ -140,8 +143,8 @@ public class FakturaBaza implements ObiektBazaManager
 				{
 					// dodajemy do tabeli kolejne pobrane wiersze,
 					// skladajace sie z 4 elementow
-					return new Faktura(id, result.getInt(1), MojeUtils
-							.parsujDate(result.getString(2)), MojeUtils
+					return new Faktura(id, result.getInt(1), DataUtils
+							.parsujDate(result.getString(2)), DataUtils
 							.parsujDate(result.getString(3)), result
 							.getBoolean(4), result.getInt(5),
 							(Kontrachent) KontrachentBaza
@@ -158,14 +161,15 @@ public class FakturaBaza implements ObiektBazaManager
 		}
 	}
 
-	public static int pobierzNrFaktury(int rodzaj)
+	public static int pobierzNrFaktury(int rodzaj, String dataFaktury)
 	{
 		try
 		{
 			String querySql = "SELECT max( numer ) FROM " + Faktura.tableName
-					+ " WHERE rodzaj= " + SqlUtils.popraw(rodzaj);
-
-			MojeUtils.println(querySql);
+					+ " WHERE rodzaj= " + SqlUtils.popraw(rodzaj)
+					+ " AND data_wystawienia BETWEEN '"
+					+ DataUtils.pierwszyDzienRoku(dataFaktury) + "' AND '"
+					+ DataUtils.ostatniDzienRoku(dataFaktury) + "'";
 
 			return (Integer) BazaDanych.getInstance().zapytanie(querySql,
 
@@ -199,10 +203,9 @@ public class FakturaBaza implements ObiektBazaManager
 				new Faktura());
 		warunki.dodajWarunek(nowaFaktura.numer, "numer");
 		warunki.dodajWarunek(nowaFaktura.rodzaj, "rodzaj");
-
 		String[][] znalezioneWiersze = pobierzWierszeZBazy(warunki);
 
-		if (znalezioneWiersze.length == 0)
+		if (nowaFaktura.rodzaj == Faktura.SPRZEDAZ)
 		{
 			dodaj_encje_faktura(nowaFaktura);
 
@@ -214,13 +217,27 @@ public class FakturaBaza implements ObiektBazaManager
 			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
 					nowaFaktura.produkty, dodac);
 		} else
-			throw new UserShowException(
-					"Znaleziono już fakturę o takim numerze");
+		{
+			if (znalezioneWiersze.length == 0)
+			{
+				dodaj_encje_faktura(nowaFaktura);
+
+				/* edycja magazynu */
+				ProduktBaza.dodajListeProduktow(nowaFaktura.produkty,
+						nowaFaktura.id_faktura);
+				boolean dodac = (nowaFaktura.rodzaj == Faktura.SPRZEDAZ) ? false
+						: true;
+				ProduktBaza.instance().zmienIloscProduktyZMagazynu(
+						nowaFaktura.produkty, dodac);
+			} else
+				throw new UserShowException(
+						"Znaleziono już fakturę o takim numerze");
+		}
 	}
 
 	public static Faktura nowaFaktura(int rodzajFaktury, int numer,
-			List<ProduktWFakturze> listaProduktow, Long waluta)
-			throws UserShowException, IOException
+			List<ProduktWFakturze> listaProduktow, Long waluta,
+			String dataFaktury) throws UserShowException, IOException
 	{
 		if (rodzajFaktury == Faktura.ZAKUP)
 		{
@@ -230,7 +247,7 @@ public class FakturaBaza implements ObiektBazaManager
 			}
 		} else
 		{
-			numer = FakturaBaza.pobierzNrFaktury(rodzajFaktury) + 1;
+			numer = FakturaBaza.pobierzNrFaktury(rodzajFaktury, dataFaktury) + 1;
 		}
 		Date data_wystawienia = new Date();
 		Date termin_platnosci = new Date(data_wystawienia.getTime());
@@ -256,9 +273,9 @@ public class FakturaBaza implements ObiektBazaManager
 	 */
 	public void dodaj_encje_faktura(Faktura nowaFaktura) throws Exception
 	{
-		String data_wystawienia_faktury_nowej = MojeUtils.stringToDate_format
+		String data_wystawienia_faktury_nowej = DataUtils.stringToDate_format
 				.format(nowaFaktura.data_wystawienia);
-		String termin_platnosci_faktury_nowej = MojeUtils.stringToDate_format
+		String termin_platnosci_faktury_nowej = DataUtils.stringToDate_format
 				.format(nowaFaktura.termin_platnosci);
 		int generatedId = BazaDanych
 				.getInstance()
@@ -327,9 +344,9 @@ public class FakturaBaza implements ObiektBazaManager
 				MojeUtils.showError("Znaleziono taki sam numer: "
 						+ getNumerFromWiersz(znalezioneWiersze[0]));
 		}
-		String data_wystawienia_faktury_nowej = MojeUtils.stringToDate_format
+		String data_wystawienia_faktury_nowej = DataUtils.stringToDate_format
 				.format(nowaFaktura.data_wystawienia);
-		String termin_platnosci_faktury_nowej = MojeUtils.stringToDate_format
+		String termin_platnosci_faktury_nowej = DataUtils.stringToDate_format
 				.format(nowaFaktura.termin_platnosci);
 		BazaDanych.getInstance().aktualizacja(
 				"UPDATE "

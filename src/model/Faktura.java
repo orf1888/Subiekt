@@ -7,6 +7,7 @@ import java.util.List;
 import kontroler.ObiektWyszukanieWarunki.StrukturaWarunku;
 import kontroler.WalutaManager;
 import model.produkt.ProduktWFakturze;
+import utils.DataUtils;
 import utils.MojeUtils;
 
 public class Faktura implements ObiektZId
@@ -77,9 +78,9 @@ public class Faktura implements ObiektZId
 	{
 		String[] wiersz = new String[7];
 		wiersz[0] = piszNumerFaktury();
-		wiersz[1] = MojeUtils.formatujDate(MojeUtils.stringToDate_format
+		wiersz[1] = DataUtils.formatujDate(DataUtils.stringToDate_format
 				.format(data_wystawienia));
-		wiersz[2] = MojeUtils.formatujDate(MojeUtils.stringToDate_format
+		wiersz[2] = DataUtils.formatujDate(DataUtils.stringToDate_format
 				.format(termin_platnosci));
 		wiersz[3] = "" + (kontrahent == null ? "Brak!" : kontrahent.nazwa);
 		wiersz[4] = MojeUtils.formatujWartosc(wartosc_z_narzutem)
@@ -90,11 +91,13 @@ public class Faktura implements ObiektZId
 		return wiersz;
 	}
 
-	@SuppressWarnings("deprecation")
 	public String piszNumerFaktury()
 	{
-		return MojeUtils.poprawNrFaktury(rodzaj, numer,
-				(data_wystawienia.getYear() + 1900) + "", isKorekta);
+		return MojeUtils.poprawNrFaktury(
+				rodzaj,
+				numer,
+				DataUtils.getYear(DataUtils.stringToDate_format
+						.format(data_wystawienia)) + "", isKorekta);
 	}
 
 	@Override

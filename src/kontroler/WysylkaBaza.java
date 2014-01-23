@@ -12,6 +12,7 @@ import model.produkt.Produkt;
 import model.produkt.ProduktWWysylce;
 import utils.BazaDanych;
 import utils.BazaStatementFunktor;
+import utils.DataUtils;
 import utils.MojeUtils;
 import utils.SqlUtils;
 
@@ -27,11 +28,13 @@ public class WysylkaBaza implements ObiektBazaManager
 			// dodajemy do tabeli kolejne pobrane wiersze
 			while (result.next())
 			{
-				String data = MojeUtils.formatujDate(result.getString(2));
+				String data = DataUtils.formatujDate(result.getString(2));
 				String[] wiersz =
-				{ "W/" + result.getInt(1) + "/" + data.substring(6), data,
-				/** id **/
-				"" + result.getInt(1) };
+				{
+						"W/" + result.getInt(1) + "/"
+								+ DataUtils.getYear(result.getString(2)), data,
+						/** id **/
+						"" + result.getInt(1) };
 				wynik.add(wiersz);
 			}
 			return wynik;
@@ -88,7 +91,7 @@ public class WysylkaBaza implements ObiektBazaManager
 						{
 							// dodajemy do tabeli kolejne pobrane wiersze,
 							// skladajace sie z 4 elementow
-							return new Wysylka(id, MojeUtils.parsujDate(result
+							return new Wysylka(id, DataUtils.parsujDate(result
 									.getString(1)), produkty);
 						}
 					});
@@ -103,7 +106,7 @@ public class WysylkaBaza implements ObiektBazaManager
 	public void dodaj(Object nowy) throws Exception
 	{
 		Wysylka nowaWysylka = (Wysylka) nowy;
-		String data_wysylki = MojeUtils.stringToDate_format
+		String data_wysylki = DataUtils.stringToDate_format
 				.format(nowaWysylka.data_wysylki);
 		int generatedId = BazaDanych.getInstance().wstaw(
 				"INSERT INTO  " + Wysylka.tableName + " (data) VALUES ('"
@@ -122,7 +125,7 @@ public class WysylkaBaza implements ObiektBazaManager
 	{
 		Wysylka staraWysylka = (Wysylka) stara;
 		Wysylka nowaWysylka = (Wysylka) nowa;
-		String data_wysylki_nowa = MojeUtils.stringToDate_format
+		String data_wysylki_nowa = DataUtils.stringToDate_format
 				.format(nowaWysylka.data_wysylki);
 		BazaDanych.getInstance().aktualizacja(
 				"UPDATE " + Wysylka.tableName + " set data= '"

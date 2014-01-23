@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import kontroler.InformatorBaza;
 import kontroler.ProduktBaza;
 import model.ObiektWiersz;
+import utils.DataUtils;
 import utils.Globals;
 import utils.MojeUtils;
 
@@ -144,10 +145,10 @@ public class InformatorOkno extends JDialog
 				String[][] data = InformatorBaza.instance()
 						.pobierzWysylekZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowWysylki.dataOd
 												.getDate()),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowWysylki.dataDo
 												.getDate()), true);
 				/* Ustaw model */
@@ -173,10 +174,10 @@ public class InformatorOkno extends JDialog
 				String[][] data = InformatorBaza.instance()
 						.pobierzSrzedazZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowSprzedaz.dataOd
 												.getDate()),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowSprzedaz.dataDo
 												.getDate()), true);
 				/* Ustaw model */
@@ -203,10 +204,10 @@ public class InformatorOkno extends JDialog
 						.instance()
 						.pobierzIloscSprzedazZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowSprzedazIlosc.dataOd
 												.getDate()),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowSprzedazIlosc.dataDo
 												.getDate()));
 				/* Ustaw model */
@@ -233,10 +234,10 @@ public class InformatorOkno extends JDialog
 						.instance()
 						.pobierzIloscWyslanychZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowWyslanychIlosc.dataOd
 												.getDate()),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowWyslanychIlosc.dataDo
 												.getDate()));
 				/* Ustaw model */
@@ -263,10 +264,10 @@ public class InformatorOkno extends JDialog
 						.instance()
 						.pobierzRuchTowaruZBazy(
 								(ProduktBaza.getIdFromWiersz(wiersz)),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowRuchTowaru.dataOd
 												.getDate()),
-								MojeUtils.stringToDate_format
+								DataUtils.stringToDate_format
 										.format(panelPrzyciskowRuchTowaru.dataDo
 												.getDate()));
 				/* Ustaw model */

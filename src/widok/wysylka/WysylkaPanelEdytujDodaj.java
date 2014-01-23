@@ -32,6 +32,7 @@ import model.Wysylka;
 import model.produkt.Produkt;
 import model.produkt.ProduktWWysylce;
 import net.sf.nachocalendar.components.DatePanel;
+import utils.DataUtils;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.MagazynPanel;
@@ -248,8 +249,9 @@ public class WysylkaPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		{
 			DateFormat dateToString_format = new SimpleDateFormat("dd-MM-yyyy",
 					Locale.US);
-			Date data_wystawienia_wysylki = dateToString_format.parse(MojeUtils.dateToString_format
-					.format(wysylka.data_wysylki));
+			Date data_wystawienia_wysylki = dateToString_format
+					.parse(DataUtils.dateToString_format
+							.format(wysylka.data_wysylki));
 			panelData.setDate(data_wystawienia_wysylki);
 		} catch (ParseException e)
 		{

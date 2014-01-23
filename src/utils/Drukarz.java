@@ -132,11 +132,11 @@ public class Drukarz
 					helvetica10));
 			// newline
 			tabelka_dat.addCell(newCellWysrodkowany(
-					MojeUtils.dateToString_format
+					DataUtils.dateToString_format
 							.format(faktura.data_wystawienia), helvetica10));
 			tabelka_dat.addCell(newSeparator());
 			tabelka_dat.addCell(newCellWysrodkowany(
-					MojeUtils.dateToString_format
+					DataUtils.dateToString_format
 							.format(faktura.termin_platnosci), helvetica10));
 			// settings
 
@@ -293,7 +293,7 @@ public class Drukarz
 			tabelka_dat.addCell(newSeparator());
 			// newline
 			tabelka_dat.addCell(newCellWysrodkowany(
-					MojeUtils.dateToString_format.format(wysylka.data_wysylki),
+					DataUtils.dateToString_format.format(wysylka.data_wysylki),
 					helvetica10));
 			tabelka_dat.addCell(newSeparator());
 			tabelka_dat.addCell(newSeparator());
@@ -395,7 +395,7 @@ public class Drukarz
 				tabelka_dat.addCell(newSeparator());
 				// newline
 				tabelka_dat.addCell(newCellWysrodkowany(
-						MojeUtils.pobierzAktualnaDate(), helvetica10));
+						DataUtils.pobierzAktualnaDate(), helvetica10));
 				tabelka_dat.addCell(newSeparator());
 				tabelka_dat.addCell(newSeparator());
 				// settings

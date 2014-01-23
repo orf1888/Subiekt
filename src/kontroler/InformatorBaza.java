@@ -12,6 +12,7 @@ import model.Wysylka;
 import model.produkt.Produkt;
 import utils.BazaDanych;
 import utils.BazaStatementFunktor;
+import utils.DataUtils;
 import utils.MojeUtils;
 
 public class InformatorBaza
@@ -48,7 +49,7 @@ public class InformatorBaza
 			// dodajemy do tabeli kolejne pobrane wiersze
 			while (result.next())
 			{
-				String data = MojeUtils.formatujDate(result.getString(2));
+				String data = DataUtils.formatujDate(result.getString(2));
 				String[] wiersz =
 				{
 						MojeUtils.poprawNrFaktury(1, result.getInt(1),
@@ -70,7 +71,7 @@ public class InformatorBaza
 			// dodajemy do tabeli kolejne pobrane wiersze
 			while (result.next())
 			{
-				String data = MojeUtils.formatujDate(result.getString(2));
+				String data = DataUtils.formatujDate(result.getString(2));
 				String[] wiersz =
 				{
 						MojeUtils.poprawNrFaktury(1, result.getInt(1),
@@ -92,7 +93,7 @@ public class InformatorBaza
 			// dodajemy do tabeli kolejne pobrane wiersze
 			while (result.next())
 			{
-				String data = MojeUtils.formatujDate(result.getString(2));
+				String data = DataUtils.formatujDate(result.getString(2));
 				String[] wiersz =
 				{ "Wysyłka nr. " + result.getInt(1), data,
 						"" + result.getInt(3) };
@@ -272,7 +273,7 @@ public class InformatorBaza
 		List<String[]> wynik = new ArrayList<>();
 		wynik.addAll(Arrays.asList(wysylki));
 		wynik.addAll(Arrays.asList(faktury));
-		MojeUtils.sortujPoDacie(wynik);
-		return MojeUtils.foratujDate(wynik.toArray(new String[wynik.size()][]));
+		DataUtils.sortujPoDacie(wynik);
+		return DataUtils.foratujDate(wynik.toArray(new String[wynik.size()][]));
 	}
 }

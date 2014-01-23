@@ -39,6 +39,7 @@ import model.Waluta;
 import model.produkt.Produkt;
 import model.produkt.ProduktWFakturze;
 import net.sf.nachocalendar.components.DatePanel;
+import utils.DataUtils;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.MagazynPanel;
@@ -455,10 +456,10 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		try
 		{
 			data_wystawienia_faktury = dateToString_format
-					.parse(MojeUtils.dateToString_format
+					.parse(DataUtils.dateToString_format
 							.format(faktura.data_wystawienia));
 			termin_platnosci_faktury = dateToString_format
-					.parse(MojeUtils.dateToString_format
+					.parse(DataUtils.dateToString_format
 							.format(faktura.termin_platnosci));
 		} catch (ParseException e)
 		{
@@ -545,7 +546,9 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 				numer = Integer.parseInt(numerField.getText());
 			} else
 			{
-				numer = FakturaBaza.pobierzNrFaktury(rodzajFaktury) + 1;
+				numer = FakturaBaza.pobierzNrFaktury(rodzajFaktury,
+						DataUtils.stringToDate_format
+								.format(panelDatyWystawFaktury.getDate())) + 1;
 			}
 			Date data_wystawienia = panelDatyWystawFaktury.getDate();
 			Date termin_platnosci = panelTerminPlatnosci.getDate();

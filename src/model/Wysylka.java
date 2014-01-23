@@ -6,7 +6,7 @@ import java.util.List;
 
 import kontroler.ObiektWyszukanieWarunki.StrukturaWarunku;
 import model.produkt.ProduktWWysylce;
-import utils.MojeUtils;
+import utils.DataUtils;
 
 public class Wysylka implements ObiektZId
 {
@@ -39,7 +39,7 @@ public class Wysylka implements ObiektZId
 	{
 		String[] wiersz = new String[3];
 		wiersz[0] = getNumer();
-		wiersz[1] = MojeUtils.formatujDate(MojeUtils.stringToDate_format
+		wiersz[1] = DataUtils.formatujDate(DataUtils.stringToDate_format
 				.format(data_wysylki));
 		wiersz[wierszIndeks_wartoscId] = "" + id;
 		return wiersz;

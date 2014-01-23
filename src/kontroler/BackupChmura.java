@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import model.Chmura;
+import utils.DataUtils;
 import utils.MojeUtils;
 import widok.WidokGlowny;
 
@@ -67,7 +68,7 @@ public class BackupChmura
 		try
 		{
 			uploadedFile = client.uploadFile("/" + bazaTmp.getName() + "_"
-					+ MojeUtils.pobierzAktualnaDate(), DbxWriteMode.add(),
+					+ DataUtils.pobierzAktualnaDate(), DbxWriteMode.add(),
 					bazaTmp.length(), inputStream);
 		} finally
 		{
