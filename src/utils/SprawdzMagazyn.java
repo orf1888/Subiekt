@@ -17,6 +17,12 @@ public class SprawdzMagazyn
 	public static String[] kolumny =
 	{ "Kod", "Nazwa", "Ilość", "Status" };
 
+	/***
+	 * Funkcja pobiera wszystkie widoczne produkty z db.
+	 * 
+	 * @return lista_produktow
+	 * @throws SQLException
+	 */
 	private static List<String[]> pobierzMagazyn() throws SQLException
 	{
 		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
@@ -27,6 +33,12 @@ public class SprawdzMagazyn
 		return lista_m;
 	}
 
+	/***
+	 * Funkcja pobiera listę produktów z wczytanego pliku .xls.
+	 * 
+	 * @return lista_produktow
+	 * @throws Exception
+	 */
 	private static List<String[]> pobierzProduktyZPliku() throws Exception
 	{
 		File plik_magazyn = null;
@@ -64,10 +76,85 @@ public class SprawdzMagazyn
 		return lista;
 	}
 
+	/***
+	 * Funkcja odpowiedzialna za utworzenie tablicy String, zawierającej dane z
+	 * funkcji: porownajPlikZMagazynem() oraz porownajMagazynZPlikiem().
+	 * 
+	 * @param magazyn
+	 *            - aktualny stan magazynowy produktów w db
+	 * @param magazyn_plik
+	 *            - rzeczywiste stany magazynowe
+	 * @return data.toArray(new String[data.size()][])
+	 */
 	private static String[][] porownajMagazyny(List<String[]> magazyn,
 			List<String[]> magazyn_plik)
 	{
 		List<String[]> data = new ArrayList<>();
+		data = porownajPlikZMagazynem(magazyn, magazyn_plik, data);
+		data.add(new String[]
+		{ "----", "TOWARY DO WYJAŚNIENIA", "---" });
+		data = porownajMagazynZPlikiem(magazyn, magazyn_plik, data);
+		return data.toArray(new String[data.size()][]);
+	}
+
+	/**
+	 * Funkcja sprawdza, czy w bazie danych występują towary o niezerowym
+	 * stanie, których brak jest w magazynie.
+	 * 
+	 * @param magazyn
+	 *            - aktualny stan magazynowy produktów w db
+	 * @param magazyn_plik
+	 *            - rzeczywiste stany magazynowe
+	 * @param data
+	 *            - lista która zostanie dopełniona porównaniem (wstępnie na
+	 *            liście powinny znajdować się porównanie z funkcji
+	 *            porownajPlikZMagazynem())
+	 * @return data
+	 */
+	private static List<String[]> porownajMagazynZPlikiem(
+			List<String[]> magazyn, List<String[]> magazyn_plik,
+			List<String[]> data)
+	{
+		for (int i = 0; i < magazyn.size(); i++)
+		{
+			boolean znaleziony = false;
+			boolean niezerowy = false;
+			for (int j = 0; j < magazyn_plik.size(); j++)
+			{
+				if (Integer.parseInt(magazyn.get(i)[2]) != 0)
+				{
+					niezerowy = true;
+					if (magazyn.get(i)[0].equals(magazyn_plik.get(j)[0]))
+					{
+						znaleziony = true;
+						break;
+					}
+				}
+			}
+			if (!znaleziony && niezerowy)
+				data.add(new String[]
+				{ magazyn.get(i)[0], magazyn.get(i)[1], magazyn.get(i)[2],
+						"NIE WYSTĘPUJE W OSTATKACH!" });
+		}
+		return data;
+	}
+
+	/***
+	 * Funkcja porównuje ilosci produktów w db oraz rzczywiste ilości
+	 * dostarczone z magazynu.
+	 * 
+	 * @param magazyn
+	 *            - aktualny stan magazynowy produktów w db
+	 * @param magazyn_plik
+	 *            - rzeczywiste stany magazynowe
+	 * @param data
+	 *            - lista która zostanie wypełniona porównaniem
+	 * @return data
+	 */
+	private static List<String[]> porownajPlikZMagazynem(
+			List<String[]> magazyn, List<String[]> magazyn_plik,
+			List<String[]> data)
+	{
 		for (int i = 0; i < magazyn_plik.size(); i++)
 		{
 			boolean znaleziony = false;
@@ -99,9 +186,16 @@ public class SprawdzMagazyn
 			}
 			data.add(data_tmp);
 		}
-		return data.toArray(new String[data.size()][]);
+		return data;
 	}
 
+	/***
+	 * Funkcja pobiera dane z db oraz pliku magazynowego, następnie robi
+	 * porównania.
+	 * 
+	 * @return tablica String gotowa do wstawienia w tabelę
+	 * @throws Exception
+	 */
 	public static String[][] stworzOstatki() throws Exception
 	{
 		List<String[]> magazyn = pobierzMagazyn();
