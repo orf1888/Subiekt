@@ -17,7 +17,7 @@ public class SprawdzMagazyn
 	public static String[] kolumny =
 	{ "Kod", "Nazwa", "Ilość", "Status" };
 
-	public static List<String[]> pobierzMagazyn() throws SQLException
+	private static List<String[]> pobierzMagazyn() throws SQLException
 	{
 		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
 				new Produkt());
@@ -27,7 +27,7 @@ public class SprawdzMagazyn
 		return lista_m;
 	}
 
-	public static List<String[]> pobierzProduktyZPliku() throws Exception
+	private static List<String[]> pobierzProduktyZPliku() throws Exception
 	{
 		File plik_magazyn = null;
 		Sheet arkusz = null;
@@ -64,36 +64,39 @@ public class SprawdzMagazyn
 		return lista;
 	}
 
-	public static String[][] porownajMagazyny(List<String[]> magazyn,
+	private static String[][] porownajMagazyny(List<String[]> magazyn,
 			List<String[]> magazyn_plik)
 	{
 		List<String[]> data = new ArrayList<>();
-		for (int i = 0; i < magazyn.size(); i++)
+		for (int i = 0; i < magazyn_plik.size(); i++)
 		{
 			boolean znaleziony = false;
 			String[] data_tmp = new String[4];
-			data_tmp[0] = magazyn.get(i)[0];
-			data_tmp[1] = magazyn.get(i)[1];
-			data_tmp[2] = magazyn.get(i)[2];
-			for (int j = 0; j < magazyn_plik.size(); j++)
+			for (int j = 0; j < magazyn.size(); j++)
 			{
-				if (magazyn.get(i)[0].equals(magazyn_plik.get(j)[0]))
+				if (magazyn_plik.get(i)[0].equals(magazyn.get(j)[0]))
 				{
 					znaleziony = true;
-					if (Integer.parseInt(magazyn_plik.get(j)[1]) == Integer
-							.parseInt(magazyn.get(i)[2]))
+					data_tmp[0] = magazyn.get(j)[0];
+					data_tmp[1] = magazyn.get(j)[1];
+					data_tmp[2] = magazyn.get(j)[2];
+					if (Integer.parseInt(magazyn_plik.get(i)[1]) == Integer
+							.parseInt(magazyn.get(j)[2]))
 						data_tmp[3] = "OK";
-					if (Integer.parseInt(magazyn_plik.get(j)[1]) > Integer
-							.parseInt(magazyn.get(i)[2]))
-						data_tmp[3] = "ZA DUŻO W MAGAZYNIE!";
-					if (Integer.parseInt(magazyn_plik.get(j)[1]) < Integer
-							.parseInt(magazyn.get(i)[2]))
-						data_tmp[3] = "ZA MAŁO W MAGAZYNIE!";
+					if (Integer.parseInt(magazyn_plik.get(i)[1]) > Integer
+							.parseInt(magazyn.get(j)[2]))
+						data_tmp[3] = "ZA DUŻO NA UKRAINIE";
+					if (Integer.parseInt(magazyn_plik.get(i)[1]) < Integer
+							.parseInt(magazyn.get(j)[2]))
+						data_tmp[3] = "ZA MAŁO NA UKRAINIE";
 					break;
 				}
 			}
 			if (!znaleziony)
-				data_tmp[3] = "Brak";
+			{
+				data_tmp[0] = magazyn_plik.get(i)[0];
+				data_tmp[3] = "BRAK PRODUKTU W BAZIE DANYCH";
+			}
 			data.add(data_tmp);
 		}
 		return data.toArray(new String[data.size()][]);

@@ -318,5 +318,4 @@ public class WidokGlowny extends JFrame
 			}
 		}
 	};
-
 }
