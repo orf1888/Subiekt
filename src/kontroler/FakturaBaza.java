@@ -3,6 +3,8 @@ package kontroler;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -170,23 +172,22 @@ public class FakturaBaza implements ObiektBazaManager
 					+ " AND data_wystawienia BETWEEN '"
 					+ DataUtils.pierwszyDzienRoku(dataFaktury) + "' AND '"
 					+ DataUtils.ostatniDzienRoku(dataFaktury) + "'";
-
 			return (Integer) BazaDanych.getInstance().zapytanie(querySql,
-
-			new BazaStatementFunktor()
-			{
-				@Override
-				public Object operacja(ResultSet result) throws SQLException
-				{
-					try
+					new BazaStatementFunktor()
 					{
-						return result.getInt(1);
-					} catch (Exception przemilcz)
-					{
-						return null;
-					}
-				}
-			});
+						@Override
+						public Object operacja(ResultSet result)
+								throws SQLException
+						{
+							try
+							{
+								return result.getInt(1);
+							} catch (Exception przemilcz)
+							{
+								return null;
+							}
+						}
+					});
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -237,7 +238,8 @@ public class FakturaBaza implements ObiektBazaManager
 
 	public static Faktura nowaFaktura(int rodzajFaktury, int numer,
 			List<ProduktWFakturze> listaProduktow, Long waluta,
-			String dataFaktury) throws UserShowException, IOException
+			String dataFaktury) throws UserShowException, IOException,
+			ParseException
 	{
 		if (rodzajFaktury == Faktura.ZAKUP)
 		{
@@ -247,7 +249,9 @@ public class FakturaBaza implements ObiektBazaManager
 			}
 		} else
 		{
-			numer = FakturaBaza.pobierzNrFaktury(rodzajFaktury, dataFaktury) + 1;
+			numer = pobierzNrFaktury(rodzajFaktury,
+					DataUtils.stringToDate_format.format(new SimpleDateFormat(
+							"dd-mm-yyyy").parse(dataFaktury))) + 1;
 		}
 		Date data_wystawienia = new Date();
 		Date termin_platnosci = new Date(data_wystawienia.getTime());

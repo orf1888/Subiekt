@@ -541,7 +541,8 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			{
 				if (!MojeUtils.isNumer(numerField.getText()))
 				{
-					throw new UserShowException("Podano niepoprawny numer");
+					throw new UserShowException(
+							"Podano niepoprawny numer!\nNumer faktury powinien być unkalny!");
 				}
 				numer = Integer.parseInt(numerField.getText());
 			} else

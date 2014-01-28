@@ -12,7 +12,7 @@ import java.util.Locale;
 public class DataUtils
 {
 	public static String pierwszy_dzien_roku = "-01-01";
-	public static String ostatni_dzien_roku = "-01-31";
+	public static String ostatni_dzien_roku = "-12-31";
 
 	public static DateFormat stringToDate_format = new SimpleDateFormat(
 			"yyyy-MM-dd hh:mm", Locale.US);
@@ -141,5 +141,4 @@ public class DataUtils
 		Date d = new Date(new Date().getTime());
 		return new SimpleDateFormat("dd-MM-yyyy").format(d);
 	}
-
 }

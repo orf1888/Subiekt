@@ -8,7 +8,6 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import kontroler.FakturaBaza;
-import kontroler.ObiektWyszukanieWarunki;
 import kontroler.ProduktBaza;
 import model.Faktura;
 import model.produkt.Produkt;
@@ -81,6 +80,7 @@ public class FakturaZPliku
 		}
 
 		long waluta = 1;
+
 		Faktura nowa = FakturaBaza.nowaFaktura(Faktura.SPRZEDAZ, 0,
 				listaProduktow, waluta, DataUtils.pobierzAktualnaDate());
 		FakturaBaza.instance().dodaj(nowa);
@@ -136,23 +136,7 @@ public class FakturaZPliku
 
 	}
 
-	public static String[][] pobierzProduktyZBazy() throws Exception
-	{
-		try
-		{
-			ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
-					new Produkt());
-			warunki.dodajWarunek(1, "widoczny");
-			return ProduktBaza.instance().pobierzWierszeZBazy(warunki);
-		} catch (Exception e)
-		{
-			throw new UserShowException(
-					"Nie udało się pobrać produktów z bazy!");
-		}
-
-	}
-
-	public static String[][] pobierzProduktyZPliku(Sheet arkusz)
+	private static String[][] pobierzProduktyZPliku(Sheet arkusz)
 	{
 		int kod_kolumna;
 		int ilosc_kolumna;
