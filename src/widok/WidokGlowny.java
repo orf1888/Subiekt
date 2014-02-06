@@ -149,14 +149,14 @@ public class WidokGlowny extends JFrame
 		contentPane.add(tab, BorderLayout.CENTER);
 		{
 			MagazynPanel panelMagazynu = new MagazynPanel(
-			/* wyswietlButtony */true, /* default popup */null);
+			/* wyswietlButtony */true, /* default popup */null, false);
 
 			ProduktBaza.instance().setMagazynPanel(panelMagazynu);
 
 			tab.addTab("Magazyn", null, panelMagazynu);
 		}
 		{
-			KontrachentPanel panelKontrahentow = new KontrachentPanel();
+			KontrachentPanel panelKontrahentow = new KontrachentPanel(false);
 			tab.addTab("Kontrahenci", null, panelKontrahentow);
 		}
 		{
@@ -168,7 +168,7 @@ public class WidokGlowny extends JFrame
 			tab.addTab("Faktury sprzedaży", null, panelFakturSprz);
 		}
 		{
-			WysylkaPanel panelWysylka = new WysylkaPanel();
+			WysylkaPanel panelWysylka = new WysylkaPanel(true);
 			tab.addTab("Wysyłki", null, panelWysylka);
 		}
 		{

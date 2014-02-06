@@ -362,7 +362,8 @@ public class FakturyKorektaPanelListaWybranych extends
 	};
 
 	public FakturyKorektaPanelListaWybranych(
-			FakturyPanelEdytujDodaj fakturyPanel) {
+			FakturyPanelEdytujDodaj fakturyPanel, boolean s) {
+		super(s);
 		try
 		{
 			globalny_lp = 0;

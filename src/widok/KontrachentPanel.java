@@ -32,7 +32,8 @@ public class KontrachentPanel extends PanelOgolnyPrzyciski
 		return result;
 	}
 
-	public KontrachentPanel() {
+	public KontrachentPanel(boolean s) {
+		super(s);
 		try
 		{
 			warunki = new ObiektWyszukanieWarunki(new Kontrachent());

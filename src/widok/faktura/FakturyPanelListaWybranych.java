@@ -131,7 +131,8 @@ public class FakturyPanelListaWybranych extends
 	};
 
 	public FakturyPanelListaWybranych(
-			FakturyPanelEdytujDodaj fakturyPanelEdytujDodaj) {
+			FakturyPanelEdytujDodaj fakturyPanelEdytujDodaj, boolean s) {
+		super(s);
 		try
 		{
 			globalny_lp = 0;

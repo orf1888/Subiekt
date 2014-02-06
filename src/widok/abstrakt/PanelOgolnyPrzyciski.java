@@ -24,6 +24,10 @@ import widok.InformatorOkno;
 
 public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 {
+	public PanelOgolnyPrzyciski(boolean s) {
+		super(s);
+	}
+
 	private static final long serialVersionUID = -5671145856190517918L;
 
 	PanelEdytujDodajObiekt panelDodaj;

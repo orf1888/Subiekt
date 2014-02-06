@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -140,5 +141,30 @@ public class DataUtils
 	{
 		Date d = new Date(new Date().getTime());
 		return new SimpleDateFormat("dd-MM-yyyy").format(d);
+	}
+
+	public static String pobierzAktualnaDateFormat()
+	{
+		Date d = new Date(new Date().getTime());
+		return new SimpleDateFormat("yyyy-MM-dd").format(d);
+	}
+
+	public static String[] getCurentYear()
+	{
+		return new String[]
+		{ pierwszyDzienRoku(pobierzAktualnaDateFormat()),
+				ostatniDzienRoku(pobierzAktualnaDateFormat()) };
+	}
+
+	public static String[] getCurentMonth()
+	{
+		String koniec_miesiac = getYear(pobierzAktualnaDateFormat()) + "-"
+				+ getMonth(pobierzAktualnaDateFormat());
+		koniec_miesiac += "-"
+				+ Calendar.getInstance().getMaximum(Calendar.DAY_OF_MONTH);
+		String poczatek_miesiac = getYear(pobierzAktualnaDateFormat()) + "-"
+				+ getMonth(pobierzAktualnaDateFormat()) + "-01";
+		return new String[]
+		{ poczatek_miesiac, koniec_miesiac };
 	}
 }

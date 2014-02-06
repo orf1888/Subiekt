@@ -13,6 +13,11 @@ import widok.abstrakt.PanelOgolnyTabela;
 public class FakturyPanelListaWybranychAbstrakt extends PanelOgolnyTabela
 {
 
+	public FakturyPanelListaWybranychAbstrakt(boolean s) {
+		super(s);
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final long serialVersionUID = 966289454104607336L;
 
 	protected int globalny_lp;

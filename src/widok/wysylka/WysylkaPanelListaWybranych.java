@@ -120,7 +120,8 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 	};
 
 	public WysylkaPanelListaWybranych(
-			WysylkaPanelEdytujDodaj wysylkaPanelEdytujDodaj) {
+			WysylkaPanelEdytujDodaj wysylkaPanelEdytujDodaj, boolean s) {
+		super(s);
 		try
 		{
 			globalny_lp = 0;

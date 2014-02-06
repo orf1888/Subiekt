@@ -307,12 +307,12 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		if (!korekta)
 		{
 			/* A PO PRAWEJ LISTA WYBRAŃCÓW */
-			listaWybranychPanel = new FakturyPanelListaWybranych(this);
+			listaWybranychPanel = new FakturyPanelListaWybranych(this, false);
 			splitPane.setRightComponent(listaWybranychPanel);
 
 			/* init popup w fakturze */
 			panelMagazynu = new MagazynPanel( /* wyswietlButtony */false,
-					popupMagazynWFaktury);
+					popupMagazynWFaktury, false);
 			panelMagazynu.zmienDwuklikFunktor(new FunktorDwuklikAkcjaFaktura(
 					listaWybranychPanel, listaProduktow, this));
 			splitPane.setLeftComponent(panelMagazynu);

@@ -174,13 +174,13 @@ public class WysylkaPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		add(splitPane);
 
 		/* A PO PRAWEJ LISTA WYBRAŃCÓW */
-		listaWybranychPanel = new WysylkaPanelListaWybranych(this);
+		listaWybranychPanel = new WysylkaPanelListaWybranych(this, false);
 		splitPane.setRightComponent(listaWybranychPanel);
 
 		/* PO LEWEJ STRONIE MAGAZYNEK */
 		{
 			panelMagazynu = new MagazynPanel( /* wyswietlButtony */false,
-					popupMagazynWWysylce);
+					popupMagazynWWysylce, false);
 			panelMagazynu.zmienDwuklikFunktor(new FunktorDwuklikAkcjaWysylka(
 					listaWybranychPanel, listaProduktow, this));
 			splitPane.setLeftComponent(panelMagazynu);

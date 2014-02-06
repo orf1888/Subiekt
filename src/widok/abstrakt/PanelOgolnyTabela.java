@@ -1,7 +1,9 @@
 package widok.abstrakt;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -9,6 +11,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -27,6 +31,14 @@ import widok.abstrakt.ModelTabeli.IsCellEditableFunktor;
 
 public abstract class PanelOgolnyTabela extends JPanel
 {
+	private final boolean isSorter;
+	public JComboBox<String> sorter = new JComboBox<>(new String[]
+	{ "Wszystkie", "Bierzący miesiąc", "Bierzący rok" });
+
+	public PanelOgolnyTabela(boolean s) {
+		this.isSorter = s;
+	}
+
 	public static abstract class FunktorDwuklikTabela
 	{
 		public abstract void run(ObiektWiersz wiersz, int row);
@@ -133,6 +145,32 @@ public abstract class PanelOgolnyTabela extends JPanel
 			panel_naglowek.setLayout(gbl_panel);
 		}
 		{
+			if (isSorter)
+			{
+				JLabel pokaz = new JLabel("Pokaż za okres");
+				JPanel panel_sortera = new JPanel();
+				GridBagLayout gbl_panel = new GridBagLayout();
+				gbl_panel.columnWidths = new int[]
+				{ 0, 0 };
+				gbl_panel.rowHeights = new int[]
+				{ 0, 0 };
+				gbl_panel.columnWeights = new double[]
+				{ 0.0, Double.MIN_VALUE };
+				gbl_panel.rowWeights = new double[]
+				{ 0.0, Double.MIN_VALUE };
+				panel_sortera.setLayout(gbl_panel);
+				GridBagConstraints constraints = new GridBagConstraints();
+				constraints.gridx = 0;
+				constraints.gridy = 0;
+				constraints.insets = new Insets(0, 0, 0, 5);
+				panel_sortera.add(pokaz, constraints);
+				GridBagConstraints constraints1 = new GridBagConstraints();
+				constraints1.gridx = 1;
+				constraints1.gridy = 0;
+				constraints1.anchor = GridBagConstraints.WEST;
+				panel_sortera.add(sorter, constraints1);
+				add(panel_sortera, BorderLayout.NORTH);
+			}
 			JPanel panel_tabeli = new JPanel();
 			add(panel_tabeli, BorderLayout.CENTER);
 			panel_tabeli.setLayout(new BorderLayout(0, 0));

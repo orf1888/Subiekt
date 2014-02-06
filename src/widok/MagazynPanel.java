@@ -84,7 +84,8 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 	 *            - mozna podac wlasny popup, jesli chcemy default to podajemy
 	 *            null
 	 */
-	public MagazynPanel(boolean wyswietlButtony, JPopupMenu popupMenu) {
+	public MagazynPanel(boolean wyswietlButtony, JPopupMenu popupMenu, boolean s) {
+		super(s);
 		try
 		{
 			if (popupMenu == null)

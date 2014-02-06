@@ -13,8 +13,11 @@ import javax.swing.WindowConstants;
 import kontroler.FakturaBaza;
 import kontroler.ObiektWyszukanieWarunki;
 import kontroler.ProduktBaza;
+import kontroler.SorterKontroler;
 import model.Faktura;
 import model.ObiektWiersz;
+import model.Sorter;
+import utils.DataUtils;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.WyswietlPDFPanel;
@@ -259,8 +262,9 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 		};
 	}
 
-	public FakturyGeneralPanel(JPopupMenu popupTabeliMagazynu, int fakturaRodzaj)
-			throws SQLException {
+	public FakturyGeneralPanel(JPopupMenu popupTabeliMagazynu,
+			final int fakturaRodzaj, boolean s) throws SQLException {
+		super(s);
 		try
 		{
 			panelDodajKorekta = new FakturyPanelKorekta("Dodaj korektę",
@@ -270,7 +274,6 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 			warunki = new ObiektWyszukanieWarunki(new Faktura());
 			PanelEdytujDodajObiekt panelDwukliku = fakturaRodzaj == Faktura.SPRZEDAZ ? new WyswietlPDFPanel()
 					: null;
-
 			PanelOgolnyParametry params = new PanelOgolnyParametry(
 					tworzModelFuktor(fakturaRodzaj),
 					Faktura.kolumnyWyswietlane.length - 1, tworzMenuPopup(),
@@ -280,6 +283,40 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					new FakturyPanelEdytujDodaj("Edytuj fakturę",
 							fakturaRodzaj, true, popupTabeliMagazynu, false),
 					panelDwukliku, false, Faktura.kolumnyWyswietlane);
+			sorter.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					String okres_sortowania = (String) sorter.getSelectedItem();
+					try
+					{
+						ustawOkres(fakturaRodzaj, okres_sortowania);
+					} catch (SQLException e1)
+					{
+						MojeUtils
+								.showError("Błąd ustawiania okresu wyświetlania!");
+					}
+					String[][] dane = null;
+					try
+					{
+						dane = obiektBazaManager.pobierzWierszeZBazy(warunki);
+					} catch (SQLException e)
+					{
+						MojeUtils
+								.showError("Błąd ustawiania danych widoku faktury!");
+					}
+					try
+					{
+						przeladujTabele(dane, editableFunktor, false);
+					} catch (SQLException e)
+					{
+						MojeUtils
+								.showError("Błąd przeładowania widoku faktur!");
+					}
+				}
+			});
 			params.setBounds(1150, 550);
 			init(params);
 		} catch (Exception e)
@@ -297,9 +334,10 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 			{
 				try
 				{
-					warunki.dodajWarunek(1, "aktualna");
-					warunki.dodajWarunek(fakturaRodzaj, "rodzaj");
-					return obiektBazaManager.pobierzWierszeZBazy(warunki);
+					if (fakturaRodzaj == Faktura.SPRZEDAZ)
+						return ustawOkres(fakturaRodzaj, null);
+					else
+						return ustawOkres(fakturaRodzaj, null);
 				} catch (Exception e)
 				{
 					MojeUtils.showPrintError(e);
@@ -308,4 +346,68 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 			}
 		};
 	}
+
+	private String[][] ustawOkres(int fakturaRodzaj, String wejscieSortowania)
+			throws SQLException
+	{
+		Sorter sort = null;
+		try
+		{
+			sort = SorterKontroler.getSorter();
+		} catch (SQLException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if (wejscieSortowania == null && fakturaRodzaj == Faktura.SPRZEDAZ)
+			wejscieSortowania = sort.sorterFS;
+		if (wejscieSortowania == null && fakturaRodzaj == Faktura.ZAKUP)
+			wejscieSortowania = sort.sorterFZ;
+		String[] daty = null;
+		boolean wszystkie = false;
+		switch (wejscieSortowania)
+		{
+		case "Wszystkie":
+		{
+			wszystkie = true;
+			if (fakturaRodzaj == Faktura.SPRZEDAZ)
+				sort.sorterFS = "Wszystkie";
+			else
+				sort.sorterFZ = "Wszystkie";
+			sorter.setSelectedItem("Wszystkie");
+			break;
+		}
+		case "Bierzący miesiąc":
+		{
+			daty = DataUtils.getCurentMonth();
+			sorter.setSelectedItem("Bierzący miesiąc");
+			if (fakturaRodzaj == Faktura.SPRZEDAZ)
+				sort.sorterFS = "Bierzący miesiąc";
+			else
+				sort.sorterFZ = "Bierzący miesiąc";
+			break;
+		}
+		case "Bierzący rok":
+		{
+			daty = DataUtils.getCurentYear();
+			sorter.setSelectedItem("Bierzący rok");
+			if (fakturaRodzaj == Faktura.SPRZEDAZ)
+				sort.sorterFS = "Bierzący rok";
+			else
+				sort.sorterFZ = "Bierzący rok";
+			break;
+		}
+		}
+		warunki = new ObiektWyszukanieWarunki(new Faktura());
+		warunki.dodajWarunek(1, "aktualna");
+		warunki.dodajWarunek(fakturaRodzaj, "rodzaj");
+		if (!wszystkie)
+		{
+			warunki.dodajWarunekZData(daty[0], daty[1], "data_wystawienia");
+		}
+		SorterKontroler.edytuj(sort);
+		return obiektBazaManager.pobierzWierszeZBazy(warunki);
+
+	}
+
 }

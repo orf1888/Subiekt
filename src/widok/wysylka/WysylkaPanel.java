@@ -1,5 +1,7 @@
 package widok.wysylka;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import javax.swing.JMenuItem;
@@ -7,8 +9,11 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 
 import kontroler.ObiektWyszukanieWarunki;
+import kontroler.SorterKontroler;
 import kontroler.WysylkaBaza;
+import model.Sorter;
 import model.Wysylka;
+import utils.DataUtils;
 import utils.MojeUtils;
 import widok.WyswietlPDFPanel;
 import widok.abstrakt.PanelEdytujDodajObiekt;
@@ -39,13 +44,13 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 		return result;
 	}
 
-	public WysylkaPanel() throws SQLException {
+	public WysylkaPanel(boolean s) throws SQLException {
+		super(s);
 		try
 		{
 			JPopupMenu popupTabeliMagazynu = tworzPopupMagazynWysylce();
 			warunki = new ObiektWyszukanieWarunki(new Wysylka());
 			PanelEdytujDodajObiekt panelDwukliku = new WyswietlPDFPanel();
-
 			PanelOgolnyParametry params = new PanelOgolnyParametry(
 					tworzModelFuktor(), Wysylka.kolumnyWyswietlane.length - 1,
 					tworzMenuPopup(), new WysylkaBaza(),
@@ -53,6 +58,41 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 							popupTabeliMagazynu), new WysylkaPanelEdytujDodaj(
 							"Edytuj", true, popupTabeliMagazynu),
 					panelDwukliku, false, Wysylka.kolumnyWyswietlane);
+			sorter.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					String okres_sortowania = (String) sorter.getSelectedItem();
+					try
+					{
+						ustawOkres(okres_sortowania);
+					} catch (SQLException e1)
+					{
+						MojeUtils
+								.showError("Błąd ustawiania okresu wyświetlania!");
+						e1.printStackTrace();
+					}
+					String[][] dane = null;
+					try
+					{
+						dane = obiektBazaManager.pobierzWierszeZBazy(warunki);
+					} catch (SQLException e)
+					{
+						MojeUtils
+								.showError("Błąd ustawiania danych widoku faktury!");
+					}
+					try
+					{
+						przeladujTabele(dane, editableFunktor, false);
+					} catch (SQLException e)
+					{
+						MojeUtils
+								.showError("Błąd przeładowania widoku faktur!");
+					}
+				}
+			});
 			params.setBounds(1150, 550);
 			init(params);
 		} catch (Exception e)
@@ -70,7 +110,7 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 			{
 				try
 				{
-					return obiektBazaManager.pobierzWierszeZBazy(warunki);
+					return ustawOkres(null);
 				} catch (Exception e)
 				{
 					MojeUtils.showPrintError(e);
@@ -79,4 +119,54 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 			}
 		};
 	}
+
+	private String[][] ustawOkres(String wejscieSortowania) throws SQLException
+	{
+		Sorter sort = null;
+		try
+		{
+			sort = SorterKontroler.getSorter();
+		} catch (SQLException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		if (wejscieSortowania == null)
+			wejscieSortowania = sort.sorterW;
+		String[] daty = null;
+		boolean wszystkie = false;
+		switch (wejscieSortowania)
+		{
+		case "Wszystkie":
+		{
+			wszystkie = true;
+			sort.sorterW = "Wszystkie";
+			sorter.setSelectedItem("Wszystkie");
+			break;
+		}
+		case "Bierzący miesiąc":
+		{
+			daty = DataUtils.getCurentMonth();
+			sorter.setSelectedItem("Bierzący miesiąc");
+			sort.sorterW = "Bierzący miesiąc";
+			break;
+		}
+		case "Bierzący rok":
+		{
+			daty = DataUtils.getCurentYear();
+			sorter.setSelectedItem("Bierzący rok");
+			sort.sorterW = "Bierzący rok";
+			break;
+		}
+		}
+		warunki = new ObiektWyszukanieWarunki(new Wysylka());
+		if (!wszystkie)
+		{
+			warunki.dodajWarunekZData(daty[0], daty[1], "data");
+		}
+		SorterKontroler.edytuj(sort);
+		return obiektBazaManager.pobierzWierszeZBazy(warunki);
+
+	}
+
 }

@@ -40,11 +40,12 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 		listaProduktowKorekta = new ArrayList<ProduktWFakturze>();
 
 		{
-			listaWybranychPanel = new FakturyKorektaPanelListaWybranych(this);
+			listaWybranychPanel = new FakturyKorektaPanelListaWybranych(this,
+					false);
 			splitPane.setRightComponent(listaWybranychPanel);
 
 			panelMagazynu = new MagazynPanel( /* wyswietlButtony */false,
-					popupMagazynWFaktury);
+					popupMagazynWFaktury, false);
 			panelMagazynu.zmienDwuklikFunktor(new FunktorDwuklikAkcjaFaktura(
 					listaWybranychPanel, listaProduktow, this));
 			splitPane.setLeftComponent(panelMagazynu);
