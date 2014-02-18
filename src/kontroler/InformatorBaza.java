@@ -1,7 +1,6 @@
 package kontroler;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +42,7 @@ public class InformatorBaza
 	BazaStatementFunktor pobieranieWierszaFunktorSprzedazy = new BazaStatementFunktor()
 	{
 		@Override
-		public List<String[]> operacja(ResultSet result) throws SQLException
+		public List<String[]> operacja(ResultSet result) throws Exception
 		{
 			List<String[]> wynik = new ArrayList<String[]>();
 			// dodajemy do tabeli kolejne pobrane wiersze
@@ -65,7 +64,7 @@ public class InformatorBaza
 	BazaStatementFunktor pobieranieWierszaFunktorSprzedazyBezDaty = new BazaStatementFunktor()
 	{
 		@Override
-		public List<String[]> operacja(ResultSet result) throws SQLException
+		public List<String[]> operacja(ResultSet result) throws Exception
 		{
 			List<String[]> wynik = new ArrayList<String[]>();
 			// dodajemy do tabeli kolejne pobrane wiersze
@@ -87,7 +86,7 @@ public class InformatorBaza
 	BazaStatementFunktor pobieranieWierszaFunktorWysylek = new BazaStatementFunktor()
 	{
 		@Override
-		public List<String[]> operacja(ResultSet result) throws SQLException
+		public List<String[]> operacja(ResultSet result) throws Exception
 		{
 			List<String[]> wynik = new ArrayList<String[]>();
 			// dodajemy do tabeli kolejne pobrane wiersze
@@ -106,7 +105,7 @@ public class InformatorBaza
 	BazaStatementFunktor pobieranieWierszaFunktorWysylekBezDaty = new BazaStatementFunktor()
 	{
 		@Override
-		public List<String[]> operacja(ResultSet result) throws SQLException
+		public List<String[]> operacja(ResultSet result) throws Exception
 		{
 			List<String[]> wynik = new ArrayList<String[]>();
 			// dodajemy do tabeli kolejne pobrane wiersze
@@ -124,7 +123,7 @@ public class InformatorBaza
 	BazaStatementFunktor pobieranieIlosciSprzedazyIWysylekFunktor = new BazaStatementFunktor()
 	{
 		@Override
-		public List<String[]> operacja(ResultSet result) throws SQLException
+		public List<String[]> operacja(ResultSet result) throws Exception
 		{
 			List<String[]> wynik = new ArrayList<String[]>();
 			// dodajemy do tabeli kolejne pobrane wiersze
@@ -141,7 +140,7 @@ public class InformatorBaza
 
 	@SuppressWarnings("unchecked")
 	public String[][] pobierzSrzedazZBazy(int id_produkt, String data_od,
-			String data_do, boolean z_data) throws SQLException
+			String data_do, boolean z_data) throws Exception
 	{
 		String querySql = "SELECT faktura.numer, faktura.data_wystawienia, c_faktura_produkt.ilosc_produktu, kontrachent.id_kontrachent FROM "
 				+ Faktura.tableName
@@ -180,7 +179,7 @@ public class InformatorBaza
 
 	@SuppressWarnings("unchecked")
 	public String[][] pobierzWysylekZBazy(int id_produkt, String data_od,
-			String data_do, boolean z_data) throws SQLException
+			String data_do, boolean z_data) throws Exception
 	{
 		String querySql = "SELECT wysylka.id, wysylka.data, c_wysylka_produkt.ilosc FROM "
 				+ Wysylka.tableName
@@ -214,7 +213,7 @@ public class InformatorBaza
 
 	@SuppressWarnings("unchecked")
 	public String[][] pobierzIloscSprzedazZBazy(int id_produkt, String data_od,
-			String data_do) throws SQLException
+			String data_do) throws Exception
 	{
 		String querySql = "SELECT produkt.kod, produkt.nazwa, SUM(c_faktura_produkt.ilosc_produktu) FROM "
 				+ Produkt.tableName
@@ -241,7 +240,7 @@ public class InformatorBaza
 
 	@SuppressWarnings("unchecked")
 	public String[][] pobierzIloscWyslanychZBazy(int id_produkt,
-			String data_od, String data_do) throws SQLException
+			String data_od, String data_do) throws Exception
 	{
 		String querySql = "SELECT produkt.kod, produkt.nazwa, SUM(c_wysylka_produkt.ilosc) FROM "
 				+ Wysylka.tableName
@@ -264,7 +263,7 @@ public class InformatorBaza
 	}
 
 	public String[][] pobierzRuchTowaruZBazy(int id_produkt, String data_od,
-			String data_do) throws SQLException
+			String data_do) throws Exception
 	{
 		String[][] wysylki = pobierzWysylekZBazy(id_produkt, data_od, data_do,
 				false);

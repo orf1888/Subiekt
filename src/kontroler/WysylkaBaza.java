@@ -1,7 +1,6 @@
 package kontroler;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class WysylkaBaza implements ObiektBazaManager
 	BazaStatementFunktor pobieranieWierszaFunktor = new BazaStatementFunktor()
 	{
 		@Override
-		public Object operacja(ResultSet result) throws SQLException
+		public Object operacja(ResultSet result) throws Exception
 		{
 			List<String[]> wynik = new ArrayList<String[]>();
 			// dodajemy do tabeli kolejne pobrane wiersze
@@ -44,7 +43,7 @@ public class WysylkaBaza implements ObiektBazaManager
 	@SuppressWarnings("unchecked")
 	@Override
 	public String[][] pobierzWierszeZBazy(ObiektWyszukanieWarunki warunki)
-			throws SQLException
+			throws Exception
 	{
 		String querySql = "SELECT DISTINCT id, data FROM " + Wysylka.tableName;
 		querySql += warunki.generujWarunekWhere();
@@ -87,7 +86,7 @@ public class WysylkaBaza implements ObiektBazaManager
 					{
 						@Override
 						public Object operacja(ResultSet result)
-								throws SQLException
+								throws Exception
 						{
 							// dodajemy do tabeli kolejne pobrane wiersze,
 							// skladajace sie z 4 elementow
@@ -95,7 +94,7 @@ public class WysylkaBaza implements ObiektBazaManager
 									.getString(1)), produkty);
 						}
 					});
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -145,7 +144,7 @@ public class WysylkaBaza implements ObiektBazaManager
 
 	@Override
 	public void zmienWidocznosc(ObiektWiersz wiersz, boolean aktualna)
-			throws SQLException
+			throws Exception
 	{
 		throw new NullPointerException();
 	}

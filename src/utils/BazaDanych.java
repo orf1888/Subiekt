@@ -23,7 +23,7 @@ public class BazaDanych
 	}
 
 	public Object zapytanie(String dane,
-			BazaStatementFunktor bazaStatementFunktor) throws SQLException
+			BazaStatementFunktor bazaStatementFunktor) throws Exception
 	{
 		try
 		{

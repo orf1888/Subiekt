@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -132,12 +131,12 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	 * @param popupMagazynWFaktury
 	 *            - popup PrawegoKlikMyszy na tabeli Magazyn
 	 * @param korekta
-	 * @throws SQLException
+	 * @throws Exception
 	 */
 	@SuppressWarnings("deprecation")
 	public FakturyPanelEdytujDodaj(String tytul, int rodzajFaktury,
 			boolean editable, JPopupMenu popupMagazynWFaktury, boolean korekta)
-			throws SQLException {
+			throws Exception {
 		this.rodzajFaktury = rodzajFaktury;
 		this.listaProduktow = new ArrayList<ProduktWFakturze>();
 		setBorder(new TitledBorder(null, tytul, TitledBorder.CENTER,
@@ -393,13 +392,12 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 				mnoznik += parent.pobierzKontrachenta()._cena_mnoznik;
 			double cena_zaokraglona = ((cena) * mnoznik / 100);
 			cena = (int) Math.round(cena_zaokraglona);
-			listaWybranych
-					.tabelaDodajWiersz(new String[]
-					{ "" + lp, wiersz.wiersz[1],
-							MojeUtils.utworzWartoscZlotowki(cena), ilosc + "",
-							MojeUtils.utworzWartoscZlotowki(ilosc * cena) });
+			listaWybranych.tabelaDodajWiersz(new String[]
+			{ "" + lp, wiersz.wiersz[1], MojeUtils.utworzWartoscZlotowki(cena),
+					ilosc + "", MojeUtils.utworzWartoscZlotowki(ilosc * cena),
+					"0" });
 			listaProduktow.add(new ProduktWFakturze(lp, cena, ilosc,
-					produktSlownik, false, 0));
+					produktSlownik, false, 0, 0));
 		}
 
 		public boolean czyProduktJestNaLiscie(int id)
@@ -483,7 +481,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			listaProduktow.clear();
 			comboKontrachenci.setModel(MojeUtils.odswiezDaneWCombo(false,
 					KontrachentBaza.pobierzWszystkieNazwyZBazy()));
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

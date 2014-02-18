@@ -2,10 +2,12 @@ package utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 import kontroler.PodmiotBaza;
 import kontroler.WalutaManager;
 import model.Faktura;
+import model.TransportRozliczenie;
 import model.Waluta;
 import model.Wysylka;
 import model.produkt.ProduktWFakturze;
@@ -31,11 +33,17 @@ public class Drukarz
 {
 	static BaseFont helvetica;
 
+	static BaseFont arialRU;
+
 	static Font helvetica14;
 
 	static Font helvetica10;
 
+	static Font arial12RU;
+
 	static HeaderFooter narzedzieDoNaglowkaStopki = new HeaderFooter();
+
+	static BaseFont bf;
 
 	/**
 	 * zwraca plik
@@ -48,6 +56,25 @@ public class Drukarz
 					Long.toString(System.nanoTime()));
 			Document doc = otworzPdf(temp);
 			wypelnijFakturaPdf(faktura, doc);
+			doc.close();
+			return temp;
+		} catch (Exception e)
+		{
+			MojeUtils.showPrintError(e);
+			return null;
+		}
+	}
+
+	public static File tworzRozliczenieTransportuPDF(
+			ArrayList<TransportRozliczenie> lista_rachunkow_rozliczenia)
+	{
+		try
+		{
+			File temp = File.createTempFile("temp",
+					Long.toString(System.nanoTime()));
+			Document doc = otworzPdf(temp);
+			wypelnijRachunkiRozliczeniaTransportuPdf(
+					lista_rachunkow_rozliczenia, doc);
 			doc.close();
 			return temp;
 		} catch (Exception e)
@@ -106,12 +133,22 @@ public class Drukarz
 		writer.setPageEvent(narzedzieDoNaglowkaStopki);
 
 		/* Ustawiamy polską czcionkę */
-		if (helvetica == null)
+		if (helvetica == null || arialRU == null)
 		{
 			helvetica = BaseFont.createFont(BaseFont.HELVETICA,
 					BaseFont.CP1250, BaseFont.EMBEDDED);
 			helvetica14 = new Font(helvetica, 14);
 			helvetica10 = new Font(helvetica, 12);
+			/* Czcionki nie znaleziono na dysku */
+			try
+			{
+				arialRU = BaseFont.createFont("c:/windows/fonts/arial.ttf",
+						"CP1251", BaseFont.EMBEDDED);
+				arial12RU = new Font(arialRU, 12);
+			} catch (Exception e)
+			{
+				arial12RU = new Font(helvetica, 12);
+			}
 		}
 		document.open();
 		return document;
@@ -207,9 +244,11 @@ public class Drukarz
 				tabelka_produkty.addCell(new Phrase(p.lp + "", helvetica10));
 				tabelka_produkty.addCell(new Phrase(p.produkt.nazwa,
 						helvetica10));
-				tabelka_produkty.addCell(newCellDoPrawej(
-						MojeUtils.utworzWartoscZlotowki(p._cena_jednostkowa),
-						helvetica10));
+				tabelka_produkty
+						.addCell(newCellDoPrawej(
+								MojeUtils
+										.utworzWartoscZlotowki((p._cena_jednostkowa * (100 - p.rabat)) / 100),
+								helvetica10));
 				tabelka_produkty.addCell(newCellDoPrawej("" + p.ilosc_produktu,
 						helvetica10));
 				tabelka_produkty.addCell(newCellDoPrawej(MojeUtils
@@ -641,6 +680,110 @@ public class Drukarz
 			}
 			return true;
 		}
+	}
+
+	private static void wypelnijRachunkiRozliczeniaTransportuPdf(
+			ArrayList<TransportRozliczenie> lista_rachunkow_rozliczenia,
+			Document doc) throws Exception
+	{
+		float[] szerokosci = new float[]
+		{ 500, 400, 500 };
+		// ///////////////////Nazwa podmiotu oraz
+		// data////////////////////////////
+		{
+			PdfPTable tabelka_dat = new PdfPTable(3);
+			tabelka_dat.addCell(newCellWysrodkowanySzary("Termin utworzenia",
+					helvetica10));
+			tabelka_dat.addCell(newSeparator());
+			tabelka_dat.addCell(newSeparator());
+			// newline
+			tabelka_dat.addCell(newCellWysrodkowany(
+					DataUtils.pobierzAktualnaDateFormat(), helvetica10));
+			tabelka_dat.addCell(newSeparator());
+			tabelka_dat.addCell(newCellPodkreslony(
+					PodmiotBaza.pobierzPodmiot().nazwa + "\n"
+							+ PodmiotBaza.pobierzPodmiot().ulica + "\n"
+							+ PodmiotBaza.pobierzPodmiot().kod_pocztowy + " "
+							+ PodmiotBaza.pobierzPodmiot().miasto + "\n"
+							+ "NIP:" + PodmiotBaza.pobierzPodmiot().nip,
+					helvetica10));
+			// settings
+			tabelka_dat.setWidths(szerokosci);
+			Paragraph paragDaty = new Paragraph();
+			paragDaty.add(tabelka_dat);
+			doc.add(paragDaty);
+		}
+		// ///////////////Tutuł/////////////////////
+		String[] daty_rozliczenia = DataUtils.getCurrentMonth();
+		Paragraph nazwa_dokumentu = new Paragraph("Rozliczenie transportu za "
+				+ daty_rozliczenia[0] + "-" + daty_rozliczenia[1], helvetica14);
+		nazwa_dokumentu.setSpacingBefore(50);
+		nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
+		doc.add(nazwa_dokumentu);
+		// ////////Tabela//////////////
+		// // naglowek
+		String[] naglowki =
+		{ "L.p.", "Numer oryginału", "Numer faktury", "Wartość PLN",
+				"Wartość EUR" };
+		PdfPTable tabelka_produkty = new PdfPTable(naglowki.length);
+		tabelka_produkty.setSpacingBefore(25);
+		tabelka_produkty.setSpacingAfter(10);
+
+		for (String naglowek : naglowki)
+		{
+			PdfPCell komorka_lp = new PdfPCell(
+					new Phrase(naglowek, helvetica10));
+			komorka_lp.setBackgroundColor(new BaseColor(244, 244, 244));
+			tabelka_produkty.addCell(komorka_lp);
+		}
+		// // zawartość tabeli
+		int lp = 1;
+		/* PLN,EUR */
+		int[] wartosci = new int[2];
+		wartosci[0] = 0;
+		wartosci[1] = 0;
+		for (TransportRozliczenie tr : lista_rachunkow_rozliczenia)
+		{
+			tabelka_produkty.addCell(new Phrase("" + lp, helvetica10));
+			tabelka_produkty.addCell(new Phrase(tr.nr_faktury, arial12RU));
+			tabelka_produkty.addCell(new Phrase(tr.nr_faktury_odpowiadajacej,
+					arial12RU));
+			if (tr.waluta == 1)
+			{
+				tabelka_produkty.addCell(newCellDoPrawej(
+						MojeUtils.utworzWartoscZlotowki(tr.wartosc),
+						helvetica10));
+				wartosci[0] += tr.wartosc;
+			} else
+				tabelka_produkty.addCell(newCellDoPrawej("" + 0, helvetica10));
+			if (tr.waluta == 2)
+			{
+				tabelka_produkty.addCell(newCellDoPrawej(
+						MojeUtils.utworzWartoscZlotowki(tr.wartosc),
+						helvetica10));
+				wartosci[1] += tr.wartosc;
+			} else
+				tabelka_produkty.addCell(newCellDoPrawej("" + 0, helvetica10));
+			lp++;
+		}
+		// // ostatni wiersz
+		tabelka_produkty.addCell(newSeparator());
+		tabelka_produkty.addCell(newSeparator());
+		tabelka_produkty.addCell(newSeparator());
+		tabelka_produkty.addCell(new Phrase("Razem: "
+				+ MojeUtils.utworzWartoscZlotowki(wartosci[0]) + " PLN",
+				helvetica10));
+		tabelka_produkty.addCell(new Phrase("Razem: "
+				+ MojeUtils.utworzWartoscZlotowki(wartosci[1]) + " EUR",
+				helvetica10));
+
+		// settings
+		float[] columnWidths = new float[]
+		{ 35, 280, 130, 95, 95 };
+		tabelka_produkty.setWidths(columnWidths);
+		Paragraph tabelka = new Paragraph();
+		tabelka.add(tabelka_produkty);
+		doc.add(tabelka);
 	}
 
 	private static PdfPCell newSeparator()

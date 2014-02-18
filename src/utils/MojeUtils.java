@@ -15,8 +15,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import kontroler.BackupChmura;
+import kontroler.FakturaBaza;
+import kontroler.ObiektWyszukanieWarunki;
 import model.Chmura;
 import model.FChooserPL;
+import model.Faktura;
 import model.ObiektWiersz;
 import widok.WidokGlowny;
 
@@ -390,5 +393,34 @@ public class MojeUtils
 			tmp = new JComboBox<Object>(dane);
 			return tmp.getModel();
 		}
+	}
+
+	/***
+	 * Funkcja pobiera z bazy oraz formatuje numer faktury, której odpowiada
+	 * dany rachunek transportowy.
+	 * 
+	 * @param id_faktury_odopwiadającej_rachunkowi
+	 * @return String - numer faktury której odpowiada dany rachunek
+	 *         transportowy.
+	 * @throws Exception
+	 */
+	public static String pobierzNrFakturyOdpowiadającej(
+			int id_faktury_odopwiadającej_rachunkowi) throws Exception
+	{
+		ObiektWyszukanieWarunki warunki_faktury = new ObiektWyszukanieWarunki(
+				new Faktura());
+		warunki_faktury.dodajWarunek(id_faktury_odopwiadającej_rachunkowi,
+				"id_faktura");
+		String[][] nr_faktury_odpowiadajacej = null;
+		try
+		{
+			nr_faktury_odpowiadajacej = FakturaBaza.instance()
+					.pobierzWierszeZBazy(warunki_faktury);
+		} catch (SQLException e)
+		{
+			throw new UserShowException(
+					"Nie udało się pobrać numeru faktury odpowiadającej!");
+		}
+		return nr_faktury_odpowiadajacej[0][0];
 	}
 }

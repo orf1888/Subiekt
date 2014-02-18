@@ -113,7 +113,7 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 															 */
 			Produkt.kolumnyWyswietlane.length - 1, popupMenu,
 					ProduktBaza.instance(), pDodaj, pEdytuj, pWyswietl,
-					wyswietlButtony, Produkt.kolumnyWyswietlane));
+					wyswietlButtony, Produkt.kolumnyWyswietlane), false);
 
 			/* filtrowanie po producencie u góry tabelki */
 			{

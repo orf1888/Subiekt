@@ -2,7 +2,6 @@ package kontroler;
 
 import java.io.IOException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class FakturaBaza implements ObiektBazaManager
 	BazaStatementFunktor pobieranieWierszaFunktor = new BazaStatementFunktor()
 	{
 		@Override
-		public Object operacja(ResultSet result) throws SQLException
+		public Object operacja(ResultSet result) throws Exception
 		{
 			List<String[]> wynik = new ArrayList<String[]>();
 			// dodajemy do tabeli kolejne pobrane wiersze
@@ -66,12 +65,11 @@ public class FakturaBaza implements ObiektBazaManager
 	@SuppressWarnings("unchecked")
 	@Override
 	public String[][] pobierzWierszeZBazy(ObiektWyszukanieWarunki warunki)
-			throws SQLException
+			throws Exception
 	{
 		String querySql = "SELECT DISTINCT numer, data_wystawienia, termin_platnosci, id_kontrachent, wartosc, id_faktura, rodzaj, czy_korekta, waluta FROM "
 				+ Faktura.tableName;
-		querySql += warunki.generujWarunekWhere()
-				+ " ORDER BY data_wystawienia";
+		querySql += warunki.generujWarunekWhere() + " ORDER BY id_faktura";
 
 		MojeUtils.println(querySql);
 
@@ -91,7 +89,7 @@ public class FakturaBaza implements ObiektBazaManager
 
 	@SuppressWarnings("unchecked")
 	private List<String[]> wyszukajPoKontrachencie(
-			ObiektWyszukanieWarunki warunki) throws SQLException
+			ObiektWyszukanieWarunki warunki) throws Exception
 	{
 		ObiektWyszukanieWarunki warunekTmp = new ObiektWyszukanieWarunki(
 				warunki.typObiektu);
@@ -141,7 +139,7 @@ public class FakturaBaza implements ObiektBazaManager
 			new BazaStatementFunktor()
 			{
 				@Override
-				public Object operacja(ResultSet result) throws SQLException
+				public Object operacja(ResultSet result) throws Exception
 				{
 					// dodajemy do tabeli kolejne pobrane wiersze,
 					// skladajace sie z 4 elementow
@@ -156,7 +154,7 @@ public class FakturaBaza implements ObiektBazaManager
 							result.getLong(10));
 				}
 			});
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -177,7 +175,7 @@ public class FakturaBaza implements ObiektBazaManager
 					{
 						@Override
 						public Object operacja(ResultSet result)
-								throws SQLException
+								throws Exception
 						{
 							try
 							{
@@ -188,7 +186,7 @@ public class FakturaBaza implements ObiektBazaManager
 							}
 						}
 					});
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			return -1;
@@ -414,7 +412,7 @@ public class FakturaBaza implements ObiektBazaManager
 	/* Refactoring */
 	@Override
 	public void zmienWidocznosc(ObiektWiersz wiersz, boolean aktualna)
-			throws SQLException
+			throws Exception
 	{
 		BazaDanych.getInstance().aktualizacja(
 				"UPDATE " + Faktura.tableName + " set aktualna = "
@@ -433,7 +431,7 @@ public class FakturaBaza implements ObiektBazaManager
 	}
 
 	public static void ustawZaplacona(ObiektWiersz wiersz, boolean zaplacona)
-			throws SQLException
+			throws Exception
 	{
 		BazaDanych.getInstance().aktualizacja(
 				"UPDATE " + Faktura.tableName + " set zaplacona = "

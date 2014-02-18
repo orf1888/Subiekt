@@ -42,7 +42,7 @@ public class KontrachentPanel extends PanelOgolnyPrzyciski
 					new KontrachentBaza(), new KontrachentPanelEdytujDodaj(
 							"Dodaj", true), new KontrachentPanelEdytujDodaj(
 							"Edytuj", true), new KontrachentPanelEdytujDodaj(
-							"Dane", false), true, Kontrachent.kolumny));
+							"Dane", false), true, Kontrachent.kolumny), false);
 		} catch (Exception e)
 		{
 			MojeUtils.showPrintError(e);

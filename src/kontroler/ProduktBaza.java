@@ -1,7 +1,6 @@
 package kontroler;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class ProduktBaza implements ObiektBazaManager
 					.getInstance()
 					.wstaw("INSERT INTO  "
 							+ Produkt.tableLaczacaFaktura
-							+ " (id_produkt, id_faktura, ilosc_produktu, cena_jednostkowa, lp, korekta, wartosc_po_korekcie)"
+							+ " (id_produkt, id_faktura, ilosc_produktu, cena_jednostkowa, lp, korekta, wartosc_po_korekcie, rabat)"
 							+ " VALUES ("
 							+ SqlUtils.popraw(produkt.produkt.id_produkt) + ","
 							+ SqlUtils.popraw(fakturaId) + ","
@@ -57,7 +56,8 @@ public class ProduktBaza implements ObiektBazaManager
 							+ SqlUtils.popraw(produkt._cena_jednostkowa) + ","
 							+ SqlUtils.popraw(produkt.lp) + ","
 							+ SqlUtils.popraw(produkt.korekta) + ","
-							+ SqlUtils.popraw(produkt.wartoscPoKorekcie) + ")");
+							+ SqlUtils.popraw(produkt.wartoscPoKorekcie) + ","
+							+ SqlUtils.popraw(produkt.rabat) + ")");
 		}
 	}
 
@@ -68,7 +68,7 @@ public class ProduktBaza implements ObiektBazaManager
 		try
 		{
 			String querySql = "SELECT P.kod, P.nazwa, P.ilosc, P.widoczny, P.id_producenta, P.cena_zakupu, P.id_produkt, "
-					+ " P_F.lp, P_F.cena_jednostkowa, P_F.ilosc_produktu, P_F.wartosc_po_korekcie FROM "
+					+ " P_F.lp, P_F.cena_jednostkowa, P_F.ilosc_produktu, P_F.wartosc_po_korekcie, P_F.rabat FROM "
 					+ Produkt.tableName
 					+ " P JOIN "
 					+ Produkt.tableLaczacaFaktura
@@ -88,7 +88,7 @@ public class ProduktBaza implements ObiektBazaManager
 					{
 						@Override
 						public Object operacja(ResultSet result)
-								throws SQLException
+								throws Exception
 						{
 							List<ProduktWFakturze> produkty = new ArrayList<ProduktWFakturze>();
 							while (result.next())
@@ -106,14 +106,15 @@ public class ProduktBaza implements ObiektBazaManager
 								int cena = result.getInt(9);
 								int ilosc = result.getInt(10);
 								int wartoscPoKorekcie = result.getInt(11);
+								int rabat = result.getInt(12);
 								produkty.add(new ProduktWFakturze(lp, cena,
 										ilosc, produktSlownik, korekta,
-										wartoscPoKorekcie));
+										wartoscPoKorekcie, rabat));
 							}
 							return produkty;
 						}
 					});
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			MojeUtils.println("pobierzDlaFaktury error");
 			e.printStackTrace();
@@ -123,7 +124,7 @@ public class ProduktBaza implements ObiektBazaManager
 
 	@Override
 	public String[][] pobierzWierszeZBazy(ObiektWyszukanieWarunki warunki)
-			throws SQLException
+			throws Exception
 	{
 		final List<String[]> wynik = new ArrayList<String[]>();
 
@@ -141,8 +142,7 @@ public class ProduktBaza implements ObiektBazaManager
 				new BazaStatementFunktor()
 				{
 					@Override
-					public Object operacja(ResultSet result)
-							throws SQLException
+					public Object operacja(ResultSet result) throws Exception
 					{
 
 						// dodajemy do tabeli kolejne pobrane wiersze
@@ -188,7 +188,7 @@ public class ProduktBaza implements ObiektBazaManager
 					{
 						@Override
 						public Object operacja(ResultSet result)
-								throws SQLException
+								throws Exception
 						{
 							// dodajemy do tabeli kolejne pobrane wiersze,
 							// skladajace sie z 4 elementow
@@ -198,7 +198,7 @@ public class ProduktBaza implements ObiektBazaManager
 									.getInt(6), id);
 						}
 					});
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -225,7 +225,7 @@ public class ProduktBaza implements ObiektBazaManager
 					{
 						@Override
 						public Object operacja(ResultSet result)
-								throws SQLException
+								throws Exception
 						{
 							try
 							{
@@ -241,7 +241,7 @@ public class ProduktBaza implements ObiektBazaManager
 							}
 						}
 					});
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -331,7 +331,7 @@ public class ProduktBaza implements ObiektBazaManager
 
 	@Override
 	public void zmienWidocznosc(ObiektWiersz wiersz, boolean widoczny)
-			throws SQLException
+			throws Exception
 	{
 		BazaDanych.getInstance().aktualizacja(
 				"UPDATE " + Produkt.tableName + " set widoczny = "
@@ -379,7 +379,7 @@ public class ProduktBaza implements ObiektBazaManager
 					{
 						@Override
 						public Object operacja(ResultSet result)
-								throws SQLException
+								throws Exception
 						{
 							// dodajemy do tabeli kolejne pobrane wiersze,
 							// skladajace sie z 4 elementow
@@ -389,7 +389,7 @@ public class ProduktBaza implements ObiektBazaManager
 									.getInt(6), id);
 						}
 					});
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -418,7 +418,7 @@ public class ProduktBaza implements ObiektBazaManager
 
 	/*
 	 * public static void usunListeProduktow_wysylka( Wysylka wysylka ) throws
-	 * SQLException { for ( ProduktWWysylce produkt : wysylka.produkty )
+	 * Exception { for ( ProduktWWysylce produkt : wysylka.produkty )
 	 * BazaDanych.getInstance().aktualizacja( "DELETE FROM " +
 	 * Produkt.tableLaczacaWysylka + " WHERE (id_produkt=" +
 	 * produkt.produkt.id_produkt + " AND id_wysylka=" + wysylka.id + ")" ); }
@@ -431,7 +431,7 @@ public class ProduktBaza implements ObiektBazaManager
 	 */
 	public void zmienIloscProduktyZMagazynu(
 			List<? extends ProduktNaSztuki> produkty, boolean dodaj)
-			throws SQLException
+			throws Exception
 	{
 		if (produkty.isEmpty())
 			return;
@@ -495,7 +495,7 @@ public class ProduktBaza implements ObiektBazaManager
 					{
 						@Override
 						public Object operacja(ResultSet result)
-								throws SQLException
+								throws Exception
 						{
 							List<ProduktWWysylce> produkty = new ArrayList<ProduktWWysylce>();
 							while (result.next())

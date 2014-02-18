@@ -1,6 +1,5 @@
 package widok.faktura;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import model.Faktura;
@@ -15,7 +14,6 @@ public class FakturyPanelListaWybranychAbstrakt extends PanelOgolnyTabela
 
 	public FakturyPanelListaWybranychAbstrakt(boolean s) {
 		super(s);
-		// TODO Auto-generated constructor stub
 	}
 
 	private static final long serialVersionUID = 966289454104607336L;
@@ -44,7 +42,7 @@ public class FakturyPanelListaWybranychAbstrakt extends PanelOgolnyTabela
 		@Override
 		public boolean isCellEditable(int row, int column)
 		{
-			return column > 1 && column < 4;
+			return (column == 2 || column == 3 || column == 5);
 		}
 	};
 
@@ -53,7 +51,7 @@ public class FakturyPanelListaWybranychAbstrakt extends PanelOgolnyTabela
 		return ++globalny_lp;
 	}
 
-	public void czysc() throws SQLException
+	public void czysc() throws Exception
 	{
 		globalny_lp = 0;
 		przeladujTabele(new String[][]
@@ -66,7 +64,7 @@ public class FakturyPanelListaWybranychAbstrakt extends PanelOgolnyTabela
 		{
 			przeladujTabele(tworzModelFuktor().getBeginningData(),
 					editableFunktor, true);
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

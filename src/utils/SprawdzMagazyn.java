@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,9 +20,9 @@ public class SprawdzMagazyn
 	 * Funkcja pobiera wszystkie widoczne produkty z db.
 	 * 
 	 * @return lista_produktow
-	 * @throws SQLException
+	 * @throws Exception
 	 */
-	private static List<String[]> pobierzMagazyn() throws SQLException
+	private static List<String[]> pobierzMagazyn() throws Exception
 	{
 		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
 				new Produkt());

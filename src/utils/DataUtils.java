@@ -149,14 +149,14 @@ public class DataUtils
 		return new SimpleDateFormat("yyyy-MM-dd").format(d);
 	}
 
-	public static String[] getCurentYear()
+	public static String[] getCurrentYear()
 	{
 		return new String[]
 		{ pierwszyDzienRoku(pobierzAktualnaDateFormat()),
 				ostatniDzienRoku(pobierzAktualnaDateFormat()) };
 	}
 
-	public static String[] getCurentMonth()
+	public static String[] getCurrentMonth()
 	{
 		String koniec_miesiac = getYear(pobierzAktualnaDateFormat()) + "-"
 				+ getMonth(pobierzAktualnaDateFormat());

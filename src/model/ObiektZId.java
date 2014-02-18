@@ -6,7 +6,7 @@ public interface ObiektZId
 {
 	int getId();
 
-	String[] piszWierszTabeli();
+	String[] piszWierszTabeli() throws Exception;
 
 	String[] getKolumnyPrzeszukiwania();
 

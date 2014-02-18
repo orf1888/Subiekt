@@ -6,7 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -89,7 +88,7 @@ public class ZestawieniaPanel extends JPanel
 	}
 
 	/* Zestawienie pokazujące dłużników */
-	public void dluznicy() throws SQLException
+	public void dluznicy() throws Exception
 	{
 		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
 				new Faktura());
@@ -110,7 +109,7 @@ public class ZestawieniaPanel extends JPanel
 				TitledBorder.CENTER, TitledBorder.TOP, null, null));
 	}
 
-	public void dluznicyZmienKontrachent() throws SQLException
+	public void dluznicyZmienKontrachent() throws Exception
 	{
 		if (comboBoxKontrachentDluznicy.getSelectedIndex() < 0)
 			return;
@@ -131,7 +130,7 @@ public class ZestawieniaPanel extends JPanel
 	// //
 
 	/* Zestawienie pokazujące sprzedaż w określonym czasie */
-	public void raportDlugiZmienKontrachent() throws SQLException
+	public void raportDlugiZmienKontrachent() throws Exception
 	{
 
 		if (comboBoxRaportDluznika.getSelectedIndex() < 0)
@@ -149,7 +148,7 @@ public class ZestawieniaPanel extends JPanel
 		raportDlugi();
 	}
 
-	public void dlugiZmienKontrachent() throws SQLException
+	public void dlugiZmienKontrachent() throws Exception
 	{
 
 		if (comboBoxKontrachentDlugi.getSelectedIndex() < 0)
@@ -168,7 +167,7 @@ public class ZestawieniaPanel extends JPanel
 				KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 	}
 
-	public void raportDlugi() throws SQLException
+	public void raportDlugi() throws Exception
 	{
 		/* poierz listę faktur w PLN - 1 */
 		ObiektWyszukanieWarunki warunkiDlugPLN = new ObiektWyszukanieWarunki(
@@ -227,7 +226,7 @@ public class ZestawieniaPanel extends JPanel
 				dataDlugKontrahentaUSD, dataDlugKontrahentaUAH, new JDialog());
 	}
 
-	public void dlugi() throws SQLException
+	public void dlugi() throws Exception
 	{
 		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
 				new Faktura());
@@ -303,7 +302,7 @@ public class ZestawieniaPanel extends JPanel
 						try
 						{
 							dlugiZmienKontrachent();
-						} catch (SQLException e1)
+						} catch (Exception e1)
 						{
 							MojeUtils.showPrintError(e1);
 						}
@@ -330,7 +329,7 @@ public class ZestawieniaPanel extends JPanel
 								try
 								{
 									dluznicyZmienKontrachent();
-								} catch (SQLException e1)
+								} catch (Exception e1)
 								{
 									MojeUtils.showPrintError(e1);
 								}
@@ -354,7 +353,7 @@ public class ZestawieniaPanel extends JPanel
 						try
 						{
 							raportDlugiZmienKontrachent();
-						} catch (SQLException e1)
+						} catch (Exception e1)
 						{
 							MojeUtils.showPrintError(e1);
 						}

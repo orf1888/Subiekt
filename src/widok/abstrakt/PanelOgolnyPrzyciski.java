@@ -8,19 +8,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import kontroler.ObiektWyszukanieWarunki;
 import kontroler.ProduktBaza;
+import kontroler.TransportRozliczenieBaza;
 import model.ObiektWiersz;
 import model.ObiektZId;
+import model.TransportRozliczenie;
+import net.sf.nachocalendar.components.DatePanel;
+import utils.DataUtils;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.InformatorOkno;
+import widok.WyswietlPDFPanel;
 
 public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 {
@@ -42,17 +51,25 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 	protected ActionListener usunListener;
 
+	protected ActionListener rozliczListener;
+
 	protected static ActionListener informatorListener;
 
 	protected JPanel panel_przycikow;
 
 	protected JTextField pole_wyszukiwania;
 
+	private DatePanel okresOd;
+
+	private DatePanel okresDo;
+
 	public int sizeX;
 
 	public int sizeY;
 
-	public void init(PanelOgolnyParametry params) throws Exception
+	@Override
+	public void init(PanelOgolnyParametry params, boolean isRozlicz)
+			throws Exception
 	{
 		MojeUtils.println("Inicjuje " + this.getClass().getName());
 
@@ -73,28 +90,49 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					params.sizeX, params.sizeY);
 		if (params.pokazBtnUsun)
 			usunListener = tworzUsunListener();
+		if (isRozlicz)
+			rozliczListener = tworzRozliczListener();
 
 		funktorDwuklikTabela = new FunktorDwuklikTabelaAkcja(this);
 		super.init(params, false);
-		initPrzyciski();
+		initPrzyciski(isRozlicz);
 		initWyszukiwarka();
 	}
 
-	private void initPrzyciski()
+	private void initPrzyciski(boolean isRozlicz)
 	{
-		panel_przycikow = new JPanel();
+		if (!isRozlicz)
 		{
-			add(panel_przycikow, BorderLayout.EAST);
-			GridBagLayout gbl_panel_przycikow = new GridBagLayout();
-			gbl_panel_przycikow.columnWidths = new int[]
-			{ 0, 0 };
-			gbl_panel_przycikow.rowHeights = new int[]
-			{ 0, 0, 0, 0 };
-			gbl_panel_przycikow.columnWeights = new double[]
-			{ 0.0, Double.MIN_VALUE };
-			gbl_panel_przycikow.rowWeights = new double[]
-			{ 0.0, 0.0, 0.0, Double.MIN_VALUE };
-			panel_przycikow.setLayout(gbl_panel_przycikow);
+			panel_przycikow = new JPanel();
+			{
+				add(panel_przycikow, BorderLayout.EAST);
+				GridBagLayout gbl_panel_przycikow = new GridBagLayout();
+				gbl_panel_przycikow.columnWidths = new int[]
+				{ 0, 0 };
+				gbl_panel_przycikow.rowHeights = new int[]
+				{ 0, 0, 0, 0 };
+				gbl_panel_przycikow.columnWeights = new double[]
+				{ 0.0, Double.MIN_VALUE };
+				gbl_panel_przycikow.rowWeights = new double[]
+				{ 0.0, 0.0, 0.0, Double.MIN_VALUE };
+				panel_przycikow.setLayout(gbl_panel_przycikow);
+			}
+		} else
+		{
+			panel_przycikow = new JPanel();
+			{
+				add(panel_przycikow, BorderLayout.EAST);
+				GridBagLayout gbl_panel_przycikow = new GridBagLayout();
+				gbl_panel_przycikow.columnWidths = new int[]
+				{ 0, 0 };
+				gbl_panel_przycikow.rowHeights = new int[]
+				{ 0, 0, 0, 0, 0, 0 };
+				gbl_panel_przycikow.columnWeights = new double[]
+				{ 0.0, Double.MIN_VALUE };
+				gbl_panel_przycikow.rowWeights = new double[]
+				{ 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+				panel_przycikow.setLayout(gbl_panel_przycikow);
+			}
 		}
 		if (dodajListener != null)
 		{
@@ -127,6 +165,44 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			gbc_btnUsu.gridx = 0;
 			gbc_btnUsu.gridy = 2;
 			panel_przycikow.add(btnUsu, gbc_btnUsu);
+		}
+		if (rozliczListener != null)
+		{
+			JButton btnRozlicz = new JButton("Rozlicz");
+			btnRozlicz.addActionListener(rozliczListener);
+			GridBagConstraints gbc_btnRozlicz = new GridBagConstraints();
+			gbc_btnRozlicz.fill = GridBagConstraints.HORIZONTAL;
+			gbc_btnRozlicz.gridx = 0;
+			gbc_btnRozlicz.gridy = 0;
+			panel_przycikow.add(btnRozlicz, gbc_btnRozlicz);
+
+			JLabel poczatek_okresu = new JLabel("Początek okresu");
+			GridBagConstraints gbc_poczatek_okresu = new GridBagConstraints();
+			gbc_poczatek_okresu.fill = GridBagConstraints.HORIZONTAL;
+			gbc_poczatek_okresu.gridx = 0;
+			gbc_poczatek_okresu.gridy = 1;
+			panel_przycikow.add(poczatek_okresu, gbc_poczatek_okresu);
+
+			okresOd = new DatePanel();
+			GridBagConstraints gbc_okresOd = new GridBagConstraints();
+			gbc_okresOd.fill = GridBagConstraints.HORIZONTAL;
+			gbc_okresOd.gridx = 0;
+			gbc_okresOd.gridy = 2;
+			panel_przycikow.add(okresOd, gbc_okresOd);
+
+			JLabel koniec_okresu = new JLabel("Koniec okresu");
+			GridBagConstraints gbc_koniec_okresu = new GridBagConstraints();
+			gbc_koniec_okresu.fill = GridBagConstraints.HORIZONTAL;
+			gbc_koniec_okresu.gridx = 0;
+			gbc_koniec_okresu.gridy = 3;
+			panel_przycikow.add(koniec_okresu, gbc_koniec_okresu);
+
+			okresDo = new DatePanel();
+			GridBagConstraints gbc_okresDo = new GridBagConstraints();
+			gbc_okresDo.fill = GridBagConstraints.HORIZONTAL;
+			gbc_okresDo.gridx = 0;
+			gbc_okresDo.gridy = 4;
+			panel_przycikow.add(okresDo, gbc_okresDo);
 		}
 	}
 
@@ -448,7 +524,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					try
 					{
 						przeladujTabele(false);
-					} catch (SQLException e1)
+					} catch (Exception e1)
 					{
 						MojeUtils.showPrintError(e1);
 					}
@@ -467,12 +543,57 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			try
 			{
 				przeladujTabele(false);
-			} catch (SQLException e1)
+			} catch (Exception e1)
 			{
 				MojeUtils.showPrintError(e1);
 			}
 		}
 	};
+
+	/* Rozlicz ----------------------------------- */
+	protected ActionListener tworzRozliczListener()
+	{
+		return new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				try
+				{
+					Date[] daty =
+					{ okresOd.getDate(), okresDo.getDate() };
+					if (daty[0].toString().equals(daty[1].toString()))
+						MojeUtils.showMsg("Wybrane daty są identyczne");
+					else if (daty[0].after(daty[1]))
+						MojeUtils.showMsg("Okres do musi być za okresem od");
+					else
+					{
+						String[] daty_rozliczenia =
+						{ DataUtils.stringToDate_format.format(daty[0]),
+								DataUtils.stringToDate_format.format(daty[1]) };
+						ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
+								null);
+						warunki.dodajWarunekZData(
+								daty_rozliczenia[0].substring(0,
+										daty_rozliczenia[0].length() - 6),
+								daty_rozliczenia[1].substring(0,
+										daty_rozliczenia[1].length() - 6),
+								"data_ksiegowania");
+						String[][] rachunki_rozliczenia = TransportRozliczenieBaza
+								.instance().pobierzWierszeZBazy(warunki);
+						ArrayList<TransportRozliczenie> lista_rachunkow_rozliczenia = (ArrayList<TransportRozliczenie>) TransportRozliczenieBaza
+								.rozliczZaOkres(rachunki_rozliczenia);
+						WyswietlPDFPanel panel = new WyswietlPDFPanel();
+						panel.uzupelnijTransportRozliczenie(
+								lista_rachunkow_rozliczenia, new JDialog());
+					}
+				} catch (Exception e)
+				{
+					MojeUtils.showPrintError(e);
+				}
+			}
+		};
+	}
 
 	public String pobierzSzukanyText()
 	{

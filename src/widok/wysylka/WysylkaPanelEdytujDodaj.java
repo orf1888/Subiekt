@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -105,11 +104,11 @@ public class WysylkaPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	/**
 	 * @param tytul
 	 * @param editable
-	 * @throws SQLException
+	 * @throws Exception
 	 */
 	@SuppressWarnings("deprecation")
 	public WysylkaPanelEdytujDodaj(String tytul, boolean editable,
-			JPopupMenu popupMagazynWWysylce) throws SQLException {
+			JPopupMenu popupMagazynWWysylce) throws Exception {
 		this.listaProduktow = new ArrayList<ProduktWWysylce>();
 		setBorder(new TitledBorder(null, tytul + " wysyłkę",
 				TitledBorder.CENTER, TitledBorder.TOP, null, null));
@@ -266,7 +265,7 @@ public class WysylkaPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			panelMagazynu.wczytajTabele(true);
 			dataButtonListener.ukryj();
 			listaProduktow.clear();
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.SQLException;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -180,7 +179,7 @@ public abstract class PanelOgolnyTabela extends JPanel
 		}
 	}
 
-	public void wczytajTabele(boolean ustawWielkoscKolumny) throws SQLException
+	public void wczytajTabele(boolean ustawWielkoscKolumny) throws Exception
 	{
 		przeladujTabele(initModelFunktor.getBeginningData(), editableFunktor,
 				ustawWielkoscKolumny);
@@ -237,7 +236,7 @@ public abstract class PanelOgolnyTabela extends JPanel
 	}
 
 	public void tabelaEdytujWiersz(int numerEdytowanegoWiersza,
-			String[] wiersz, boolean ustawWielkoscKolumny) throws SQLException
+			String[] wiersz, boolean ustawWielkoscKolumny) throws Exception
 	{
 		model.edytujWiersz(numerEdytowanegoWiersza, wiersz);
 		przeladujTabele(ustawWielkoscKolumny);
@@ -263,8 +262,7 @@ public abstract class PanelOgolnyTabela extends JPanel
 		_table.setRowSorter(null);
 	}
 
-	public void przeladujTabele(boolean ustawWielkoscKolumny)
-			throws SQLException
+	public void przeladujTabele(boolean ustawWielkoscKolumny) throws Exception
 	{
 		przeladujTabele(null/* default */, editableFunktor,
 				ustawWielkoscKolumny);
@@ -272,7 +270,7 @@ public abstract class PanelOgolnyTabela extends JPanel
 
 	public void przeladujTabele(String[][] data,
 			IsCellEditableFunktor editableFunktor, boolean ustawWielkoscKolumny)
-			throws SQLException
+			throws Exception
 	{
 		resetujTabele();
 		if (data == null)

@@ -71,11 +71,12 @@ public class FakturyPanelListaWybranych extends
 			int column = e.getColumn();
 			if (row < 0)
 				return;
-			if (column < 2 || column > 3)
+			if (!(column == 2 || column == 3 || column == 5))
 				return;
 
 			TableModel model = (TableModel) e.getSource();
 			String data = (String) model.getValueAt(row, column);
+			String rabat = (String) model.getValueAt(row, 5);
 			int edytowanyProduktLP = Integer.parseInt((String) model
 					.getValueAt(row, 0));
 			ProduktWFakturze zmienionyProdukt = fakturyPanel
@@ -124,8 +125,24 @@ public class FakturyPanelListaWybranych extends
 					return;
 				}
 			}
+			if (column == 5)
+			{
+				try
+				{
+					if (!MojeUtils.isNumer(data))
+						throw new UserShowException("Wprowadź poprawną liczbę!");
+					zmienionyProdukt.rabat = Integer.parseInt(rabat);
+				} catch (Exception e1)
+				{
+					MojeUtils.showError(e1);
+					/* zla wartosc - przywroc stara */
+					model.setValueAt("" + zmienionyProdukt.rabat, row, column);
+					return;
+				}
+			}
 			/* przelicz wartosc */
 			int wartosc = zmienionyProdukt.liczWartoscZNarzutem();
+			// zmienionyProdukt.w
 			model.setValueAt(MojeUtils.utworzWartoscZlotowki(wartosc), row, 4);
 		}
 	};
@@ -146,7 +163,8 @@ public class FakturyPanelListaWybranych extends
 			PanelOgolnyParametry params = PanelOgolnyParametry
 					.createMinimalParametry(tworzModelFuktor(), (Integer) null,
 							popupMenu, null, new String[]
-							{ "L.p.", "Nazwa", "Cena", "Ilość", "Wartość" });
+							{ "L.p.", "Nazwa", "Cena", "Ilość", "Wartość",
+									"Rabat %" });
 			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu(
 					this);
 			init(params, true);

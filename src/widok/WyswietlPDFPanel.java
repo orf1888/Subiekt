@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,6 +22,7 @@ import javax.swing.JTextField;
 
 import model.Faktura;
 import model.ObiektZId;
+import model.TransportRozliczenie;
 import model.Wysylka;
 
 import org.jpedal.PdfDecoder;
@@ -425,6 +427,24 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 		} else
 		{
 			MojeUtils.showMsg("Kontrachent nie posiada długów.");
+		}
+	}
+
+	public void uzupelnijTransportRozliczenie(
+			ArrayList<TransportRozliczenie> lista, JDialog parent)
+	{
+		currentPage = 1;
+		pageCounter2.setText("1");
+		frame = parent;
+		plik = Drukarz.tworzRozliczenieTransportuPDF(lista);
+		if (plik != null)
+		{
+			initFormatki(plik.getAbsolutePath());
+			frame.setVisible(true);
+		} else
+		{
+			MojeUtils
+					.showMsg("Nastąpił błąd podczas rozliczania rachunku transportowego!");
 		}
 	}
 

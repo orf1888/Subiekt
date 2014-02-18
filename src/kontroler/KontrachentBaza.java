@@ -1,8 +1,6 @@
 package kontroler;
 
-
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class KontrachentBaza implements ObiektBazaManager
 
 	@Override
 	public String[][] pobierzWierszeZBazy(ObiektWyszukanieWarunki warunki)
-			throws SQLException
+			throws Exception
 	{
 		final List<String[]> wynik = new ArrayList<String[]>();
 
@@ -37,7 +35,7 @@ public class KontrachentBaza implements ObiektBazaManager
 		BazaDanych.getInstance().zapytanie(querySql, new BazaStatementFunktor()
 		{
 			@Override
-			public Object operacja(ResultSet result) throws SQLException
+			public Object operacja(ResultSet result) throws Exception
 			{
 				/*
 				 * dodajemy do tabeli kolejne pobrane wiersze,skladajace sie z 4
@@ -88,7 +86,7 @@ public class KontrachentBaza implements ObiektBazaManager
 					{
 						@Override
 						public Object operacja(ResultSet result)
-								throws SQLException
+								throws Exception
 						{
 							try
 							{
@@ -111,7 +109,7 @@ public class KontrachentBaza implements ObiektBazaManager
 							}
 						}
 					});
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 			return null;
@@ -206,7 +204,7 @@ public class KontrachentBaza implements ObiektBazaManager
 
 	@Override
 	public void zmienWidocznosc(ObiektWiersz wiersz, boolean widoczny)
-			throws SQLException
+			throws Exception
 	{
 		BazaDanych.getInstance().aktualizacja(
 				"UPDATE " + Kontrachent.tableName + " set widoczny = "
@@ -229,7 +227,7 @@ public class KontrachentBaza implements ObiektBazaManager
 		return Integer.parseInt(wiersz.wiersz[3]);
 	}
 
-	public static String pobierzNazweZBazy(int id) throws SQLException
+	public static String pobierzNazweZBazy(int id) throws Exception
 	{
 		return (String) BazaDanych.getInstance().zapytanie(
 				/* sql do pobrania */
@@ -239,8 +237,7 @@ public class KontrachentBaza implements ObiektBazaManager
 				new BazaStatementFunktor()
 				{
 					@Override
-					public Object operacja(ResultSet result)
-							throws SQLException
+					public Object operacja(ResultSet result) throws Exception
 					{
 						try
 						{
@@ -255,15 +252,14 @@ public class KontrachentBaza implements ObiektBazaManager
 				});
 	}
 
-	public static String[] pobierzWszystkieNazwyZBazy() throws SQLException
+	public static String[] pobierzWszystkieNazwyZBazy() throws Exception
 	{
 		return (String[]) BazaDanych.getInstance().zapytanie(
 				"SELECT nazwa FROM " + Kontrachent.tableName
 						+ " WHERE widoczny= 1", new BazaStatementFunktor()
 				{
 					@Override
-					public Object operacja(ResultSet result)
-							throws SQLException
+					public Object operacja(ResultSet result) throws Exception
 					{
 						List<String> wynik = new ArrayList<String>();
 						while (result.next())

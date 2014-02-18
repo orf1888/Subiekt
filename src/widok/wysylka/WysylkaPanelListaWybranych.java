@@ -2,7 +2,6 @@ package widok.wysylka;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -213,7 +212,7 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 		return ++globalny_lp;
 	}
 
-	public void czysc() throws SQLException
+	public void czysc() throws Exception
 	{
 		globalny_lp = 0;
 		przeladujTabele(new String[][]
@@ -226,7 +225,7 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 		{
 			przeladujTabele(tworzModelFuktor().getBeginningData(),
 					editableFunktor, true);
-		} catch (SQLException e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}

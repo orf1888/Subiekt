@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -82,9 +81,9 @@ public class WidokGlowny extends JFrame
 	}
 
 	public FakturySprzedazyPanel panelFakturSprz;
+	public TransportRozliczeniePanel panelTransportRozliczenie;
 
-	public WidokGlowny() throws SQLException, ClassNotFoundException,
-			IOException {
+	public WidokGlowny() throws Exception, ClassNotFoundException, IOException {
 		/* Ustaw ikonę */
 		setIconImage(Globals.IkonaAplikacji.getImage());
 		/* Wersja aplikacji */
@@ -172,9 +171,20 @@ public class WidokGlowny extends JFrame
 			tab.addTab("Wysyłki", null, panelWysylka);
 		}
 		{
+			panelTransportRozliczenie = new TransportRozliczeniePanel(true);
+			tab.addTab("Rachunki transportowe", null, panelTransportRozliczenie);
+		}
+		{
 			JPanel panel_5 = new ZestawieniaPanel();
 			tab.addTab("Zestawienia", null, panel_5);
 		}
+		/* Test */
+		/*
+		 * { TransportRozliczenieBaza t = new TransportRozliczenieBaza();
+		 * String[][] transport = t.pobierzWierszeZBazy(null); for (int i = 0; i
+		 * < transport.length; i++) { System.err.println(transport[i][0] + "<->"
+		 * + transport[i][1] + "<->" + transport[i][2]); } }
+		 */
 		this.addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -269,7 +279,7 @@ public class WidokGlowny extends JFrame
 			{
 				PodmiotOkno ok = new PodmiotOkno();
 				ok.setVisible(true);
-			} catch (SQLException e1)
+			} catch (Exception e1)
 			{
 				e1.printStackTrace();
 			}

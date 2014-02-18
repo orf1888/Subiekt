@@ -3,7 +3,6 @@ package widok;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -155,7 +154,7 @@ public class InformatorOkno extends JDialog
 				DefaultTableModel model_wysylki = new DefaultTableModel(data,
 						InformatorBaza.kolumny_sprzedaz_ilosc);
 				tableWysylki.setModel(model_wysylki);
-			} catch (SQLException e1)
+			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
 				e1.printStackTrace();
@@ -184,7 +183,7 @@ public class InformatorOkno extends JDialog
 				DefaultTableModel model_sprzedaz = new DefaultTableModel(data,
 						InformatorBaza.kolumny_sprzedaz_ilosc);
 				tableSprzedaz.setModel(model_sprzedaz);
-			} catch (SQLException e1)
+			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
 				e1.printStackTrace();
@@ -214,7 +213,7 @@ public class InformatorOkno extends JDialog
 				DefaultTableModel model_sprzedaz_ilosc = new DefaultTableModel(
 						data, InformatorBaza.kolumny_sprzedaz_ilosc);
 				tableIloscSprzedazy.setModel(model_sprzedaz_ilosc);
-			} catch (SQLException e1)
+			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
 				e1.printStackTrace();
@@ -244,7 +243,7 @@ public class InformatorOkno extends JDialog
 				DefaultTableModel model_sprzedaz_ilosc = new DefaultTableModel(
 						data, InformatorBaza.kolumny_wyslane_ilosc);
 				tableIloscWyslanych.setModel(model_sprzedaz_ilosc);
-			} catch (SQLException e1)
+			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
 				e1.printStackTrace();
@@ -274,7 +273,7 @@ public class InformatorOkno extends JDialog
 				DefaultTableModel model_ruch_towaru = new DefaultTableModel(
 						data, InformatorBaza.kolumny_ruch_towaru);
 				tableRuchTowaru.setModel(model_ruch_towaru);
-			} catch (SQLException e1)
+			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
 				e1.printStackTrace();

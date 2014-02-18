@@ -1,6 +1,5 @@
 package widok.abstrakt;
 
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class ModelTabeli extends DefaultTableModel
@@ -47,22 +46,24 @@ public class ModelTabeli extends DefaultTableModel
 		return isCellEditableFunktor.isCellEditable(row, column);
 	}
 
-	static public void ustawSzerokosc(JTable table)
-	{
-		table.getColumnModel().getColumn(0).setPreferredWidth(100);
-		table.getColumnModel().getColumn(1).setPreferredWidth(800);
-		table.getColumnModel().getColumn(3).setPreferredWidth(100);
-	}
-
 	@SuppressWarnings(
 	{ "rawtypes", "unchecked" })
 	@Override
 	public Class getColumnClass(int column)
 	{
 		if (column >= 0 && column < getColumnCount())
-			return getValueAt(0, column).getClass();
-		else
+		{
+			try
+			{
+				return getValueAt(0, column).getClass();
+			} catch (Exception e)
+			{
+				System.out.println(column);
+				e.printStackTrace();
+			}
+		} else
 			return Object.class;
+		return null;
 	}
 
 	public String[] pobierzWiersz(int row)

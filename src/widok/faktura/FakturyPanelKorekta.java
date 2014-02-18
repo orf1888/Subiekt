@@ -1,6 +1,5 @@
 package widok.faktura;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,11 +30,10 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 	 * @param editable
 	 * @param popupMagazynWFaktury
 	 *            - popup PrawegoKlikMyszy na tabeli Magazyn
-	 * @throws SQLException
+	 * @throws Exception
 	 */
 	public FakturyPanelKorekta(String tytul, int rodzajFaktury,
-			boolean editable, JPopupMenu popupMagazynWFaktury)
-			throws SQLException {
+			boolean editable, JPopupMenu popupMagazynWFaktury) throws Exception {
 		super(tytul, rodzajFaktury, editable, popupMagazynWFaktury, true);
 		listaProduktowKorekta = new ArrayList<ProduktWFakturze>();
 

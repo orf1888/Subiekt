@@ -2,20 +2,26 @@ package utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import kontroler.FakturaBaza;
 import kontroler.ProduktBaza;
+import kontroler.TransportRozliczenieBaza;
 import model.Faktura;
+import model.TransportRozliczenie;
 import model.produkt.Produkt;
 import model.produkt.ProduktWFakturze;
 import widok.WidokGlowny;
 
 public class FakturaZPliku
 {
+	private static TransportRozliczenie rachunek;
+	private static boolean isRachunek = true;
 
 	public static boolean wczytajTowaryZFS() throws Exception
 	{
@@ -74,7 +80,7 @@ public class FakturaZPliku
 			} else
 			{
 				listaProduktow.add(new ProduktWFakturze(index_produktu, cena,
-						ilosc_produktu, produktSlownik, false, 0));
+						ilosc_produktu, produktSlownik, false, 0, 0));
 				++index_produktu;
 			}
 		}
@@ -84,9 +90,18 @@ public class FakturaZPliku
 		Faktura nowa = FakturaBaza.nowaFaktura(Faktura.SPRZEDAZ, 0,
 				listaProduktow, waluta, DataUtils.pobierzAktualnaDate());
 		FakturaBaza.instance().dodaj(nowa);
-
 		WidokGlowny.frame.panelFakturSprz.tabelaDodajWiersz(nowa
 				.piszWierszTabeli());
+
+		if (isRachunek)
+		{
+			rachunek.id_faktury_odpowiadajacej = nowa.id_faktura;
+			TransportRozliczenieBaza.instance().dodaj_encje_transport(rachunek);
+			WidokGlowny.frame.panelTransportRozliczenie
+					.tabelaDodajWiersz(rachunek.piszWierszTabeli());
+		} else
+			MojeUtils
+					.showMsg("W fakturze nie znaleziono rachunku transportowego.");
 		/* Brak kodu bądź nie rozpoznano produktu */
 		if (!niewczytane_rekordy.isEmpty())
 		{
@@ -128,7 +143,9 @@ public class FakturaZPliku
 	{
 		if (plik != null)
 		{
-			Workbook plikXLS = Workbook.getWorkbook(plik);
+			WorkbookSettings setting = new WorkbookSettings();
+			setting.setEncoding("Cp1251");
+			Workbook plikXLS = Workbook.getWorkbook(plik, setting);
 			Sheet arkusz = plikXLS.getSheet(0);
 			return arkusz;
 		} else
@@ -137,6 +154,7 @@ public class FakturaZPliku
 	}
 
 	private static String[][] pobierzProduktyZPliku(Sheet arkusz)
+			throws Exception
 	{
 		int kod_kolumna;
 		int ilosc_kolumna;
@@ -168,10 +186,59 @@ public class FakturaZPliku
 						.replaceAll(",000", "");
 				++result_index;
 			}
+			try
+			{
+				String[] rachunek_transportowy = pobierzRachunekTrasportowy(
+						arkusz, start_end[1]);
+				rachunek = new TransportRozliczenie(0, new Date(),
+						rachunek_transportowy[1],
+						Integer.parseInt(rachunek_transportowy[2]),
+						Long.parseLong(rachunek_transportowy[0]), 0);
+			} catch (Exception e)
+			{
+				/* W fakturze z pliku nie znaleziono rachunku transportowego */
+				isRachunek = false;
+			}
 		} catch (Exception e)
 		{
 			MojeUtils.showError("Wczytany plik jest niekompatybilny!");
+			e.printStackTrace();
 		}
+		return result;
+	}
+
+	private static String[] pobierzRachunekTrasportowy(Sheet arkusz,
+			int koniec_towarow)
+	{
+		String[] result = new String[3];
+		/* Waluta */
+		String tmp_waluta = arkusz.getCell(7, 8).getContents().toString();
+		switch (tmp_waluta)
+		{
+		case TransportRozliczenie.EURO:
+		{
+			result[0] = "" + 2;
+			break;
+		}
+		case TransportRozliczenie.PLN:
+		{
+			result[0] = "" + 1;
+			break;
+		}
+		default:
+			break;
+		}
+		/* Numer oryginału faktury */
+		String tmp_numer = arkusz.getCell(0, 12).getContents().toString();
+		result[1] = tmp_numer;/* .substring(tmp_numer.length() - 9); */
+		/* Wartosc */
+		String tmp_wartosc = arkusz.getCell(8, (koniec_towarow + 4))
+				.getContents().toString().replaceAll(",", "");
+		/*
+		 * Znak spacji nie jest rozpoznawany jako spacja, w funkcji znajduje się
+		 * znak żywcem wklejony...
+		 */
+		result[2] = tmp_wartosc.replaceAll(" ", "").trim();
 		return result;
 	}
 

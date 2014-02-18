@@ -1,7 +1,5 @@
 package widok.faktura;
 
-import java.sql.SQLException;
-
 import javax.swing.JPopupMenu;
 
 import model.Faktura;
@@ -10,7 +8,7 @@ public class FakturySprzedazyPanel extends FakturyGeneralPanel
 {
 	private static final long serialVersionUID = -527809025862409241L;
 
-	public FakturySprzedazyPanel() throws SQLException {
+	public FakturySprzedazyPanel() throws Exception {
 		super(tworzPopupMagazynWFakturySprzedazy(), Faktura.SPRZEDAZ, true);
 	}
 

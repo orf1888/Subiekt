@@ -2,7 +2,6 @@ package widok.faktura;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -124,7 +123,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 				}
 			}
 
-			void zmienZaplacona(boolean zaplacona) throws SQLException
+			void zmienZaplacona(boolean zaplacona) throws Exception
 			{
 				ObiektWiersz wiersz = new ObiektWiersz(
 						pobierzZaznaczonyWiersz());
@@ -263,7 +262,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 	}
 
 	public FakturyGeneralPanel(JPopupMenu popupTabeliMagazynu,
-			final int fakturaRodzaj, boolean s) throws SQLException {
+			final int fakturaRodzaj, boolean s) throws Exception {
 		super(s);
 		try
 		{
@@ -293,7 +292,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					try
 					{
 						ustawOkres(fakturaRodzaj, okres_sortowania);
-					} catch (SQLException e1)
+					} catch (Exception e1)
 					{
 						MojeUtils
 								.showError("Błąd ustawiania okresu wyświetlania!");
@@ -302,7 +301,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					try
 					{
 						dane = obiektBazaManager.pobierzWierszeZBazy(warunki);
-					} catch (SQLException e)
+					} catch (Exception e)
 					{
 						MojeUtils
 								.showError("Błąd ustawiania danych widoku faktury!");
@@ -310,7 +309,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					try
 					{
 						przeladujTabele(dane, editableFunktor, false);
-					} catch (SQLException e)
+					} catch (Exception e)
 					{
 						MojeUtils
 								.showError("Błąd przeładowania widoku faktur!");
@@ -318,7 +317,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 				}
 			});
 			params.setBounds(1150, 550);
-			init(params);
+			init(params, false);
 		} catch (Exception e)
 		{
 			MojeUtils.showPrintError(e);
@@ -348,15 +347,14 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 	}
 
 	private String[][] ustawOkres(int fakturaRodzaj, String wejscieSortowania)
-			throws SQLException
+			throws Exception
 	{
 		Sorter sort = null;
 		try
 		{
 			sort = SorterKontroler.getSorter();
-		} catch (SQLException e1)
+		} catch (Exception e1)
 		{
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		if (wejscieSortowania == null && fakturaRodzaj == Faktura.SPRZEDAZ)
@@ -379,7 +377,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 		}
 		case "Bierzący miesiąc":
 		{
-			daty = DataUtils.getCurentMonth();
+			daty = DataUtils.getCurrentMonth();
 			sorter.setSelectedItem("Bierzący miesiąc");
 			if (fakturaRodzaj == Faktura.SPRZEDAZ)
 				sort.sorterFS = "Bierzący miesiąc";
@@ -389,7 +387,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 		}
 		case "Bierzący rok":
 		{
-			daty = DataUtils.getCurentYear();
+			daty = DataUtils.getCurrentYear();
 			sorter.setSelectedItem("Bierzący rok");
 			if (fakturaRodzaj == Faktura.SPRZEDAZ)
 				sort.sorterFS = "Bierzący rok";
