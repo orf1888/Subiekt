@@ -15,13 +15,14 @@ public class SorterKontroler
 		@Override
 		public Object operacja(ResultSet result) throws Exception
 		{
-			Sorter s = new Sorter(null, null, null, null);
+			Sorter s = new Sorter(null, null, null, null, null);
 			while (result.next())
 			{
 				s.sorterFS = result.getString(1);
 				s.sorterFZ = result.getString(2);
 				s.sorterW = result.getString(3);
 				s.sorterT = result.getString(4);
+				s.sorterWp = result.getString(5);
 			}
 			return s;
 		}
@@ -31,7 +32,8 @@ public class SorterKontroler
 	{
 		String querySql = "SELECT " + Sorter.kolumnyWBazie[0] + ", "
 				+ Sorter.kolumnyWBazie[1] + ", " + Sorter.kolumnyWBazie[2]
-				+ ", " + Sorter.kolumnyWBazie[3] + " FROM " + Sorter.tableName
+				+ ", " + Sorter.kolumnyWBazie[3] + ", "
+				+ Sorter.kolumnyWBazie[4] + " FROM " + Sorter.tableName
 				+ " WHERE id= " + SqlUtils.popraw(1);
 		return (Sorter) BazaDanych.getInstance().zapytanie(querySql,
 				pobieranieWierszaFunktor);
@@ -55,9 +57,12 @@ public class SorterKontroler
 					+ SqlUtils.popraw(sorter.sorterW) + "', ";
 		if (sorter.sorterT != null)
 			update += " " + Sorter.kolumnyWBazie[3] + "= '"
-					+ SqlUtils.popraw(sorter.sorterT) + "' ";
+					+ SqlUtils.popraw(sorter.sorterT) + "', ";
+		if (sorter.sorterWp != null)
+			update += " " + Sorter.kolumnyWBazie[4] + "= '"
+					+ SqlUtils.popraw(sorter.sorterWp) + "' ";
 		update += "WHERE id = " + SqlUtils.popraw(sorter.id);
-
+		System.err.println(update);
 		BazaDanych.getInstance().aktualizacja(update);
 	}
 }

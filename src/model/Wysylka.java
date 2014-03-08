@@ -7,13 +7,16 @@ import java.util.List;
 import kontroler.ObiektWyszukanieWarunki.StrukturaWarunku;
 import model.produkt.ProduktWWysylce;
 import utils.DataUtils;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 
 public class Wysylka implements ObiektZId
 {
 	public static String tableName = "wysylka";
 
-	public static String[] kolumnyWyswietlane =
-	{ "Numer wysyłki", "Data wysyłki", "id" };
+	public final static int kolumnaUkryta = 2; // liczac od 0, kolumna id
+
+	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
+	{ "Numer wysyłki", "Data wysyłki", "id" }, kolumnaUkryta);
 
 	public static String[] kolumnyWBazie =
 	{ "id", "data" };

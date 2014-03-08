@@ -8,6 +8,7 @@ import kontroler.WalutaManager;
 import utils.DataUtils;
 import utils.MojeUtils;
 import utils.UserShowException;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 
 public class TransportRozliczenie implements ObiektZId
 {
@@ -25,8 +26,13 @@ public class TransportRozliczenie implements ObiektZId
 	public static final String PLN = "Злотий";
 	/* Struktura widoku i DB */
 	public static String tableName = "transport_rozliczenie";
-	public static String[] kolumnyWyswietlane =
-	{ "Numer oryginału", "Numer faktury", "Data wystawienia", "Wartość" };
+
+	public final static int kolumnaUkryta = -1; // zadna
+
+	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
+	{ "Numer oryginału", "Numer faktury", "Data wystawienia", "Wartość" },
+			kolumnaUkryta);
+
 	public static String[] kolumnyWBazie =
 	{ "nr_faktury", "data_ksiegowania", "wartosc", "waluta",
 			"id_faktury_odpowiadajacej" };

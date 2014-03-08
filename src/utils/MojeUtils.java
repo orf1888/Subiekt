@@ -19,8 +19,8 @@ import kontroler.FakturaBaza;
 import kontroler.ObiektWyszukanieWarunki;
 import model.Chmura;
 import model.FChooserPL;
-import model.Faktura;
 import model.ObiektWiersz;
+import utils.Loger.LogerNazwa;
 import widok.WidokGlowny;
 
 public class MojeUtils
@@ -44,6 +44,7 @@ public class MojeUtils
 	{
 		showError(e.getLocalizedMessage());
 		e.printStackTrace();
+		error(e);
 	}
 
 	public static void showMsg(String str)
@@ -56,6 +57,18 @@ public class MojeUtils
 	{
 		JOptionPane.showMessageDialog(null, str, "Błąd",
 				JOptionPane.ERROR_MESSAGE);
+	}
+
+	public static void error(Exception e)
+	{
+		e.printStackTrace();
+		try
+		{
+			Loger.log(LogerNazwa.BledyLog, e.getLocalizedMessage());
+		} catch (IOException e1)
+		{
+			e1.printStackTrace();
+		}
 	}
 
 	/**
@@ -158,7 +171,7 @@ public class MojeUtils
 		String prefix = (grosze < 0) ? "-" : "";
 		if (grosze < 0)
 			grosze = -grosze;
-		int obcieteGrosze = grosze % 100;
+		int obcieteGrosze = Math.abs(grosze % 100);
 		if (obcieteGrosze < 10)
 			return prefix + (grosze / 100) + ",0" + (obcieteGrosze);
 		else
@@ -168,6 +181,7 @@ public class MojeUtils
 	public static void showError(Exception e)
 	{
 		showError(e.getMessage());
+		error(e);
 	}
 
 	public static void kopiujPlik(File source, File destination)
@@ -407,8 +421,8 @@ public class MojeUtils
 	public static String pobierzNrFakturyOdpowiadającej(
 			int id_faktury_odopwiadającej_rachunkowi) throws Exception
 	{
-		ObiektWyszukanieWarunki warunki_faktury = new ObiektWyszukanieWarunki(
-				new Faktura());
+		ObiektWyszukanieWarunki warunki_faktury = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
 		warunki_faktury.dodajWarunek(id_faktury_odopwiadającej_rachunkowi,
 				"id_faktura");
 		String[][] nr_faktury_odpowiadajacej = null;

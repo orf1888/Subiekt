@@ -27,6 +27,7 @@ import kontroler.ObiektWyszukanieWarunki;
 import model.ObiektWiersz;
 import utils.MojeUtils;
 import widok.abstrakt.ModelTabeli.IsCellEditableFunktor;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 
 public abstract class PanelOgolnyTabela extends JPanel
 {
@@ -65,7 +66,12 @@ public abstract class PanelOgolnyTabela extends JPanel
 	/**
 	 * 
 	 */
-	public ObiektBazaManager obiektBazaManager = null;
+	ObiektBazaManager _obiektBazaManager = null;
+
+	public ObiektBazaManager getObiektBazaManager()
+	{
+		return _obiektBazaManager;
+	}
 
 	public ObiektWyszukanieWarunki warunki;
 
@@ -82,9 +88,9 @@ public abstract class PanelOgolnyTabela extends JPanel
 
 	private JScrollPane suwak_tabeli;
 
-	private String[] obiektKolumny;
+	private OpisKolumn opisKolumn;
 
-	private Integer columnToDeleteCache;
+	private int columnToDeleteCache;
 
 	protected JPanel panel_naglowek;
 
@@ -110,6 +116,10 @@ public abstract class PanelOgolnyTabela extends JPanel
 	protected void init(PanelOgolnyParametry params,
 			boolean ustawWielkoscKolumny) throws Exception
 	{
+		//
+		this._obiektBazaManager = params.obiektBazaManager;
+		//
+
 		/* ASSERT */
 		if (funktorDwuklikTabela == null)
 			throw new Exception("funktorDwuklikTabela cannot be null");
@@ -122,8 +132,8 @@ public abstract class PanelOgolnyTabela extends JPanel
 		_table.addMouseListener(tableMouseClickAdapter);
 
 		this.popup = params.popupMenu;
-		this.obiektKolumny = params.obiektKolumny;
-		this.columnToDeleteCache = params.columnToDelete;
+		this.opisKolumn = params.opisKolumny;
+		this.columnToDeleteCache = params.opisKolumny.columnToDelete;
 		this.panelWyswietl = params.panelWyswietl;
 
 		wczytajTabele(ustawWielkoscKolumny);
@@ -191,7 +201,7 @@ public abstract class PanelOgolnyTabela extends JPanel
 			model.removeRow(i);
 	}
 
-	protected void ustawTabele(ModelTabeli model, Integer columnToDelete)
+	protected void ustawTabele(ModelTabeli model, int columnToDelete)
 	{
 		_table.setModel(model);
 
@@ -200,7 +210,7 @@ public abstract class PanelOgolnyTabela extends JPanel
 			RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 			_table.setRowSorter(sorter);
 		}
-		if (columnToDelete != null && columnToDelete < _table.getColumnCount())
+		if (columnToDelete >= 0 && columnToDelete < _table.getColumnCount())
 			_table.removeColumn(_table.getColumnModel().getColumn(
 					columnToDelete));
 	}
@@ -273,9 +283,15 @@ public abstract class PanelOgolnyTabela extends JPanel
 			throws Exception
 	{
 		resetujTabele();
-		if (data == null)
-			data = obiektBazaManager.pobierzWierszeZBazy(warunki);
-		model = new ModelTabeli(data, obiektKolumny, editableFunktor);
+
+		if (getObiektBazaManager() == null)
+			MojeUtils.println("getObiektBazaManager() == null");
+
+		if (data == null
+		/** TMP **/
+		&& getObiektBazaManager() != null)
+			data = getObiektBazaManager().pobierzWierszeZBazy(warunki);
+		model = new ModelTabeli(data, opisKolumn, editableFunktor);
 		ustawTabele(model, columnToDeleteCache);
 		if (ustawWielkoscKolumny)
 		{

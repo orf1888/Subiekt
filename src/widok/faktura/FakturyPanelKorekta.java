@@ -53,6 +53,8 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 	@Override
 	protected void zmienKontrachent()
 	{
+		// LogerBledow.log(LogerNazwa.FakturaLog, "zmienKontrachent hahaha");
+
 		if (tmpNieZmieniaKontrachenta)
 			return;
 		Kontrachent k = pobierzKontrachenta();
@@ -75,7 +77,9 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 					listaWybranychPanel.tabelaEdytujWiersz(i, _produkt.pisz(),
 							true);
 				} catch (Exception e)
-				{}
+				{
+					MojeUtils.error(e);
+				}
 			}
 		}
 	}

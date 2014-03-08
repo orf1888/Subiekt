@@ -96,7 +96,7 @@ public class WysylkaBaza implements ObiektBazaManager
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}

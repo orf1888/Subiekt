@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import model.Faktura;
 import model.ObiektZId;
 import utils.SqlUtils;
 
@@ -49,8 +50,18 @@ public class ObiektWyszukanieWarunki
 
 	//
 
-	public ObiektWyszukanieWarunki(ObiektZId typObiektu) {
+	private ObiektWyszukanieWarunki() {}
+
+	public ObiektWyszukanieWarunki(ObiektZId typObiektu) throws Exception {
 		this.typObiektu = typObiektu;
+	}
+
+	public static ObiektWyszukanieWarunki TworzWarunekFaktura()
+	{
+		ObiektWyszukanieWarunki result = new ObiektWyszukanieWarunki();
+		result.typObiektu = new Faktura();
+		result.dodajWarunek("1", "aktualna");
+		return result;
 	}
 
 	public String generujWarunekWhere()

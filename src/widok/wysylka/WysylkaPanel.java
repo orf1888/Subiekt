@@ -51,12 +51,11 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 			warunki = new ObiektWyszukanieWarunki(new Wysylka());
 			PanelEdytujDodajObiekt panelDwukliku = new WyswietlPDFPanel();
 			PanelOgolnyParametry params = new PanelOgolnyParametry(
-					tworzModelFuktor(), Wysylka.kolumnyWyswietlane.length - 1,
-					tworzMenuPopup(), new WysylkaBaza(),
+					tworzModelFuktor(), tworzMenuPopup(), new WysylkaBaza(),
 					new WysylkaPanelEdytujDodaj("Dodaj", true,
 							popupTabeliMagazynu), new WysylkaPanelEdytujDodaj(
 							"Edytuj", true, popupTabeliMagazynu),
-					panelDwukliku, false, Wysylka.kolumnyWyswietlane);
+					panelDwukliku, false, Wysylka.opisKolumn);
 			sorter.addActionListener(new ActionListener()
 			{
 
@@ -71,12 +70,13 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 					{
 						MojeUtils
 								.showError("Błąd ustawiania okresu wyświetlania!");
-						e1.printStackTrace();
+						MojeUtils.error(e1);
 					}
 					String[][] dane = null;
 					try
 					{
-						dane = obiektBazaManager.pobierzWierszeZBazy(warunki);
+						dane = getObiektBazaManager().pobierzWierszeZBazy(
+								warunki);
 					} catch (Exception e)
 					{
 						MojeUtils
@@ -128,7 +128,7 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 		} catch (Exception e1)
 		{
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			MojeUtils.error(e1);
 		}
 		if (wejscieSortowania == null)
 			wejscieSortowania = sort.sorterW;
@@ -164,7 +164,7 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 			warunki.dodajWarunekZData(daty[0], daty[1], "data");
 		}
 		SorterKontroler.edytuj(sort);
-		return obiektBazaManager.pobierzWierszeZBazy(warunki);
+		return getObiektBazaManager().pobierzWierszeZBazy(warunki);
 
 	}
 

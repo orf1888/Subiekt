@@ -10,12 +10,15 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import kontroler.FakturaBaza;
+import kontroler.ObiektBazaManager;
 import model.Faktura;
 import model.produkt.ProduktWFakturze;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.abstrakt.ModelTabeli;
 import widok.abstrakt.PanelOgolnyParametry;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 
 public class FakturyKorektaPanelListaWybranych extends
 		FakturyPanelListaWybranychAbstrakt
@@ -169,21 +172,21 @@ public class FakturyKorektaPanelListaWybranych extends
 	{
 
 		@Override
-		public void tableChanged(TableModelEvent e)
+		public void tableChanged(TableModelEvent ev)
 		{
 			if (exit)
 			{
 				exit = false;
 				return;
 			}
-			int row = e.getFirstRow();
-			int column = e.getColumn();
+			int row = ev.getFirstRow();
+			int column = ev.getColumn();
 			if (row < 0)
 				return;
 			if (column < 2 || column > 3)
 				return;
 
-			TableModel model = (TableModel) e.getSource();
+			TableModel model = (TableModel) ev.getSource();
 
 			boolean isKorekta = ((String) model.getValueAt(row, 0)).isEmpty();
 
@@ -234,8 +237,9 @@ public class FakturyKorektaPanelListaWybranych extends
 						try
 						{
 							grosze = MojeUtils.utworzWartoscGrosze(data, "");
-						} catch (Exception exc)
+						} catch (Exception e)
 						{
+							MojeUtils.error(e);
 							model.setValueAt(staraWartosc, row, column);
 							return;
 						}
@@ -299,6 +303,7 @@ public class FakturyKorektaPanelListaWybranych extends
 						grosze = MojeUtils.utworzWartoscGrosze(data, "");
 					} catch (Exception exc)
 					{
+						MojeUtils.error(exc);
 						model.setValueAt(staraWartosc, row, column);
 						return;
 					}
@@ -361,6 +366,14 @@ public class FakturyKorektaPanelListaWybranych extends
 		}
 	};
 
+	//
+	public final static int kolumnaUkryta = -1; // liczac od 0, kolumna id
+
+	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
+	{ "L.p.", "Nazwa", "Cena", "Ilość", "Wartość", "Rabat %" }, kolumnaUkryta);
+
+	//
+
 	public FakturyKorektaPanelListaWybranych(
 			FakturyPanelEdytujDodaj fakturyPanel, boolean s) {
 		super(s);
@@ -382,10 +395,11 @@ public class FakturyKorektaPanelListaWybranych extends
 				itemUsun.addActionListener(usunListener);
 			}
 
+			// ObiektBazaManager baza = null;
+			ObiektBazaManager baza = new FakturaBaza();
 			PanelOgolnyParametry params = PanelOgolnyParametry
-					.createMinimalParametry(tworzModelFuktor(), (Integer) null,
-							popupMenu, null, new String[]
-							{ "L.p.", "Nazwa", "Cena", "Ilość", "Wartość" });
+					.createMinimalParametry(tworzModelFuktor(), popupMenu,
+							baza, null, opisKolumn);
 			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu(
 					this);
 			init(params, true);
@@ -400,7 +414,7 @@ public class FakturyKorektaPanelListaWybranych extends
 	}
 
 	@Override
-	protected void ustawTabele(ModelTabeli model, Integer columnToDelete)
+	protected void ustawTabele(ModelTabeli model, int columnToDelete)
 	{
 		super.ustawTabele(model, columnToDelete);
 		zmienEditableFunktor(listaWybranychEditableFunktor);

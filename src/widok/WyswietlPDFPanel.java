@@ -65,7 +65,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 			pdfDecoder.setPageParameters(1, 1);
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 		}
 		initializeViewer();
 		pageCounter2.setText(String.valueOf(currentPage));
@@ -125,7 +125,9 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 				{
 					MojeUtils.zapiszPlik(plik, "pdf", false);
 				} catch (Exception e1)
-				{}
+				{
+					MojeUtils.error(e1);;
+				}
 			}
 		});
 
@@ -173,7 +175,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					} catch (Exception e1)
 					{
 						System.err.println("back to page 1");
-						e1.printStackTrace();
+						MojeUtils.error(e1);;
 					}
 					pageCounter2.setText(String.valueOf(currentPage));
 				}
@@ -202,7 +204,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					} catch (Exception e1)
 					{
 						System.err.println("back 10 pages");
-						e1.printStackTrace();
+						MojeUtils.error(e1);;
 					}
 					pageCounter2.setText(String.valueOf(currentPage));
 				}
@@ -232,7 +234,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					} catch (Exception e1)
 					{
 						System.err.println("back 1 page");
-						e1.printStackTrace();
+						MojeUtils.error(e1);;
 					}
 
 					// set page number display
@@ -270,7 +272,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					} catch (Exception e)
 					{
 						System.err.println("page number entered");
-						e.printStackTrace();
+						MojeUtils.error(e);
 					}
 
 				} catch (Exception e)
@@ -319,7 +321,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					} catch (Exception e1)
 					{
 						System.err.println("forward 1 page");
-						e1.printStackTrace();
+						MojeUtils.error(e1);;
 					}
 
 					pageCounter2.setText(String.valueOf(currentPage));
@@ -352,7 +354,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					} catch (Exception e1)
 					{
 						System.err.println("forward 10 pages");
-						e1.printStackTrace();
+						MojeUtils.error(e1);;
 					}
 
 					pageCounter2.setText(String.valueOf(currentPage));
@@ -386,7 +388,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					} catch (Exception e1)
 					{
 						System.err.println("forward to last page");
-						e1.printStackTrace();
+						MojeUtils.error(e1);;
 					}
 
 					pageCounter2.setText(String.valueOf(currentPage));

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import model.Podmiot;
 import utils.BazaDanych;
 import utils.BazaStatementFunktor;
+import utils.MojeUtils;
 import utils.SqlUtils;
 
 public class PodmiotBaza
@@ -29,7 +30,7 @@ public class PodmiotBaza
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}

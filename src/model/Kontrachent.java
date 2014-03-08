@@ -1,13 +1,16 @@
 package model;
 
 import kontroler.ObiektWyszukanieWarunki.StrukturaWarunku;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 
 public class Kontrachent implements ObiektZId
 {
 	public final static String tableName = "kontrachent";
 
-	public final static String[] kolumny =
-	{ "Nazwa", "Miejscowość", "NIP", "id" };
+	public final static int kolumnaUkryta = 3; // liczac od 0, kolumna id
+
+	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
+	{ "Nazwa", "Miejscowość", "NIP", "id" }, kolumnaUkryta);
 
 	public final static String[] kolumnyPrzeszukiwania =
 	{ "nazwa", "miasto", "kod_pocztowy", "ulica", "regon", "nr_konta", "nip" };
@@ -35,11 +38,24 @@ public class Kontrachent implements ObiektZId
 	// dodałem do bazy kredyt_kupiecki
 	public int kredyt_kupiecki;
 
+	/* długi walutowe kontrachenta */
+	public Integer dlug_pln, dlug_eur, dlug_usd, dlug_uah;
+
+	/*
+	 * środki nierozliczone w waluciepodczas wpłaty automatycznie płaconesą
+	 * najstarsze niezałacone faktury,kolumny odpowiadają różnicy wpłaty oraz
+	 * faktur opłaconych dzięki wpłacie
+	 */
+	public Integer nadplata_pln, nadplata_eur, nadplata_usd, nadplata_uah;
+
 	public Kontrachent() {}
 
 	public Kontrachent(String nazwa, String miasto, String kod_pocztowy,
 			String ulica, int cena_mnoznik, boolean widoczny, String nip,
-			String regon, String nrKonta, int kredyt_kupiecki, int id) {
+			String regon, String nrKonta, int kredyt_kupiecki, int id,
+			Integer dlug_pln, Integer dlug_eur, Integer dlug_usd,
+			Integer dlug_uah, Integer nadplata_pln, Integer nadplata_eur,
+			Integer nadplata_usd, Integer nadplata_uah) {
 		this.nazwa = nazwa;
 		this.miasto = miasto;
 		this.kod_pocztowy = kod_pocztowy;
@@ -51,6 +67,14 @@ public class Kontrachent implements ObiektZId
 		this.nrKonta = nrKonta;
 		this.kredyt_kupiecki = kredyt_kupiecki;
 		this.id_kontrachent = id;
+		this.dlug_pln = dlug_pln;
+		this.dlug_eur = dlug_eur;
+		this.dlug_usd = dlug_usd;
+		this.dlug_uah = dlug_uah;
+		this.nadplata_pln = nadplata_pln;
+		this.nadplata_eur = nadplata_eur;
+		this.nadplata_usd = nadplata_usd;
+		this.nadplata_uah = nadplata_uah;
 	}
 
 	@Override

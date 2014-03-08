@@ -42,7 +42,7 @@ public class SlownikManager
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}
@@ -83,7 +83,7 @@ public class SlownikManager
 			return wynik.toArray(new String[wynik.size()]);
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}
@@ -116,7 +116,7 @@ public class SlownikManager
 			});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}

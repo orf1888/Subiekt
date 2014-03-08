@@ -1,4 +1,4 @@
-package widok;
+package widok.podmiot;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

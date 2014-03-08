@@ -44,7 +44,7 @@ public class WalutaManager
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);;
 			return null;
 		}
 	}
@@ -87,7 +87,7 @@ public class WalutaManager
 			return wynik.toArray(new String[wynik.size()]);
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);;
 			return null;
 		}
 	}
@@ -120,7 +120,7 @@ public class WalutaManager
 			});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);;
 			return null;
 		}
 	}
@@ -153,7 +153,7 @@ public class WalutaManager
 			});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);;
 			return null;
 		}
 	}

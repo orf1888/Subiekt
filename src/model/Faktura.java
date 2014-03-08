@@ -9,14 +9,17 @@ import kontroler.WalutaManager;
 import model.produkt.ProduktWFakturze;
 import utils.DataUtils;
 import utils.MojeUtils;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 
 public class Faktura implements ObiektZId
 {
 	public static String tableName = "faktura";
 
-	public static String[] kolumnyWyswietlane =
+	public final static int kolumnaUkryta = 5; // liczac od 0, kolumna id
+
+	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
 	{ "Numer faktury", "Data wystawienia", " Termin płatności", "Kontrahent",
-			"Wartość", "id" };
+			"Wartość", "id" }, kolumnaUkryta);
 
 	public static String[] kolumnyWBazie =
 	{ "numer", "data_wystawienia", "termin_platnosci", "wartosc" };

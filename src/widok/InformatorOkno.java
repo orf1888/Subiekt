@@ -157,7 +157,7 @@ public class InformatorOkno extends JDialog
 			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
-				e1.printStackTrace();
+				MojeUtils.error(e1);;
 			}
 		}
 	};
@@ -186,7 +186,7 @@ public class InformatorOkno extends JDialog
 			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
-				e1.printStackTrace();
+				MojeUtils.error(e1);;
 			}
 		}
 	};
@@ -216,7 +216,7 @@ public class InformatorOkno extends JDialog
 			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
-				e1.printStackTrace();
+				MojeUtils.error(e1);;
 			}
 		}
 	};
@@ -246,7 +246,7 @@ public class InformatorOkno extends JDialog
 			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
-				e1.printStackTrace();
+				MojeUtils.error(e1);;
 			}
 		}
 	};
@@ -276,7 +276,7 @@ public class InformatorOkno extends JDialog
 			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
-				e1.printStackTrace();
+				MojeUtils.error(e1);;
 			}
 		}
 	};

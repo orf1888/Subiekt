@@ -90,17 +90,16 @@ public class ZestawieniaPanel extends JPanel
 	/* Zestawienie pokazujące dłużników */
 	public void dluznicy() throws Exception
 	{
-		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
-				new Faktura());
+		ObiektWyszukanieWarunki warunki = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
 		warunki.dodajWarunek("0", "zaplacona");
-		warunki.dodajWarunek("1", "aktualna");
 		warunki.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
 		if (warunekKontrachent != null)
 			warunki.dodajWarunek(warunekKontrachent, "id_kontrachent");
 
 		String[][] data = fakturaBaza.pobierzWierszeZBazy(warunki);
 		DefaultTableModel model = new DefaultTableModel(data,
-				Faktura.kolumnyWyswietlane);
+				Faktura.opisKolumn.obiektKolumny);
 		table.setModel(model);
 		table.removeColumn(table.getColumnModel().getColumn(5));
 		panelTabeli.setBorder(new TitledBorder(UIManager
@@ -170,9 +169,8 @@ public class ZestawieniaPanel extends JPanel
 	public void raportDlugi() throws Exception
 	{
 		/* poierz listę faktur w PLN - 1 */
-		ObiektWyszukanieWarunki warunkiDlugPLN = new ObiektWyszukanieWarunki(
-				new Faktura());
-		warunkiDlugPLN.dodajWarunek("1", "aktualna");
+		ObiektWyszukanieWarunki warunkiDlugPLN = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
 		warunkiDlugPLN.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
 		warunkiDlugPLN.dodajWarunek("1", "waluta"); // waluta PLN
 		warunkiDlugPLN.dodajWarunek("0", "zaplacona"); // nie zapłacona
@@ -183,9 +181,8 @@ public class ZestawieniaPanel extends JPanel
 		String[][] dataDlugKontrahentaPLN = fakturaBaza
 				.pobierzWierszeZBazy(warunkiDlugPLN);
 		/* poierz listę faktur w EUR - 2 */
-		ObiektWyszukanieWarunki warunkiDlugEUR = new ObiektWyszukanieWarunki(
-				new Faktura());
-		warunkiDlugEUR.dodajWarunek("1", "aktualna");
+		ObiektWyszukanieWarunki warunkiDlugEUR = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
 		warunkiDlugEUR.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
 		warunkiDlugEUR.dodajWarunek("2", "waluta"); // waluta EUR
 		warunkiDlugEUR.dodajWarunek("0", "zaplacona"); // nie zapłacona
@@ -196,9 +193,8 @@ public class ZestawieniaPanel extends JPanel
 		String[][] dataDlugKontrahentaEUR = fakturaBaza
 				.pobierzWierszeZBazy(warunkiDlugEUR);
 		/* poierz listę faktur w USD - 3 */
-		ObiektWyszukanieWarunki warunkiDlugUSD = new ObiektWyszukanieWarunki(
-				new Faktura());
-		warunkiDlugUSD.dodajWarunek("1", "aktualna");
+		ObiektWyszukanieWarunki warunkiDlugUSD = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
 		warunkiDlugUSD.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
 		warunkiDlugUSD.dodajWarunek("3", "waluta"); // waluta USD
 		warunkiDlugUSD.dodajWarunek("0", "zaplacona"); // nie zapłacona
@@ -209,9 +205,8 @@ public class ZestawieniaPanel extends JPanel
 		String[][] dataDlugKontrahentaUSD = fakturaBaza
 				.pobierzWierszeZBazy(warunkiDlugUSD);
 		/* listę faktur w EUR - 4 */
-		ObiektWyszukanieWarunki warunkiDlugUAH = new ObiektWyszukanieWarunki(
-				new Faktura());
-		warunkiDlugUAH.dodajWarunek("1", "aktualna");
+		ObiektWyszukanieWarunki warunkiDlugUAH = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
 		warunkiDlugUAH.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
 		warunkiDlugUAH.dodajWarunek("4", "waluta"); // waluta UAH
 		warunkiDlugUAH.dodajWarunek("0", "zaplacona"); // nie zapłacona
@@ -228,17 +223,16 @@ public class ZestawieniaPanel extends JPanel
 
 	public void dlugi() throws Exception
 	{
-		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
-				new Faktura());
+		ObiektWyszukanieWarunki warunki = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
 		warunki.dodajWarunek("0", "zaplacona");
-		warunki.dodajWarunek("1", "aktualna");
 		warunki.dodajWarunek(Faktura.ZAKUP, "rodzaj");
 		if (warunekKontrachent != null)
 			warunki.dodajWarunek(warunekKontrachent, "id_kontrachent");
 
 		String[][] data = fakturaBaza.pobierzWierszeZBazy(warunki);
 		DefaultTableModel model = new DefaultTableModel(data,
-				Faktura.kolumnyWyswietlane);
+				Faktura.opisKolumn.obiektKolumny);
 
 		table.setModel(model);
 		table.removeColumn(table.getColumnModel().getColumn(5));

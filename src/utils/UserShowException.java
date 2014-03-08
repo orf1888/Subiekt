@@ -1,8 +1,8 @@
 package utils;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
+
+import utils.Loger.LogerNazwa;
 
 public class UserShowException extends Exception
 {
@@ -11,16 +11,6 @@ public class UserShowException extends Exception
 
 	public UserShowException(String message) throws IOException {
 		super(message);
-		writeLog();
-	}
-
-	private void writeLog() throws IOException
-	{
-		FileWriter file = new FileWriter("log//log.txt", true);
-		BufferedWriter out = new BufferedWriter(file);
-		out.write(DataUtils.pobierzAktualnaDate() + "--->" + getMessage()
-				+ "\n");
-		out.close();
-		file.close();
+		Loger.log(LogerNazwa.BledyLog, message);
 	}
 }

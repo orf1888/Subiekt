@@ -1,10 +1,10 @@
 package model.produkt;
 
-import model.ObiektZId;
 import kontroler.ObiektWyszukanieWarunki.StrukturaWarunku;
+import model.ObiektZId;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 
-public class Produkt
-	implements ObiektZId
+public class Produkt implements ObiektZId
 {
 	public static final String tableName = "produkt";
 
@@ -12,10 +12,16 @@ public class Produkt
 
 	public static final String tableLaczacaWysylka = "c_wysylka_produkt";
 
-	public final static String[] kolumnyWyswietlane = { "Kod", "Nazwa", "Ilość", "id" };
+	public final static int kolumnaUkryta = 3; // liczac od 0, kolumna id
 
-	public final static String[] kolumnyWBazie = { "kod", "nazwa", "ilosc", "widoczny", "id_producenta",
-		"cena_zakupu" };
+	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
+	{ "Kod", "Nazwa", "Ilość", "id" }, kolumnaUkryta);
+
+	// public final static String[] kolumnyWyswietlane = { "Kod", "Nazwa",
+	// "Ilość", "id" };
+
+	public final static String[] kolumnyWBazie =
+	{ "kod", "nazwa", "ilosc", "widoczny", "id_producenta", "cena_zakupu" };
 
 	/*
 	 * 
@@ -35,9 +41,8 @@ public class Produkt
 
 	public int id_produkt;
 
-	public Produkt( String kod, String nazwa, int ilosc, boolean widoczny, int id_producenta,
-			int cena_zakupu, int id_produkt )
-	{
+	public Produkt(String kod, String nazwa, int ilosc, boolean widoczny,
+			int id_producenta, int cena_zakupu, int id_produkt) {
 		this.kod = kod;
 		this.nazwa = nazwa;
 		this.ilosc = ilosc;
@@ -47,8 +52,7 @@ public class Produkt
 		this.id_produkt = id_produkt;
 	}
 
-	public Produkt()
-	{}
+	public Produkt() {}
 
 	@Override
 	public String[] piszWierszTabeli()
@@ -73,7 +77,8 @@ public class Produkt
 		return kolumnyWBazie;
 	}
 
-	private static StrukturaWarunku warunekWidoczny = new StrukturaWarunku( 1, "widoczny", false );
+	private static StrukturaWarunku warunekWidoczny = new StrukturaWarunku(1,
+			"widoczny", false);
 
 	@Override
 	public StrukturaWarunku getWarunekWidoczny()

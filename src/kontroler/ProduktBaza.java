@@ -117,7 +117,7 @@ public class ProduktBaza implements ObiektBazaManager
 		} catch (Exception e)
 		{
 			MojeUtils.println("pobierzDlaFaktury error");
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}
@@ -128,7 +128,10 @@ public class ProduktBaza implements ObiektBazaManager
 	{
 		final List<String[]> wynik = new ArrayList<String[]>();
 
-		String querySql = "SELECT kod, nazwa, ilosc, id_produkt, cena_zakupu FROM "
+		// String querySql =
+		// "SELECT kod, nazwa, ilosc, id_produkt, cena_zakupu FROM "
+		// + Produkt.tableName;
+		String querySql = "SELECT kod, nazwa, ilosc, id_produkt FROM "
 				+ Produkt.tableName;
 		querySql += warunki.generujWarunekWhere();
 
@@ -151,8 +154,9 @@ public class ProduktBaza implements ObiektBazaManager
 							String[] wiersz =
 							{ result.getString(1), result.getString(2),
 									"" + result.getInt(3),
-									"" + result.getInt(4),
-									"" + result.getInt(5) };
+									"" + result.getInt(4)
+							// "" + result.getInt(5)
+							};
 							wynik.add(wiersz);
 						}
 						return null;
@@ -200,7 +204,7 @@ public class ProduktBaza implements ObiektBazaManager
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}
@@ -237,13 +241,14 @@ public class ProduktBaza implements ObiektBazaManager
 										result.getInt(1));
 							} catch (Exception e)
 							{
+								MojeUtils.error(e);
 								return null;
 							}
 						}
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}
@@ -391,7 +396,7 @@ public class ProduktBaza implements ObiektBazaManager
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}
@@ -520,7 +525,7 @@ public class ProduktBaza implements ObiektBazaManager
 		} catch (Exception e)
 		{
 			MojeUtils.println("pobierzDlaWysylki error");
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}

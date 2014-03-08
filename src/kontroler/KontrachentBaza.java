@@ -4,9 +4,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Faktura;
 import model.Kontrachent;
 import model.ObiektWiersz;
 import model.ObiektZId;
+import model.Wplata;
 import utils.BazaDanych;
 import utils.BazaStatementFunktor;
 import utils.MojeUtils;
@@ -16,7 +18,10 @@ import utils.UserShowException;
 public class KontrachentBaza implements ObiektBazaManager
 {
 
-	private static final String SELECT_QUERY_SQL = "SELECT nazwa, miasto, kod_pocztowy, ulica, cena_mnoznik, widoczny, nip, regon, nr_konta, kredyt_kupiecki, id_kontrachent FROM "
+	private static final String SELECT_QUERY_SQL = "SELECT nazwa, miasto, kod_pocztowy,"
+			+ " ulica, cena_mnoznik, widoczny, nip, regon, nr_konta,"
+			+ " kredyt_kupiecki, id_kontrachent, dlug_pln, dlug_eur,"
+			+ " dlug_usd, dlug_uah,nadplata_pln, nadplata_eur, nadplata_usd, nadplata_uah FROM "
 			+ Kontrachent.tableName;
 
 	@Override
@@ -90,10 +95,6 @@ public class KontrachentBaza implements ObiektBazaManager
 						{
 							try
 							{
-								/*
-								 * dodajemy do tabeli kolejne pobrane
-								 * wiersze,skladajace sie z 4 elementow
-								 */
 								return new Kontrachent(result.getString(1),
 										result.getString(2), result
 												.getString(3), result
@@ -102,16 +103,21 @@ public class KontrachentBaza implements ObiektBazaManager
 										result.getString(7), result
 												.getString(8), result
 												.getString(9), result
-												.getInt(10), result.getInt(11));
+												.getInt(10), result.getInt(11),
+										result.getInt(12), result.getInt(13),
+										result.getInt(14), result.getInt(15),
+										result.getInt(16), result.getInt(17),
+										result.getInt(18), result.getInt(19));
 							} catch (Exception e)
 							{
+								MojeUtils.error(e);
 								return null;
 							}
 						}
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return null;
 		}
 	}
@@ -135,9 +141,11 @@ public class KontrachentBaza implements ObiektBazaManager
 					.getInstance()
 					.wstaw("INSERT INTO  "
 							+ Kontrachent.tableName
-							+ " (nazwa, miasto, kod_pocztowy, ulica, cena_mnoznik, widoczny, nip, regon, nr_konta, kredyt_kupiecki"
-							+ ") VALUES ('" + SqlUtils.popraw(nowyKontr.nazwa)
-							+ "','" + SqlUtils.popraw(nowyKontr.miasto) + "','"
+							+ " (nazwa, miasto, kod_pocztowy, ulica, cena_mnoznik, widoczny, nip, regon, nr_konta,"
+							+ " kredyt_kupiecki, dlug_pln, dlug_eur, dlug_usd, dlug_uah,nadplata_pln, nadplata_eur,"
+							+ " nadplata_usd, nadplata_uah" + ") VALUES ('"
+							+ SqlUtils.popraw(nowyKontr.nazwa) + "','"
+							+ SqlUtils.popraw(nowyKontr.miasto) + "','"
 							+ SqlUtils.popraw(nowyKontr.kod_pocztowy) + "','"
 							+ SqlUtils.popraw(nowyKontr.ulica) + "',"
 							+ SqlUtils.popraw(nowyKontr._cena_mnoznik) + ","
@@ -145,7 +153,16 @@ public class KontrachentBaza implements ObiektBazaManager
 							+ ",'" + SqlUtils.popraw(nowyKontr.nip) + "','"
 							+ SqlUtils.popraw(nowyKontr.regon) + "','"
 							+ SqlUtils.popraw(nowyKontr.nrKonta) + "','"
-							+ SqlUtils.popraw(nowyKontr.kredyt_kupiecki) + "')");
+							+ SqlUtils.popraw(nowyKontr.kredyt_kupiecki)
+							+ "','" + SqlUtils.popraw(nowyKontr.dlug_pln)
+							+ "','" + SqlUtils.popraw(nowyKontr.dlug_eur)
+							+ "','" + SqlUtils.popraw(nowyKontr.dlug_usd)
+							+ "','" + SqlUtils.popraw(nowyKontr.dlug_uah)
+							+ "','" + SqlUtils.popraw(nowyKontr.nadplata_pln)
+							+ "','" + SqlUtils.popraw(nowyKontr.nadplata_eur)
+							+ "','" + SqlUtils.popraw(nowyKontr.nadplata_usd)
+							+ "','" + SqlUtils.popraw(nowyKontr.nadplata_uah)
+							+ "')");
 
 			MojeUtils.println("" + generatedId);
 
@@ -180,26 +197,48 @@ public class KontrachentBaza implements ObiektBazaManager
 						+ getNazwaFromWiersz(znalezioneWiersze[0]));
 		}
 
-		BazaDanych.getInstance().aktualizacja(
-				"UPDATE " + Kontrachent.tableName + " set nazwa= '"
-						+ SqlUtils.popraw(nowyKontrachent.nazwa)
-						+ "', miasto= '"
-						+ SqlUtils.popraw(nowyKontrachent.miasto)
-						+ "', kod_pocztowy= '"
-						+ SqlUtils.popraw(nowyKontrachent.kod_pocztowy)
-						+ "', ulica= '"
-						+ SqlUtils.popraw(nowyKontrachent.ulica)
-						+ "', cena_mnoznik= '"
-						+ SqlUtils.popraw(nowyKontrachent._cena_mnoznik)
-						+ "', nip = '" + SqlUtils.popraw(nowyKontrachent.nip)
-						+ "', regon = '"
-						+ SqlUtils.popraw(nowyKontrachent.regon)
-						+ "', nr_konta = '"
-						+ SqlUtils.popraw(nowyKontrachent.nrKonta)
-						+ "', kredyt_kupiecki = '"
-						+ SqlUtils.popraw(nowyKontrachent.kredyt_kupiecki)
-						+ "' WHERE id_kontrachent = "
-						+ SqlUtils.popraw(kontrachent.id_kontrachent));
+		String updateSQL = "UPDATE " + Kontrachent.tableName + " set nazwa= '"
+				+ SqlUtils.popraw(nowyKontrachent.nazwa) + "', miasto= '"
+				+ SqlUtils.popraw(nowyKontrachent.miasto)
+				+ "', kod_pocztowy= '"
+				+ SqlUtils.popraw(nowyKontrachent.kod_pocztowy) + "', ulica= '"
+				+ SqlUtils.popraw(nowyKontrachent.ulica) + "', cena_mnoznik= '"
+				+ SqlUtils.popraw(nowyKontrachent._cena_mnoznik) + "', nip = '"
+				+ SqlUtils.popraw(nowyKontrachent.nip) + "', regon = '"
+				+ SqlUtils.popraw(nowyKontrachent.regon) + "', nr_konta = '"
+				+ SqlUtils.popraw(nowyKontrachent.nrKonta)
+				+ "', kredyt_kupiecki = '"
+				+ SqlUtils.popraw(nowyKontrachent.kredyt_kupiecki);
+		/* dług walutowy */
+		if (nowyKontrachent.dlug_pln != null)
+			updateSQL += "', dlug_pln = '"
+					+ SqlUtils.popraw(nowyKontrachent.dlug_pln);
+		if (nowyKontrachent.dlug_eur != null)
+			updateSQL += "', dlug_eur = '"
+					+ SqlUtils.popraw(nowyKontrachent.dlug_eur);
+		if (nowyKontrachent.dlug_usd != null)
+			updateSQL += "', dlug_usd = '"
+					+ SqlUtils.popraw(nowyKontrachent.dlug_usd);
+		if (nowyKontrachent.dlug_uah != null)
+			updateSQL += "', dlug_uah = '"
+					+ SqlUtils.popraw(nowyKontrachent.dlug_uah);
+		/* środki nierozliczone z wpłaty */
+		if (nowyKontrachent.nadplata_pln != null)
+			updateSQL += "', nadplata_pln = '"
+					+ SqlUtils.popraw(nowyKontrachent.nadplata_pln);
+		if (nowyKontrachent.nadplata_eur != null)
+			updateSQL += "', nadplata_eur = '"
+					+ SqlUtils.popraw(nowyKontrachent.nadplata_eur);
+		if (nowyKontrachent.nadplata_usd != null)
+			updateSQL += "', nadplata_usd = '"
+					+ SqlUtils.popraw(nowyKontrachent.nadplata_usd);
+		if (nowyKontrachent.nadplata_uah != null)
+			updateSQL += "', nadplata_uah = '"
+					+ SqlUtils.popraw(nowyKontrachent.nadplata_uah);
+		updateSQL += "' WHERE id_kontrachent = "
+				+ SqlUtils.popraw(kontrachent.id_kontrachent);
+		System.out.println(updateSQL);
+		BazaDanych.getInstance().aktualizacja(updateSQL);
 	}
 
 	@Override
@@ -269,5 +308,163 @@ public class KontrachentBaza implements ObiektBazaManager
 						return wynik.toArray(new String[wynik.size()]);
 					}
 				});
+	}
+
+	public void dodajDoDlugu(Faktura faktura, Long waluta) throws Exception
+	{
+		switch (waluta.intValue())
+		{
+		case 1:
+		{
+			faktura.kontrahent.dlug_pln += faktura.wartosc_z_narzutem;
+			break;
+		}
+		case 2:
+		{
+			faktura.kontrahent.dlug_eur += faktura.wartosc_z_narzutem;
+			break;
+		}
+		case 3:
+		{
+			faktura.kontrahent.dlug_usd += faktura.wartosc_z_narzutem;
+			break;
+		}
+		case 4:
+		{
+			faktura.kontrahent.dlug_uah += faktura.wartosc_z_narzutem;
+			break;
+		}
+		}
+		edytuj(faktura.kontrahent, faktura.kontrahent);
+	}
+
+	public void odejmijOdDlugu(Faktura faktura, Long waluta) throws Exception
+	{
+		int wartosc = 0;
+		switch (waluta.intValue())
+		{
+		case 1:
+		{
+			wartosc = faktura.kontrahent.dlug_pln - faktura.wartosc_z_narzutem;
+			if (wartosc < 0)
+			{
+				faktura.kontrahent.dlug_pln = 0;
+				faktura.kontrahent.nadplata_pln += -wartosc;
+			} else
+				faktura.kontrahent.dlug_pln -= faktura.wartosc_z_narzutem;
+			break;
+		}
+		case 2:
+		{
+			wartosc = faktura.kontrahent.dlug_eur - faktura.wartosc_z_narzutem;
+			if (wartosc < 0)
+			{
+				faktura.kontrahent.dlug_eur = 0;
+				faktura.kontrahent.nadplata_eur += -wartosc;
+			} else
+				faktura.kontrahent.dlug_eur -= faktura.wartosc_z_narzutem;
+			break;
+		}
+		case 3:
+		{
+			wartosc = faktura.kontrahent.dlug_usd - faktura.wartosc_z_narzutem;
+			if (wartosc < 0)
+			{
+				faktura.kontrahent.dlug_usd = 0;
+				faktura.kontrahent.nadplata_usd += -wartosc;
+			} else
+				faktura.kontrahent.dlug_usd -= faktura.wartosc_z_narzutem;
+			break;
+		}
+		case 4:
+		{
+			wartosc = faktura.kontrahent.dlug_uah - faktura.wartosc_z_narzutem;
+			if (wartosc < 0)
+			{
+				faktura.kontrahent.dlug_uah = 0;
+				faktura.kontrahent.nadplata_uah += -wartosc;
+			} else
+				faktura.kontrahent.dlug_uah -= faktura.wartosc_z_narzutem;
+			break;
+		}
+		}
+		edytuj(faktura.kontrahent, faktura.kontrahent);
+	}
+
+	public void odejmijOdDlugu(Wplata wplata, Long waluta) throws Exception
+	{
+		Kontrachent tmp_kontrachent = (Kontrachent) KontrachentBaza
+				.pobierzObiektZBazy(wplata.id_kontrachent);
+		int wartosc;
+		switch (waluta.intValue())
+		{
+		case 1:
+		{
+			wartosc = tmp_kontrachent.dlug_pln - wplata.wartosc;
+			if (wartosc < 0)
+			{
+				tmp_kontrachent.dlug_pln = 0;
+				tmp_kontrachent.nadplata_pln += -wartosc;
+			} else
+			{
+				tmp_kontrachent.dlug_pln -= wplata.wartosc;
+				tmp_kontrachent.nadplata_pln = tmp_kontrachent.dlug_pln
+						- wplata.wartosc;
+			}
+			break;
+		}
+		case 2:
+		{
+			wartosc = tmp_kontrachent.dlug_eur - wplata.wartosc;
+			if (wartosc < 0)
+			{
+				tmp_kontrachent.dlug_eur = 0;
+				tmp_kontrachent.nadplata_eur += -wartosc;
+			} else
+				tmp_kontrachent.dlug_eur -= wplata.wartosc;
+			break;
+		}
+		case 3:
+		{
+			wartosc = tmp_kontrachent.dlug_usd - wplata.wartosc;
+			if (wartosc < 0)
+			{
+				tmp_kontrachent.dlug_usd = 0;
+				tmp_kontrachent.nadplata_usd += -wartosc;
+			} else
+				tmp_kontrachent.dlug_usd -= wplata.wartosc;;
+			break;
+		}
+		case 4:
+		{
+			wartosc = tmp_kontrachent.dlug_uah - wplata.wartosc;
+			if (wartosc < 0)
+			{
+				tmp_kontrachent.dlug_uah = 0;
+				tmp_kontrachent.nadplata_uah += -wartosc;
+			} else
+				tmp_kontrachent.dlug_uah -= wplata.wartosc;;
+			break;
+		}
+		}
+		edytuj(tmp_kontrachent, tmp_kontrachent);
+	}
+
+	public static int getDlugByWaluta(int waluta, Kontrachent tmp_kontrachent)
+	{
+		switch (waluta)
+		{
+		case 1:
+			return tmp_kontrachent.dlug_pln;
+		case 2:
+			return tmp_kontrachent.dlug_eur;
+		case 3:
+			return tmp_kontrachent.dlug_usd;
+		case 4:
+			return tmp_kontrachent.dlug_uah;
+		default:
+			MojeUtils.showError("Nipoprawna waluta!");
+			return 0;
+		}
 	}
 }

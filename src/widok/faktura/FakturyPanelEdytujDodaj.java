@@ -324,13 +324,15 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		if (rodzajFaktury == Faktura.SPRZEDAZ)
 		{
 			if (tmpNieZmieniaKontrachenta)
+			{
+				pobierzKontrachenta();
 				return;
+			}
 			Kontrachent k = pobierzKontrachenta();
 
 			if (k != null)
 			{
 				listaWybranychPanel.wyczyscTabele();
-
 				for (ProduktWFakturze _produkt : listaProduktow)
 				{
 					double mnoznik = 100;
@@ -483,7 +485,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 					KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);;
 		}
 	}
 
@@ -502,7 +504,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			panelTerminPlatnosci.setDate(new Date());
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);;
 		}
 	}
 

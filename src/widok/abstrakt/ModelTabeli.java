@@ -2,6 +2,9 @@ package widok.abstrakt;
 
 import javax.swing.table.DefaultTableModel;
 
+import utils.MojeUtils;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
+
 public class ModelTabeli extends DefaultTableModel
 {
 	private static final long serialVersionUID = 1L;
@@ -24,13 +27,28 @@ public class ModelTabeli extends DefaultTableModel
 
 	/**
 	 * @param data
-	 * @param col_m
+	 * @param opisKolumn
+	 *            .obiektKolumny
 	 * @param editable
 	 *            - czy model jest edytowalny
+	 * @throws Exception
 	 */
-	public ModelTabeli(Object[][] data, String[] col_m,
-			IsCellEditableFunktor isCellEditableFunktor) {
-		super(data, col_m);
+	public ModelTabeli(Object[][] data, OpisKolumn opisKolumn,
+			IsCellEditableFunktor isCellEditableFunktor) throws Exception {
+		super(data, opisKolumn.obiektKolumny);
+
+		if (data.length > 0
+				&& (data[0].length != opisKolumn.obiektKolumny.length))
+			throw new Exception("ModelTabeli dostal tablice \'data\' ktora ma "
+					+ data[0].length + " kolumn, a opisKolumn jest na "
+					+ opisKolumn.obiektKolumny.length);
+
+		if (opisKolumn.columnToDelete >= 0
+				&& opisKolumn.columnToDelete > opisKolumn.obiektKolumny.length)
+			throw new Exception("ModelTabeli dostal columnToDelete "
+					+ opisKolumn.columnToDelete + ", a opisKolumn jest na "
+					+ opisKolumn.obiektKolumny.length);
+
 		setIsCellEditableFunktor(isCellEditableFunktor);
 	}
 
@@ -59,7 +77,7 @@ public class ModelTabeli extends DefaultTableModel
 			} catch (Exception e)
 			{
 				System.out.println(column);
-				e.printStackTrace();
+				MojeUtils.error(e);
 			}
 		} else
 			return Object.class;

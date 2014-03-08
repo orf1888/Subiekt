@@ -202,7 +202,7 @@ public class FakturaZPliku
 		} catch (Exception e)
 		{
 			MojeUtils.showError("Wczytany plik jest niekompatybilny!");
-			e.printStackTrace();
+			MojeUtils.error(e);
 		}
 		return result;
 	}

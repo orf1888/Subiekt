@@ -10,11 +10,14 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import kontroler.FakturaBaza;
+import kontroler.ObiektBazaManager;
 import model.produkt.ProduktWFakturze;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.abstrakt.ModelTabeli;
 import widok.abstrakt.PanelOgolnyParametry;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 
 public class FakturyPanelListaWybranych extends
 		FakturyPanelListaWybranychAbstrakt
@@ -94,6 +97,7 @@ public class FakturyPanelListaWybranych extends
 					grosze = MojeUtils.utworzWartoscGrosze(data, "");
 				} catch (Exception exc)
 				{
+					MojeUtils.error(exc);
 					model.setValueAt(staraWartosc, row, column);
 					return;
 				}
@@ -147,6 +151,14 @@ public class FakturyPanelListaWybranych extends
 		}
 	};
 
+	//
+	public final static int kolumnaUkryta = -1; // liczac od 0, kolumna id
+
+	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
+	{ "L.p.", "Nazwa", "Cena", "Ilość", "Wartość", "Rabat %" }, kolumnaUkryta);
+
+	//
+
 	public FakturyPanelListaWybranych(
 			FakturyPanelEdytujDodaj fakturyPanelEdytujDodaj, boolean s) {
 		super(s);
@@ -160,11 +172,11 @@ public class FakturyPanelListaWybranych extends
 			itemUsun.setHorizontalTextPosition(SwingConstants.RIGHT);
 			itemUsun.addActionListener(usunListener);
 
+			// ObiektBazaManager baza = null;
+			ObiektBazaManager baza = new FakturaBaza();
 			PanelOgolnyParametry params = PanelOgolnyParametry
-					.createMinimalParametry(tworzModelFuktor(), (Integer) null,
-							popupMenu, null, new String[]
-							{ "L.p.", "Nazwa", "Cena", "Ilość", "Wartość",
-									"Rabat %" });
+					.createMinimalParametry(tworzModelFuktor(), popupMenu,
+							baza, null, opisKolumn);
 			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu(
 					this);
 			init(params, true);
@@ -179,7 +191,7 @@ public class FakturyPanelListaWybranych extends
 	}
 
 	@Override
-	protected void ustawTabele(ModelTabeli model, Integer columnToDelete)
+	protected void ustawTabele(ModelTabeli model, int columnToDelete)
 	{
 		super.ustawTabele(model, columnToDelete);
 		zmienEditableFunktor(listaWybranychEditableFunktor);

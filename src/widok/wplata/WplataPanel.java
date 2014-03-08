@@ -1,39 +1,40 @@
-package widok;
+package widok.wplata;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingConstants;
+
 import kontroler.ObiektWyszukanieWarunki;
 import kontroler.SorterKontroler;
-import kontroler.TransportRozliczenieBaza;
+import kontroler.WplataBaza;
 import model.Sorter;
-import model.TransportRozliczenie;
+import model.Wplata;
 import utils.DataUtils;
 import utils.MojeUtils;
 import widok.abstrakt.PanelOgolnyParametry;
 import widok.abstrakt.PanelOgolnyPrzyciski;
 
-public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
+public class WplataPanel extends PanelOgolnyPrzyciski
 {
+	private static final long serialVersionUID = -273267642187625639L;
 
-	private static final long serialVersionUID = 2132580214548407183L;
-
-	public TransportRozliczeniePanel(boolean s) throws Exception {
+	public WplataPanel(boolean s) {
 		super(s);
 		try
 		{
-			// JPopupMenu popupTabeliMagazynu = null;//
-			// tworzPopupMagazynWysylce();
-			warunki = new ObiektWyszukanieWarunki(null);
-			// PanelEdytujDodajObiekt panelDwukliku = new WyswietlPDFPanel();
-			PanelOgolnyParametry params = new PanelOgolnyParametry(
-					tworzModelFuktor(), null/*
-											 * tworzMenuPopup ()
-											 */,
-					new TransportRozliczenieBaza(), null, null,
-					null/* panelDwukliku */, false,
-					TransportRozliczenie.opisKolumn);
-
+			warunki = new ObiektWyszukanieWarunki(new Wplata());
+			init(new PanelOgolnyParametry(initModelFunktor, tworzMenuPopup(),
+					new WplataBaza(),
+					new WplataPanelEdytujDodaj("Dodaj", true),
+					new WplataPanelEdytujDodaj("Edytuj", true), null/*
+																	 * dwulkik
+																	 * na
+																	 * wierszu
+																	 */, false,
+					Wplata.opisKolumn), false);
 			sorter.addActionListener(new ActionListener()
 			{
 
@@ -58,44 +59,54 @@ public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
 					} catch (Exception e)
 					{
 						MojeUtils
-								.showError("Błąd ustawiania danych widoku rozliczenia transportu!");
+								.showError("Błąd ustawiania danych widoku wpłat!");
 					}
 					try
 					{
 						przeladujTabele(dane, editableFunktor, false);
 					} catch (Exception e)
 					{
-						MojeUtils
-								.showError("Błąd przeładowania widoku rozliczenia transportu!");
+						MojeUtils.showError("Błąd przeładowania widoku wpłat!");
 					}
 				}
 			});
-			params.setBounds(1150, 550);
-			init(params, true);
 		} catch (Exception e)
 		{
 			MojeUtils.showPrintError(e);
 		}
 	}
 
-	public InitModelFunktor tworzModelFuktor()
+	private final InitModelFunktor initModelFunktor = new InitModelFunktor()
 	{
-		return new InitModelFunktor()
+		@Override
+		public String[][] getBeginningData()
 		{
-			@Override
-			public String[][] getBeginningData()
+			try
 			{
-				try
-				{
-					return getObiektBazaManager().pobierzWierszeZBazy(warunki);
-					/* return ustawOkres(null); */
-				} catch (Exception e)
-				{
-					MojeUtils.showPrintError(e);
-					return null;
-				}
+				return ustawOkres(null);
+			} catch (Exception e)
+			{
+				MojeUtils.showPrintError(e);
+				return null;
 			}
-		};
+		}
+	};
+
+	private JPopupMenu tworzMenuPopup()
+	{
+		JPopupMenu result = new JPopupMenu();
+		JMenuItem itemEdytuj = new JMenuItem("Edytuj", null);
+		result.add(itemEdytuj);
+		itemEdytuj.setHorizontalTextPosition(SwingConstants.RIGHT);
+		edytujListener = tworzEdytujListener();
+		itemEdytuj.addActionListener(edytujListener);
+
+		JMenuItem itemUsun = new JMenuItem("Usuń", null);
+		result.add(itemUsun);
+		itemUsun.setHorizontalTextPosition(SwingConstants.RIGHT);
+		usunListener = tworzUsunListener();
+		itemUsun.addActionListener(usunListener);
+		return result;
 	}
 
 	private String[][] ustawOkres(String wejscieSortowania) throws Exception
@@ -109,7 +120,7 @@ public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
 			MojeUtils.error(e1);
 		}
 		if (wejscieSortowania == null)
-			wejscieSortowania = sort.sorterT;
+			wejscieSortowania = sort.sorterWp;
 		String[] daty = null;
 		boolean wszystkie = false;
 		switch (wejscieSortowania)
@@ -117,7 +128,7 @@ public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
 		case "Wszystkie":
 		{
 			wszystkie = true;
-			sort.sorterT = "Wszystkie";
+			sort.sorterWp = "Wszystkie";
 			sorter.setSelectedItem("Wszystkie");
 			break;
 		}
@@ -125,21 +136,21 @@ public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
 		{
 			daty = DataUtils.getCurrentMonth();
 			sorter.setSelectedItem("Bierzący miesiąc");
-			sort.sorterT = "Bierzący miesiąc";
+			sort.sorterWp = "Bierzący miesiąc";
 			break;
 		}
 		case "Bierzący rok":
 		{
 			daty = DataUtils.getCurrentYear();
 			sorter.setSelectedItem("Bierzący rok");
-			sort.sorterT = "Bierzący rok";
+			sort.sorterWp = "Bierzący rok";
 			break;
 		}
 		}
-		warunki = new ObiektWyszukanieWarunki(null);
+		warunki = new ObiektWyszukanieWarunki(new Wplata());
 		if (!wszystkie)
 		{
-			warunki.dodajWarunekZData(daty[0], daty[1], "data_ksiegowania");
+			warunki.dodajWarunekZData(daty[0], daty[1], "data_wplaty");
 		}
 		SorterKontroler.edytuj(sort);
 		return getObiektBazaManager().pobierzWierszeZBazy(warunki);

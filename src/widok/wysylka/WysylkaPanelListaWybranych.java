@@ -10,6 +10,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import kontroler.ObiektBazaManager;
+import kontroler.WysylkaBaza;
 import model.ObiektWiersz;
 import model.Wysylka;
 import model.produkt.ProduktWWysylce;
@@ -18,6 +20,7 @@ import utils.UserShowException;
 import widok.abstrakt.ModelTabeli;
 import widok.abstrakt.ModelTabeli.IsCellEditableFunktor;
 import widok.abstrakt.PanelOgolnyParametry;
+import widok.abstrakt.PanelOgolnyParametry.OpisKolumn;
 import widok.abstrakt.PanelOgolnyTabela;
 
 public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
@@ -118,6 +121,14 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 		}
 	};
 
+	//
+	final int kolumnaUkryta = -1; // brak
+
+	final OpisKolumn opisKolumn = new OpisKolumn(new String[]
+	{ "L.p.", "Kod", "Nazwa", "Ilość" }, kolumnaUkryta);
+
+	//
+
 	public WysylkaPanelListaWybranych(
 			WysylkaPanelEdytujDodaj wysylkaPanelEdytujDodaj, boolean s) {
 		super(s);
@@ -131,10 +142,11 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 			itemUsun.setHorizontalTextPosition(SwingConstants.RIGHT);
 			itemUsun.addActionListener(usunListener);
 
+			// ObiektBazaManager baza = null;
+			ObiektBazaManager baza = new WysylkaBaza();
 			PanelOgolnyParametry params = PanelOgolnyParametry
-					.createMinimalParametry(tworzModelFuktor(), (Integer) null,
-							popupMenu, null, new String[]
-							{ "L.p.", "Kod", "Nazwa", "Ilość" });
+					.createMinimalParametry(tworzModelFuktor(), popupMenu,
+							baza, null, opisKolumn);
 			funktorDwuklikTabela = new FunktorDwuklikTabelaWybieraniaProduktu(
 					this);
 			init(params, true);
@@ -148,7 +160,7 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 	}
 
 	@Override
-	protected void ustawTabele(ModelTabeli model, Integer columnToDelete)
+	protected void ustawTabele(ModelTabeli model, int columnToDelete)
 	{
 		super.ustawTabele(model, columnToDelete);
 		zmienEditableFunktor(listaWybranychEditableFunktor);
@@ -227,7 +239,7 @@ public class WysylkaPanelListaWybranych extends PanelOgolnyTabela
 					editableFunktor, true);
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 		}
 		globalny_lp = pobierzIloscWierszy();
 	}

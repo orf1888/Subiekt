@@ -8,15 +8,17 @@ public class Sorter
 	public String sorterFZ;
 	public String sorterW;
 	public String sorterT;
+	public String sorterWp;
 	public static String[] kolumnyWBazie =
-	{ "faktury_sprzedazy", "faktury_zakupu", "wysylki", "transport" };
+	{ "faktury_sprzedazy", "faktury_zakupu", "wysylki", "transport", "wplata" };
 
 	public Sorter(String sorterFZ, String sorterFv, String sorterW,
-			String sorterT) {
+			String sorterT, String sorterWp) {
 		this.sorterFZ = sorterFv;
 		this.sorterFS = sorterFZ;
 		this.sorterW = sorterW;
 		this.sorterT = sorterT;
+		this.sorterWp = sorterWp;
 		this.id = 1;
 	}
 }

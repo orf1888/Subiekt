@@ -111,9 +111,8 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 															 * anulujSzukanieListener
 															 * ,
 															 */
-			Produkt.kolumnyWyswietlane.length - 1, popupMenu,
-					ProduktBaza.instance(), pDodaj, pEdytuj, pWyswietl,
-					wyswietlButtony, Produkt.kolumnyWyswietlane), false);
+			popupMenu, ProduktBaza.instance(), pDodaj, pEdytuj, pWyswietl,
+					wyswietlButtony, Produkt.opisKolumn), false);
 
 			/* filtrowanie po producencie u góry tabelki */
 			{
@@ -151,7 +150,6 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 			}
 		} catch (Exception e)
 		{
-			e.printStackTrace();
 			MojeUtils.showPrintError(e);
 		}
 	}
@@ -199,7 +197,7 @@ public class MagazynPanel extends PanelOgolnyPrzyciski
 			try
 			{
 				warunki.dodajWarunek(1, "widoczny");
-				return obiektBazaManager.pobierzWierszeZBazy(warunki);
+				return getObiektBazaManager().pobierzWierszeZBazy(warunki);
 			} catch (Exception e)
 			{
 				MojeUtils.showPrintError(e);

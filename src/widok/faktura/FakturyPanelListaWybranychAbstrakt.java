@@ -66,7 +66,7 @@ public class FakturyPanelListaWybranychAbstrakt extends PanelOgolnyTabela
 					editableFunktor, true);
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 		}
 		/* licz lp */
 		globalny_lp = 0;

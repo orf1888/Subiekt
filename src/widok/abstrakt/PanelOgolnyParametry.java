@@ -9,21 +9,19 @@ public class PanelOgolnyParametry
 {
 
 	public PanelOgolnyParametry(InitModelFunktor initModelFunktor,
-			Integer columnToDelete, JPopupMenu popupMenu,
-			ObiektBazaManager obiektBazaManager,
+			JPopupMenu popupMenu, ObiektBazaManager obiektBazaManager,
 			PanelEdytujDodajObiekt panelDodaj,
 			PanelEdytujDodajObiekt panelEdytuj,
 			PanelEdytujDodajObiekt panelWyswietl, boolean pokazBtnUsun,
-			String[] obiektKolumny) {
+			OpisKolumn opisKolumny) {
 		setBounds(550, 425);
 		this.initModelFunktor = initModelFunktor;
-		this.columnToDelete = columnToDelete;
 		this.popupMenu = popupMenu;
 		this.obiektBazaManager = obiektBazaManager;
 		this.panelDodaj = panelDodaj;
 		this.panelEdytuj = panelEdytuj;
 		this.panelWyswietl = panelWyswietl;
-		this.obiektKolumny = obiektKolumny;
+		this.opisKolumny = opisKolumny;
 		this.pokazBtnUsun = pokazBtnUsun;
 	}
 
@@ -32,19 +30,18 @@ public class PanelOgolnyParametry
 	}
 
 	public static PanelOgolnyParametry createMinimalParametry(
-			InitModelFunktor initModelFunktor, Integer columnToDelete,
-			JPopupMenu popupMenu, PanelEdytujDodajObiekt panelWyswietl,
-			String[] obiektKolumny)
+			InitModelFunktor initModelFunktor, JPopupMenu popupMenu,
+			ObiektBazaManager obiektBazaManager,
+			PanelEdytujDodajObiekt panelWyswietl, OpisKolumn opisKolumny)
 	{
 		PanelOgolnyParametry res = new PanelOgolnyParametry();
 		res.initModelFunktor = initModelFunktor;
-		res.columnToDelete = columnToDelete;
 		res.popupMenu = popupMenu;
-		res.obiektBazaManager = null;
+		res.obiektBazaManager = obiektBazaManager;
 		res.panelDodaj = null;
 		res.panelEdytuj = null;
 		res.panelWyswietl = panelWyswietl;
-		res.obiektKolumny = obiektKolumny;
+		res.opisKolumny = opisKolumny;
 		res.pokazBtnUsun = false;
 		return res;
 	}
@@ -57,8 +54,6 @@ public class PanelOgolnyParametry
 
 	InitModelFunktor initModelFunktor;
 
-	Integer columnToDelete;
-
 	JPopupMenu popupMenu;
 
 	ObiektBazaManager obiektBazaManager;
@@ -69,7 +64,18 @@ public class PanelOgolnyParametry
 
 	PanelEdytujDodajObiekt panelWyswietl;
 
-	String[] obiektKolumny;
+	static public class OpisKolumn
+	{
+		public OpisKolumn(String[] a, int _columnToDelete) {
+			obiektKolumny = a;
+			this.columnToDelete = _columnToDelete;
+		}
+
+		public String[] obiektKolumny;
+		public int columnToDelete;
+	}
+
+	OpisKolumn opisKolumny;
 
 	boolean pokazBtnUsun;
 

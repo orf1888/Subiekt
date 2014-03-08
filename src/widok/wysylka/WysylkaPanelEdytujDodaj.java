@@ -267,7 +267,7 @@ public class WysylkaPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			listaProduktow.clear();
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 		}
 	}
 
@@ -282,7 +282,7 @@ public class WysylkaPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			panelData.setDate(new Date());
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 		}
 	}
 

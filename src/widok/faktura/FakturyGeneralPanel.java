@@ -53,7 +53,8 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					if (wiersz.wiersz == null)
 						return;
 
-					staryObiekt = obiektBazaManager.pobierzObiektZBazy(wiersz);
+					staryObiekt = getObiektBazaManager().pobierzObiektZBazy(
+							wiersz);
 
 					if (((Faktura) staryObiekt).isKorekta)
 					{
@@ -98,7 +99,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 							pobierzZaznaczonyWiersz());
 					if (wiersz.wiersz == null)
 						return;
-					Faktura faktura = (Faktura) obiektBazaManager
+					Faktura faktura = (Faktura) getObiektBazaManager()
 							.pobierzObiektZBazy(wiersz);
 					Object[] polskiePrzyciski =
 					{ "Zapłacona", "Nie zapłacona" };
@@ -169,7 +170,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 				Faktura nowa = (Faktura) oknoModalne
 						.pobierzZFormatki(staryObiekt.getId());
 				Faktura stara = (Faktura) staryObiekt;
-				FakturaBaza baza = ((FakturaBaza) obiektBazaManager);
+				FakturaBaza baza = ((FakturaBaza) getObiektBazaManager());
 
 				if (stara.isKorekta)
 				{
@@ -181,12 +182,14 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					 */
 				} else
 				{
+					// TODO tranzakcja
+					stara.aktualna = false;
+					baza.ustawNieaktualna(stara);
+
 					/* nowa */
 					nowa.isKorekta = true;
 					baza.dodaj_encje_faktura(nowa);
 
-					stara.aktualna = false;
-					baza.ustawNieaktualna(stara);
 					/* edytuj produkty (jak przy edycji) */
 
 					ProduktBaza.dodajListeProduktow(nowa.produkty,
@@ -234,7 +237,8 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					if (wiersz.wiersz == null)
 						return;
 
-					staryObiekt = obiektBazaManager.pobierzObiektZBazy(wiersz);
+					staryObiekt = getObiektBazaManager().pobierzObiektZBazy(
+							wiersz);
 					if (((Faktura) staryObiekt).isKorekta)
 						throw new UserShowException(
 								"Nie można dodać korekty do korekty!");
@@ -270,18 +274,20 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					fakturaRodzaj, true, popupTabeliMagazynu);
 			panelEdytujKorekta = new FakturyPanelKorekta("Edytuj korektę",
 					fakturaRodzaj, true, popupTabeliMagazynu);
-			warunki = new ObiektWyszukanieWarunki(new Faktura());
+
+			warunki = ObiektWyszukanieWarunki.TworzWarunekFaktura();
+			warunki.removeWarunek("aktualna");
+
 			PanelEdytujDodajObiekt panelDwukliku = fakturaRodzaj == Faktura.SPRZEDAZ ? new WyswietlPDFPanel()
 					: null;
 			PanelOgolnyParametry params = new PanelOgolnyParametry(
-					tworzModelFuktor(fakturaRodzaj),
-					Faktura.kolumnyWyswietlane.length - 1, tworzMenuPopup(),
+					tworzModelFuktor(fakturaRodzaj), tworzMenuPopup(),
 					new FakturaBaza(), new FakturyPanelEdytujDodaj(
 							"Dodaj fakturę", fakturaRodzaj, true,
 							popupTabeliMagazynu, false),
 					new FakturyPanelEdytujDodaj("Edytuj fakturę",
 							fakturaRodzaj, true, popupTabeliMagazynu, false),
-					panelDwukliku, false, Faktura.kolumnyWyswietlane);
+					panelDwukliku, false, Faktura.opisKolumn);
 			sorter.addActionListener(new ActionListener()
 			{
 
@@ -300,7 +306,8 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 					String[][] dane = null;
 					try
 					{
-						dane = obiektBazaManager.pobierzWierszeZBazy(warunki);
+						dane = getObiektBazaManager().pobierzWierszeZBazy(
+								warunki);
 					} catch (Exception e)
 					{
 						MojeUtils
@@ -355,7 +362,7 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 			sort = SorterKontroler.getSorter();
 		} catch (Exception e1)
 		{
-			e1.printStackTrace();
+			MojeUtils.error(e1);
 		}
 		if (wejscieSortowania == null && fakturaRodzaj == Faktura.SPRZEDAZ)
 			wejscieSortowania = sort.sorterFS;
@@ -396,15 +403,14 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 			break;
 		}
 		}
-		warunki = new ObiektWyszukanieWarunki(new Faktura());
-		warunki.dodajWarunek(1, "aktualna");
+		warunki = ObiektWyszukanieWarunki.TworzWarunekFaktura();
 		warunki.dodajWarunek(fakturaRodzaj, "rodzaj");
 		if (!wszystkie)
 		{
 			warunki.dodajWarunekZData(daty[0], daty[1], "data_wystawienia");
 		}
 		SorterKontroler.edytuj(sort);
-		return obiektBazaManager.pobierzWierszeZBazy(warunki);
+		return getObiektBazaManager().pobierzWierszeZBazy(warunki);
 
 	}
 

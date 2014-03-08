@@ -18,14 +18,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import kontroler.FakturaBaza;
+import kontroler.KontrachentBaza;
 import kontroler.ObiektWyszukanieWarunki;
 import kontroler.ProduktBaza;
 import kontroler.TransportRozliczenieBaza;
+import model.Faktura;
+import model.Kontrachent;
 import model.ObiektWiersz;
 import model.ObiektZId;
 import model.TransportRozliczenie;
+import model.Wplata;
 import net.sf.nachocalendar.components.DatePanel;
 import utils.DataUtils;
+import utils.Loger;
+import utils.Loger.LogerNazwa;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.InformatorOkno;
@@ -53,6 +60,8 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 	protected ActionListener rozliczListener;
 
+	protected ActionListener pokazDlugiListener;
+
 	protected static ActionListener informatorListener;
 
 	protected JPanel panel_przycikow;
@@ -73,7 +82,9 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 	{
 		MojeUtils.println("Inicjuje " + this.getClass().getName());
 
-		this.obiektBazaManager = params.obiektBazaManager;
+		// super.init(params, false);
+
+		// this.obiektBazaManager = params.obiektBazaManager;
 		this.panelDodaj = params.panelDodaj;
 		this.panelEdytuj = params.panelEdytuj;
 		if (panelDodaj != null)
@@ -90,6 +101,8 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					params.sizeX, params.sizeY);
 		if (params.pokazBtnUsun)
 			usunListener = tworzUsunListener();
+		else
+			usunListener = null;
 		if (isRozlicz)
 			rozliczListener = tworzRozliczListener();
 
@@ -271,10 +284,65 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 					if (nowy == null)
 						return;
+					if (nowy instanceof Faktura)
+					{
+						try
+						{
+							getObiektBazaManager().dodaj(nowy);
+							tabelaDodajWiersz(nowy.piszWierszTabeli());
 
-					obiektBazaManager.dodaj(nowy);
-					tabelaDodajWiersz(nowy.piszWierszTabeli());
-					ukryjModalneOkno();
+							FakturaBaza.zaplacFaktury(
+									((Faktura) nowy).kontrahent.id_kontrachent,
+									(((Faktura) nowy).waluta).intValue());
+
+							ukryjModalneOkno();
+							/*
+							 * Loger.log(LogerNazwa.FinanseLog,
+							 * "Dodano nową fakturę dla kontrachenta " +
+							 * nowa_faktura.kontrahent.nazwa + " o wartości " +
+							 * nowa_faktura.wartosc_z_narzutem + " w walucie " +
+							 * nowa_faktura.waluta);
+							 */
+						} catch (Exception e)
+						{
+							MojeUtils
+									.showError("Coś poszło nie tak z dodaniem długu.");
+							MojeUtils.error(e);;
+						}
+					} else if (nowy instanceof Wplata)
+					{
+						try
+						{
+							getObiektBazaManager().dodaj(nowy);
+							tabelaDodajWiersz(nowy.piszWierszTabeli());
+
+							FakturaBaza.zaplacFaktury(
+									((Wplata) nowy).id_kontrachent,
+									((Wplata) nowy).waluta);
+
+							ukryjModalneOkno();
+							Loger.log(
+									LogerNazwa.FinanseLog,
+									"Dodano nową wpłatę dla kontrachenta "
+											+ KontrachentBaza
+													.pobierzNazweZBazy(((Wplata) nowy).id_kontrachent)
+											+ " o wartości "
+											+ ((Wplata) nowy).wartosc
+											+ " w walucie "
+											+ ((Wplata) nowy).waluta);
+						} catch (Exception e)
+						{
+							MojeUtils
+									.showError("Coś poszło nie tak z odejmowaniem długu.");
+							MojeUtils.error(e);;
+						}
+					} else
+					{
+						getObiektBazaManager().dodaj(nowy);
+						tabelaDodajWiersz(nowy.piszWierszTabeli());
+						ukryjModalneOkno();
+					}
+
 				} catch (UserShowException e)
 				{
 					MojeUtils.showError(e);
@@ -308,7 +376,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 	protected void wstawDaneDoFormatki(ObiektWiersz wiersz)
 	{
 		/* wstaw dane do formatki */
-		Object obiekt = obiektBazaManager.pobierzObiektZBazy(wiersz);
+		Object obiekt = getObiektBazaManager().pobierzObiektZBazy(wiersz);
 		oknoModalne.uzupelnijFormatke(obiekt);
 	}
 
@@ -328,9 +396,23 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 				ObiektZId nowy = oknoModalne.pobierzZFormatki(staryObiekt
 						.getId());
 
-				obiektBazaManager.edytuj(staryObiekt, nowy);
+				getObiektBazaManager().edytuj(staryObiekt, nowy);
 				tabelaEdytujWiersz(numerEdytowanegoWiersza,
 						nowy.piszWierszTabeli(), false);
+				/* Doszła wpłata zmień dług walutowy kontrachenta */
+				if (staryObiekt instanceof Wplata && nowy instanceof Wplata)
+				{
+					Wplata nowa_wplata = (Wplata) nowy;
+					Wplata stara_wplata = (Wplata) staryObiekt;
+					/*
+					 * Kontrachent się zmienił dodaj dług do nowego odejmij dług
+					 * od starego
+					 */
+					FakturaBaza.zaplacFaktury(stara_wplata.id_kontrachent,
+							stara_wplata.waluta);
+					FakturaBaza.zaplacFaktury(nowa_wplata.id_kontrachent,
+							nowa_wplata.waluta);
+				}
 				ukryjModalneOkno();
 			} catch (UserShowException e)
 			{
@@ -367,7 +449,8 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 							panelEdytuj, sizeX, sizeY);
 
 					/* wstaw dane do formatki */
-					staryObiekt = obiektBazaManager.pobierzObiektZBazy(wiersz);
+					staryObiekt = getObiektBazaManager().pobierzObiektZBazy(
+							wiersz);
 					oknoModalne.uzupelnijFormatke(staryObiekt);
 
 					oknoModalne
@@ -404,10 +487,40 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					if (MojeUtils.usunWiersz("Czy na peno chcesz usunąć?",
 							wiersz))
 					{
-						obiektBazaManager.zmienWidocznosc(wiersz, false);
+						getObiektBazaManager().zmienWidocznosc(wiersz, false);
 						tabelaUsunWiersz(numerEdytowanegoWiersza);
 						ukryjModalneOkno();
 					}
+				} catch (Exception e)
+				{
+					MojeUtils.showPrintError(e);
+				}
+			}
+		};
+	}
+
+	/* POKAŻ DŁUGI-------------------------------- */
+	protected ActionListener tworzDlugiListener()
+	{
+		return new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				try
+				{
+					ObiektWiersz wiersz = new ObiektWiersz(
+							pobierzZaznaczonyWiersz());
+					if (wiersz.wiersz == null)
+						return;
+					Kontrachent k = (Kontrachent) KontrachentBaza
+							.pobierzObiektZBazy(KontrachentBaza
+									.getIdFromWiersz(wiersz));
+					MojeUtils.showMsg("Długi: " + k.nazwa + "\nPLN: "
+							+ MojeUtils.formatujWartosc(k.dlug_pln) + "\nEUR: "
+							+ MojeUtils.formatujWartosc(k.dlug_eur) + "\nUSD: "
+							+ MojeUtils.formatujWartosc(k.dlug_usd) + "\nUAH: "
+							+ MojeUtils.formatujWartosc(k.dlug_uah));
 				} catch (Exception e)
 				{
 					MojeUtils.showPrintError(e);
@@ -459,8 +572,8 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			{
 				warunki.ustawTylkoWidoczne();
 				warunki.dodajWarunekDowolnaKolumna(szukanieText);
-				String[][] data = obiektBazaManager
-						.pobierzWierszeZBazy(warunki);
+				String[][] data = getObiektBazaManager().pobierzWierszeZBazy(
+						warunki);
 				if (data.length == 0)
 				{
 					szukanieText += "*";
@@ -501,7 +614,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 				{
 					warunki.ustawTylkoWidoczne();
 					warunki.dodajWarunekDowolnaKolumna(szukanieText);
-					String[][] data = obiektBazaManager
+					String[][] data = getObiektBazaManager()
 							.pobierzWierszeZBazy(warunki);
 					if (data.length == 0)
 					{

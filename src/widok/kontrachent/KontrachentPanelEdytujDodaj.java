@@ -1,4 +1,4 @@
-package widok;
+package widok.kontrachent;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -272,7 +272,9 @@ public class KontrachentPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		Walidator.walidujKodPocztowy(textKodPocztowy.getText());
 		return new Kontrachent(textNazwa.getText(), textMiasto.getText(),
 				textKodPocztowy.getText(), textUlica.getText(), narzut, true,
-				nip, regon, textNrKonta.getText(), kredytKupiecki, id);
+				nip, regon, textNrKonta.getText(), kredytKupiecki, id,
+				/* długi walutowe */null, null, null, null,
+				/* środki nierozliczone */null, null, null, null);
 	}
 
 	@Override

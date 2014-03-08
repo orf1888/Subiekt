@@ -37,6 +37,9 @@ import utils.MojeUtils;
 import utils.SprawdzMagazyn;
 import widok.faktura.FakturySprzedazyPanel;
 import widok.faktura.FakturyZakupuPanel;
+import widok.kontrachent.KontrachentPanel;
+import widok.podmiot.PodmiotOkno;
+import widok.wplata.WplataPanel;
 import widok.wysylka.WysylkaPanel;
 
 public class WidokGlowny extends JFrame
@@ -74,7 +77,7 @@ public class WidokGlowny extends JFrame
 					frame.setVisible(true);
 				} catch (Exception e)
 				{
-					e.printStackTrace();
+					MojeUtils.error(e);
 				}
 			}
 		});
@@ -175,16 +178,14 @@ public class WidokGlowny extends JFrame
 			tab.addTab("Rachunki transportowe", null, panelTransportRozliczenie);
 		}
 		{
+			WplataPanel panelWplata = new WplataPanel(true);
+			tab.addTab("Wpłaty kontrachentów", null, panelWplata);
+		}
+
+		{
 			JPanel panel_5 = new ZestawieniaPanel();
 			tab.addTab("Zestawienia", null, panel_5);
 		}
-		/* Test */
-		/*
-		 * { TransportRozliczenieBaza t = new TransportRozliczenieBaza();
-		 * String[][] transport = t.pobierzWierszeZBazy(null); for (int i = 0; i
-		 * < transport.length; i++) { System.err.println(transport[i][0] + "<->"
-		 * + transport[i][1] + "<->" + transport[i][2]); } }
-		 */
 		this.addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -281,7 +282,7 @@ public class WidokGlowny extends JFrame
 				ok.setVisible(true);
 			} catch (Exception e1)
 			{
-				e1.printStackTrace();
+				MojeUtils.error(e1);
 			}
 		}
 	};

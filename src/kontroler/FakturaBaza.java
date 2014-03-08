@@ -6,13 +6,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import model.Faktura;
 import model.Kontrachent;
 import model.ObiektWiersz;
 import model.ObiektZId;
 import model.Waluta;
+import model.Wplata;
 import model.produkt.Produkt;
 import model.produkt.ProduktWFakturze;
 import utils.BazaDanych;
@@ -62,6 +65,21 @@ public class FakturaBaza implements ObiektBazaManager
 		}
 	};
 
+	static BazaStatementFunktor pobieranieIdFunktor = new BazaStatementFunktor()
+	{
+		@Override
+		public Object operacja(ResultSet result) throws Exception
+		{
+			List<Integer> wynik = new ArrayList<>();
+			while (result.next())
+			{
+				int id = result.getInt(1);
+				wynik.add(id);
+			}
+			return wynik;
+		}
+	};
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public String[][] pobierzWierszeZBazy(ObiektWyszukanieWarunki warunki)
@@ -85,6 +103,21 @@ public class FakturaBaza implements ObiektBazaManager
 
 		/* druga i trzecia wartosc to daty wynik[1] */
 		return wynik.toArray(new String[wynik.size()][]);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Integer[] pobierzIdZBazy(ObiektWyszukanieWarunki warunki)
+			throws Exception
+	{
+		String querySql = "SELECT DISTINCT id_faktura FROM "
+				+ Faktura.tableName;
+		querySql += warunki.generujWarunekWhere() + " ORDER BY id_faktura";
+
+		System.err.println(querySql);
+
+		List<Integer> wynik = (List<Integer>) BazaDanych.getInstance()
+				.zapytanie(querySql, pobieranieIdFunktor);
+		return wynik.toArray(new Integer[wynik.size()]);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -156,7 +189,56 @@ public class FakturaBaza implements ObiektBazaManager
 			});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
+			return null;
+		}
+	}
+
+	private static ObiektZId pobierzObiektZBazy(final int id_faktura)
+	{
+		try
+		{
+
+			final List<ProduktWFakturze> produkty = ProduktBaza
+					.pobierzDlaFaktury(id_faktura, false);
+
+			final List<ProduktWFakturze> produktyKorekta = ProduktBaza
+					.pobierzDlaFaktury(id_faktura, true);
+
+			MojeUtils.println("Pobrano " + produkty.size() + " produktow");
+
+			ObiektWyszukanieWarunki warunki = ObiektWyszukanieWarunki
+					.TworzWarunekFaktura();
+			warunki.removeWarunek("aktualna");
+
+			warunki.dodajWarunek(id_faktura, "id_faktura");
+			String querySql = "SELECT numer, data_wystawienia, termin_platnosci, zaplacona, rodzaj, id_kontrachent, wartosc, aktualna, czy_korekta, waluta FROM "
+					+ Faktura.tableName + warunki.generujWarunekWhere();
+
+			System.err.println(querySql);
+
+			return (ObiektZId) BazaDanych.getInstance().zapytanie(
+			/* sql do pobrania */querySql,
+			/* operacja na pobranych danych */
+			new BazaStatementFunktor()
+			{
+				@Override
+				public Object operacja(ResultSet result) throws Exception
+				{
+					return new Faktura(id_faktura, result.getInt(1), DataUtils
+							.parsujDate(result.getString(2)), DataUtils
+							.parsujDate(result.getString(3)), result
+							.getBoolean(4), result.getInt(5),
+							(Kontrachent) KontrachentBaza
+									.pobierzObiektZBazy(result.getInt(6)),
+							result.getInt(7), result.getBoolean(8), result
+									.getBoolean(9), produkty, produktyKorekta,
+							result.getLong(10));
+				}
+			});
+		} catch (Exception e)
+		{
+			MojeUtils.error(e);
 			return null;
 		}
 	}
@@ -188,7 +270,7 @@ public class FakturaBaza implements ObiektBazaManager
 					});
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			MojeUtils.error(e);
 			return -1;
 		}
 	}
@@ -198,8 +280,9 @@ public class FakturaBaza implements ObiektBazaManager
 	{
 		Faktura nowaFaktura = (Faktura) nowy;
 
-		ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
-				new Faktura());
+		ObiektWyszukanieWarunki warunki = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
+		warunki.removeWarunek("aktualna");
 		warunki.dodajWarunek(nowaFaktura.numer, "numer");
 		warunki.dodajWarunek(nowaFaktura.rodzaj, "rodzaj");
 		String[][] znalezioneWiersze = pobierzWierszeZBazy(warunki);
@@ -306,6 +389,39 @@ public class FakturaBaza implements ObiektBazaManager
 						+ "','" + SqlUtils.popraw(nowaFaktura.waluta) + "')");
 
 		nowaFaktura.id_faktura = generatedId;
+
+		onChange(nowaFaktura);
+	}
+
+	/*
+	 * metoda wywolywana: - dla kazdego insert - dla kazdego update
+	 */
+	static final Set<Integer> LOCKED_FAKTURY = new HashSet<Integer>();
+
+	private static void onChange(int id_faktura) throws Exception
+	{
+		Faktura f = (Faktura) pobierzObiektZBazy(id_faktura);
+		onChange(f);
+	}
+
+	/*
+	 * metoda wywolywana: - dla kazdego insert - dla kazdego update
+	 */
+	private static void onChange(Faktura faktura) throws Exception
+	{
+		if (LOCKED_FAKTURY.contains(faktura.id_faktura))
+			return;
+
+		try
+		{
+			LOCKED_FAKTURY.add(faktura.id_faktura);
+
+			zaplacFaktury(faktura.kontrahent.id_kontrachent,
+					faktura.waluta.intValue());
+		} finally
+		{
+			LOCKED_FAKTURY.remove(faktura.id_faktura);
+		}
 	}
 
 	public void ustawNieaktualna(Faktura faktura) throws Exception
@@ -315,6 +431,7 @@ public class FakturaBaza implements ObiektBazaManager
 						+ SqlUtils.popraw((faktura.aktualna ? 1 : 0))
 						+ "' WHERE id_faktura = "
 						+ SqlUtils.popraw(faktura.id_faktura));
+		onChange(faktura);
 	}
 
 	@Override
@@ -333,10 +450,9 @@ public class FakturaBaza implements ObiektBazaManager
 			 * numer sie zmienil - sprawdz czy taki sam juz nie istnieje w
 			 * bazie?
 			 */
-			ObiektWyszukanieWarunki warunki = new ObiektWyszukanieWarunki(
-					new Faktura());
+			ObiektWyszukanieWarunki warunki = ObiektWyszukanieWarunki
+					.TworzWarunekFaktura();
 			warunki.dodajWarunek(nowaFaktura.numer, "numer");
-			warunki.dodajWarunek(1, "aktualna");
 
 			String[][] znalezioneWiersze = pobierzWierszeZBazy(warunki);
 			if (znalezioneWiersze.length == 0)
@@ -407,6 +523,8 @@ public class FakturaBaza implements ObiektBazaManager
 			ProduktBaza.instance().zmienIloscProduktyZMagazynu(
 					nowaFaktura.produkty, dodac);
 		}
+		onChange(staraFaktura);
+		onChange(nowaFaktura);
 	}
 
 	/* Refactoring */
@@ -418,6 +536,8 @@ public class FakturaBaza implements ObiektBazaManager
 				"UPDATE " + Faktura.tableName + " set aktualna = "
 						+ (aktualna ? 1 : 0) + " WHERE id_faktura = "
 						+ SqlUtils.popraw(getIdFromWiersz(wiersz)));
+
+		onChange(getIdFromWiersz(wiersz));
 	}
 
 	public static int getIdFromWiersz(ObiektWiersz wiersz)
@@ -433,9 +553,185 @@ public class FakturaBaza implements ObiektBazaManager
 	public static void ustawZaplacona(ObiektWiersz wiersz, boolean zaplacona)
 			throws Exception
 	{
+		ustawZaplacona(getIdFromWiersz(wiersz), zaplacona);
+	}
+
+	private static void ustawZaplacona(int id_faktura, boolean zaplacona)
+			throws Exception
+	{
 		BazaDanych.getInstance().aktualizacja(
 				"UPDATE " + Faktura.tableName + " set zaplacona = "
 						+ (zaplacona ? "1" : "0") + " WHERE id_faktura = "
-						+ SqlUtils.popraw(getIdFromWiersz(wiersz)));
+						+ SqlUtils.popraw(id_faktura));
+		onChange(id_faktura);
+	}
+
+	private static List<Faktura> pobierzFakturyByWaluta(int id_kontrachent,
+			int waluta) throws Exception
+	{
+		ObiektWyszukanieWarunki warunki = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
+		warunki.dodajWarunek(id_kontrachent, "id_kontrachent");
+		warunki.dodajWarunek(waluta, "waluta");
+		Integer[] id_faktury = pobierzIdZBazy(warunki);
+		ArrayList<Faktura> result = new ArrayList<>();
+		for (int i = 0; i < id_faktury.length; i++)
+		{
+			result.add((Faktura) pobierzObiektZBazy(id_faktury[i]));
+		}
+		return result;
+	}
+
+	/*
+	 * metoda wywolywana: - dla kazdego insert - dla kazdego update
+	 */
+	static final Set<Integer> LOCKED_KONTRAHENT = new HashSet<Integer>();
+
+	public static void zaplacFaktury(int id_kontrachent, int waluta)
+			throws Exception
+	{
+		if (LOCKED_KONTRAHENT.contains(id_kontrachent))
+			return;
+
+		try
+		{
+			LOCKED_KONTRAHENT.add(id_kontrachent);
+
+			zaplacFaktury_impl(id_kontrachent, waluta);
+		} finally
+		{
+			LOCKED_KONTRAHENT.remove(id_kontrachent);
+		}
+	}
+
+	/*
+	 * przelicza od nowa ktore faktury sa oplacone, bierze pod uwage wszystkie
+	 * faktury i wszystkie wplaty
+	 */
+	private static void zaplacFaktury_impl(int id_kontrachent, int waluta)
+			throws Exception
+	{
+		List<Faktura> faktury = pobierzFakturyByWaluta(id_kontrachent, waluta);
+
+		List<Wplata> wplaty = WplataBaza.pobierzObiektyZBazy(id_kontrachent,
+				waluta);
+
+		Kontrachent kontrachent = (Kontrachent) KontrachentBaza
+				.pobierzObiektZBazy(id_kontrachent);
+
+		int dlugggg = 0;
+		// sumuj wplaty
+		int suma_wplat = 0;
+		for (Wplata w : wplaty)
+		{
+			/* Wpłata balansująca dług faktyczny */
+			if (w.wartosc < 0)
+				dlugggg += w.wartosc * -1;
+			else
+				suma_wplat += w.wartosc;
+		}
+
+		// sortuj faktury po dacie
+		// /// siergiej mowi ze sa sortowane, jak cos to go ochrzanic
+
+		/*
+		 * zakladamy ze waluta wplat i waluta faktur jest zgodna (w selectcie to
+		 * jest)
+		 */
+
+		// oznacz faktury
+		/*
+		 * int dlug_kontrachenta = KontrachentBaza.getDlugByWaluta(waluta,
+		 * kontrachent);
+		 */
+		int f_suma_oplacone = 0;
+		int f_suma_nieoplacone = 0;
+		int faktur_oznaczonych = 0;
+		int faktur_odznaczonych = 0;
+		for (Faktura f : faktury)
+		{
+			if (suma_wplat > (f.wartosc_z_narzutem + f_suma_oplacone))
+			{
+				// oznacz
+				ustawZaplacona(f.id_faktura, true);
+				f_suma_oplacone += f.wartosc_z_narzutem;
+				++faktur_oznaczonych;
+			} else
+			{
+				// odznacz
+				ustawZaplacona(f.id_faktura, false);
+				f_suma_nieoplacone += f.wartosc_z_narzutem;
+				++faktur_odznaczonych;
+			}
+		}
+
+		// oblicz nadplate
+		int nadplata;
+		if (faktur_odznaczonych > 0)
+			nadplata = 0; // mamy nieoplacone faktury
+		else
+			nadplata = suma_wplat - f_suma_oplacone;
+
+		int dlug;
+		if (faktur_odznaczonych > 0)
+			dlug = f_suma_nieoplacone - (suma_wplat - f_suma_oplacone);
+		else
+			dlug = 0;
+
+		if (dlugggg > 0 && nadplata >= dlugggg)
+			nadplata -= dlugggg;
+		else if (dlugggg > 0 && nadplata == 0)
+			dlug += dlugggg;
+		else if (dlugggg > 0)
+		{
+			// nadplata sluzy do czesciowego splacenia, pozostalosc dlugu
+			// przepisujemy
+			int dlugggg_pomniejszony = dlugggg - nadplata;
+			nadplata = 0;
+			dlug += dlugggg_pomniejszony;
+		}
+
+		String walutaStr;
+		switch (waluta)
+		{
+		case 1:
+		{
+			kontrachent.nadplata_pln = nadplata;
+			kontrachent.dlug_pln = dlug;
+			walutaStr = "pln";
+			break;
+		}
+		case 2:
+		{
+			kontrachent.nadplata_eur = nadplata;
+			kontrachent.dlug_eur = dlug;
+			walutaStr = "eur";
+			break;
+		}
+		case 3:
+		{
+			kontrachent.nadplata_usd = nadplata;
+			kontrachent.dlug_usd = dlug;
+			walutaStr = "usd";
+			break;
+		}
+		case 4:
+		{
+			kontrachent.nadplata_uah = nadplata;
+			kontrachent.dlug_uah = dlug;
+			walutaStr = "uah";
+			break;
+		}
+		default:
+		{
+			walutaStr = "???";
+		}
+		}
+		KontrachentBaza obm = new KontrachentBaza();
+		obm.edytuj(kontrachent, kontrachent);
+		MojeUtils.showMsg("Waluta: " + walutaStr + "\nFaktur oplaconych "
+				+ faktur_oznaczonych + ", nadplata: " + nadplata
+				+ ", faktur nieoplaconych " + faktur_odznaczonych + ", dlug: "
+				+ dlug);
 	}
 }
