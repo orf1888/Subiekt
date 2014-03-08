@@ -110,8 +110,10 @@ public class WplataPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			MojeUtils.showError("Błąd pobierania wpłaty!");
 			MojeUtils.error(e);;
 		}
-		textWartoscWplaty.setText(MojeUtils.formatujWartosc(wplata.wartosc));
+		textWartoscWplaty.setText(MojeUtils
+				.utworzWartoscZlotowki(wplata.wartosc));
 		comboKontrachent.setSelectedItem(nazwa_kontrachenta);
+		comboWaluta.setSelectedIndex(wplata.waluta - 1);
 	}
 
 	@Override

@@ -113,7 +113,7 @@ public class FakturaBaza implements ObiektBazaManager
 				+ Faktura.tableName;
 		querySql += warunki.generujWarunekWhere() + " ORDER BY id_faktura";
 
-		System.err.println(querySql);
+		MojeUtils.println(querySql);
 
 		List<Integer> wynik = (List<Integer>) BazaDanych.getInstance()
 				.zapytanie(querySql, pobieranieIdFunktor);
@@ -215,7 +215,7 @@ public class FakturaBaza implements ObiektBazaManager
 			String querySql = "SELECT numer, data_wystawienia, termin_platnosci, zaplacona, rodzaj, id_kontrachent, wartosc, aktualna, czy_korekta, waluta FROM "
 					+ Faktura.tableName + warunki.generujWarunekWhere();
 
-			System.err.println(querySql);
+			MojeUtils.println(querySql);
 
 			return (ObiektZId) BazaDanych.getInstance().zapytanie(
 			/* sql do pobrania */querySql,
@@ -646,7 +646,6 @@ public class FakturaBaza implements ObiektBazaManager
 		 */
 		int f_suma_oplacone = 0;
 		int f_suma_nieoplacone = 0;
-		int faktur_oznaczonych = 0;
 		int faktur_odznaczonych = 0;
 		for (Faktura f : faktury)
 		{
@@ -655,7 +654,6 @@ public class FakturaBaza implements ObiektBazaManager
 				// oznacz
 				ustawZaplacona(f.id_faktura, true);
 				f_suma_oplacone += f.wartosc_z_narzutem;
-				++faktur_oznaczonych;
 			} else
 			{
 				// odznacz
@@ -729,9 +727,10 @@ public class FakturaBaza implements ObiektBazaManager
 		}
 		KontrachentBaza obm = new KontrachentBaza();
 		obm.edytuj(kontrachent, kontrachent);
-		MojeUtils.showMsg("Waluta: " + walutaStr + "\nFaktur oplaconych "
-				+ faktur_oznaczonych + ", nadplata: " + nadplata
-				+ ", faktur nieoplaconych " + faktur_odznaczonych + ", dlug: "
-				+ dlug);
+		/*
+		 * MojeUtils.showMsg("Waluta: " + walutaStr + "\nFaktur oplaconych " +
+		 * faktur_oznaczonych + ", nadplata: " + nadplata +
+		 * ", faktur nieoplaconych " + faktur_odznaczonych + ", dlug: " + dlug);
+		 */
 	}
 }

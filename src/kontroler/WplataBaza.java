@@ -29,7 +29,7 @@ public class WplataBaza implements ObiektBazaManager
 
 		querySql += warunki.generujWarunekWhere();
 
-		System.out.println(querySql);
+		MojeUtils.println(querySql);
 
 		BazaDanych.getInstance().zapytanie(querySql, new BazaStatementFunktor()
 		{
@@ -158,7 +158,7 @@ public class WplataBaza implements ObiektBazaManager
 				+ SqlUtils.popraw(nowaWplata.id_kontrachent) + "','"
 				+ SqlUtils.popraw(nowaWplata.wartosc) + "','"
 				+ SqlUtils.popraw(nowaWplata.waluta) + "')";
-		System.err.println(insertSQL);
+		MojeUtils.println(insertSQL);
 		int generatedId = BazaDanych.getInstance().wstaw(insertSQL);
 		nowaWplata.id_wplata = generatedId;
 		MojeUtils.println("" + generatedId);
@@ -176,7 +176,7 @@ public class WplataBaza implements ObiektBazaManager
 				+ SqlUtils.popraw(nowaWplata.wartosc) + "', waluta= '"
 				+ SqlUtils.popraw(nowaWplata.waluta) + "' WHERE id_wplata = "
 				+ SqlUtils.popraw(nowaWplata.id_wplata);
-		System.out.println(updateSQL);
+		MojeUtils.println(updateSQL);
 		BazaDanych.getInstance().aktualizacja(updateSQL);
 	}
 

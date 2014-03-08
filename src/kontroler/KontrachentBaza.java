@@ -237,7 +237,7 @@ public class KontrachentBaza implements ObiektBazaManager
 					+ SqlUtils.popraw(nowyKontrachent.nadplata_uah);
 		updateSQL += "' WHERE id_kontrachent = "
 				+ SqlUtils.popraw(kontrachent.id_kontrachent);
-		System.out.println(updateSQL);
+		MojeUtils.println(updateSQL);
 		BazaDanych.getInstance().aktualizacja(updateSQL);
 	}
 

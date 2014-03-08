@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import model.Sorter;
 import utils.BazaDanych;
 import utils.BazaStatementFunktor;
+import utils.MojeUtils;
 import utils.SqlUtils;
 
 public class SorterKontroler
@@ -62,7 +63,7 @@ public class SorterKontroler
 			update += " " + Sorter.kolumnyWBazie[4] + "= '"
 					+ SqlUtils.popraw(sorter.sorterWp) + "' ";
 		update += "WHERE id = " + SqlUtils.popraw(sorter.id);
-		System.err.println(update);
+		MojeUtils.println(update);
 		BazaDanych.getInstance().aktualizacja(update);
 	}
 }

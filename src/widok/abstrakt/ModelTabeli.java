@@ -76,7 +76,6 @@ public class ModelTabeli extends DefaultTableModel
 				return getValueAt(0, column).getClass();
 			} catch (Exception e)
 			{
-				System.out.println(column);
 				MojeUtils.error(e);
 			}
 		} else
