@@ -296,13 +296,10 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 									(((Faktura) nowy).waluta).intValue());
 
 							ukryjModalneOkno();
-							/*
-							 * Loger.log(LogerNazwa.FinanseLog,
-							 * "Dodano nową fakturę dla kontrachenta " +
-							 * nowa_faktura.kontrahent.nazwa + " o wartości " +
-							 * nowa_faktura.wartosc_z_narzutem + " w walucie " +
-							 * nowa_faktura.waluta);
-							 */
+
+							Loger.log(LogerNazwa.FinanseLog,
+									Loger.tworzLog(nowy));
+
 						} catch (Exception e)
 						{
 							MojeUtils
@@ -321,15 +318,8 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 									((Wplata) nowy).waluta);
 
 							ukryjModalneOkno();
-							Loger.log(
-									LogerNazwa.FinanseLog,
-									"Dodano nową wpłatę dla kontrachenta "
-											+ KontrachentBaza
-													.pobierzNazweZBazy(((Wplata) nowy).id_kontrachent)
-											+ " o wartości "
-											+ ((Wplata) nowy).wartosc
-											+ " w walucie "
-											+ ((Wplata) nowy).waluta);
+							Loger.log(LogerNazwa.FinanseLog,
+									Loger.tworzLog(nowy));
 						} catch (Exception e)
 						{
 							MojeUtils

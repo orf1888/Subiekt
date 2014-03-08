@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import kontroler.KontrachentBaza;
+import kontroler.WalutaManager;
+import model.Faktura;
+import model.Kontrachent;
+import model.Wplata;
+
 public class Loger
 {
 	public enum LogerNazwa
@@ -38,6 +44,77 @@ public class Loger
 		default:
 			MojeUtils.showError("Nieznany rodzaj log'a!!!");
 		}
+	}
+
+	public static String tworzLog(Object nowy)
+	{
+		String waluta = new String();
+		String result = new String();
+		if (nowy instanceof Faktura)
+		{
+			waluta = WalutaManager.pobierzNazweZBazy(
+					((Faktura) nowy).waluta - 1, "slownikWaluta");
+			result += "Dodano nową fakturę dla kontrachenta "
+					+ ((Faktura) nowy).kontrahent.nazwa
+					+ " o wartości "
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).wartosc_z_narzutem)
+					+ " w walucie "
+					+ waluta
+					+ " długi ("
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.dlug_pln)
+					+ "PLN;"
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.dlug_eur)
+					+ "EUR;"
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.dlug_usd)
+					+ "USD;"
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.dlug_uah)
+					+ "UAH)"
+					+ ", nadpłaty("
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.nadplata_pln)
+					+ "PLN;"
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.nadplata_eur)
+					+ "EUR;"
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.nadplata_usd)
+					+ "USD;"
+					+ MojeUtils
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.nadplata_uah)
+					+ "UAH)";
+		} else
+		{
+			waluta = WalutaManager.pobierzNazweZBazy(
+					(long) ((Wplata) nowy).waluta - 1, "slownikWaluta");
+			Kontrachent kontrachent = (Kontrachent) KontrachentBaza
+					.pobierzObiektZBazy(((Wplata) nowy).id_kontrachent);
+			result += "Dodano nową wpłatę dla kontrachenta "
+					+ kontrachent.nazwa + " o wartości "
+					+ MojeUtils.utworzWartoscZlotowki(((Wplata) nowy).wartosc)
+					+ " w walucie " + waluta + " długi ("
+					+ MojeUtils.utworzWartoscZlotowki(kontrachent.dlug_pln)
+					+ "PLN;"
+					+ MojeUtils.utworzWartoscZlotowki(kontrachent.dlug_eur)
+					+ "EUR;"
+					+ MojeUtils.utworzWartoscZlotowki(kontrachent.dlug_usd)
+					+ "USD;"
+					+ MojeUtils.utworzWartoscZlotowki(kontrachent.dlug_uah)
+					+ "UAH)" + "," + "nadpłaty("
+					+ MojeUtils.utworzWartoscZlotowki(kontrachent.nadplata_pln)
+					+ "PLN;"
+					+ MojeUtils.utworzWartoscZlotowki(kontrachent.nadplata_eur)
+					+ "EUR;"
+					+ MojeUtils.utworzWartoscZlotowki(kontrachent.nadplata_usd)
+					+ "USD;"
+					+ MojeUtils.utworzWartoscZlotowki(kontrachent.nadplata_uah)
+					+ "UAH)";
+		}
+		return result;
 	}
 
 	private static void piszDoPliku(String sciezka, String logContent)
