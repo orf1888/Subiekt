@@ -316,26 +316,26 @@ public class KontrachentBaza implements ObiektBazaManager
 		{
 		case 1:
 		{
-			faktura.kontrahent.dlug_pln += faktura.wartosc_z_narzutem;
+			faktura.kontrachent.dlug_pln += faktura.wartosc_z_narzutem;
 			break;
 		}
 		case 2:
 		{
-			faktura.kontrahent.dlug_eur += faktura.wartosc_z_narzutem;
+			faktura.kontrachent.dlug_eur += faktura.wartosc_z_narzutem;
 			break;
 		}
 		case 3:
 		{
-			faktura.kontrahent.dlug_usd += faktura.wartosc_z_narzutem;
+			faktura.kontrachent.dlug_usd += faktura.wartosc_z_narzutem;
 			break;
 		}
 		case 4:
 		{
-			faktura.kontrahent.dlug_uah += faktura.wartosc_z_narzutem;
+			faktura.kontrachent.dlug_uah += faktura.wartosc_z_narzutem;
 			break;
 		}
 		}
-		edytuj(faktura.kontrahent, faktura.kontrahent);
+		edytuj(faktura.kontrachent, faktura.kontrachent);
 	}
 
 	public void odejmijOdDlugu(Faktura faktura, Long waluta) throws Exception
@@ -345,50 +345,50 @@ public class KontrachentBaza implements ObiektBazaManager
 		{
 		case 1:
 		{
-			wartosc = faktura.kontrahent.dlug_pln - faktura.wartosc_z_narzutem;
+			wartosc = faktura.kontrachent.dlug_pln - faktura.wartosc_z_narzutem;
 			if (wartosc < 0)
 			{
-				faktura.kontrahent.dlug_pln = 0;
-				faktura.kontrahent.nadplata_pln += -wartosc;
+				faktura.kontrachent.dlug_pln = 0;
+				faktura.kontrachent.nadplata_pln += -wartosc;
 			} else
-				faktura.kontrahent.dlug_pln -= faktura.wartosc_z_narzutem;
+				faktura.kontrachent.dlug_pln -= faktura.wartosc_z_narzutem;
 			break;
 		}
 		case 2:
 		{
-			wartosc = faktura.kontrahent.dlug_eur - faktura.wartosc_z_narzutem;
+			wartosc = faktura.kontrachent.dlug_eur - faktura.wartosc_z_narzutem;
 			if (wartosc < 0)
 			{
-				faktura.kontrahent.dlug_eur = 0;
-				faktura.kontrahent.nadplata_eur += -wartosc;
+				faktura.kontrachent.dlug_eur = 0;
+				faktura.kontrachent.nadplata_eur += -wartosc;
 			} else
-				faktura.kontrahent.dlug_eur -= faktura.wartosc_z_narzutem;
+				faktura.kontrachent.dlug_eur -= faktura.wartosc_z_narzutem;
 			break;
 		}
 		case 3:
 		{
-			wartosc = faktura.kontrahent.dlug_usd - faktura.wartosc_z_narzutem;
+			wartosc = faktura.kontrachent.dlug_usd - faktura.wartosc_z_narzutem;
 			if (wartosc < 0)
 			{
-				faktura.kontrahent.dlug_usd = 0;
-				faktura.kontrahent.nadplata_usd += -wartosc;
+				faktura.kontrachent.dlug_usd = 0;
+				faktura.kontrachent.nadplata_usd += -wartosc;
 			} else
-				faktura.kontrahent.dlug_usd -= faktura.wartosc_z_narzutem;
+				faktura.kontrachent.dlug_usd -= faktura.wartosc_z_narzutem;
 			break;
 		}
 		case 4:
 		{
-			wartosc = faktura.kontrahent.dlug_uah - faktura.wartosc_z_narzutem;
+			wartosc = faktura.kontrachent.dlug_uah - faktura.wartosc_z_narzutem;
 			if (wartosc < 0)
 			{
-				faktura.kontrahent.dlug_uah = 0;
-				faktura.kontrahent.nadplata_uah += -wartosc;
+				faktura.kontrachent.dlug_uah = 0;
+				faktura.kontrachent.nadplata_uah += -wartosc;
 			} else
-				faktura.kontrahent.dlug_uah -= faktura.wartosc_z_narzutem;
+				faktura.kontrachent.dlug_uah -= faktura.wartosc_z_narzutem;
 			break;
 		}
 		}
-		edytuj(faktura.kontrahent, faktura.kontrahent);
+		edytuj(faktura.kontrachent, faktura.kontrachent);
 	}
 
 	public void odejmijOdDlugu(Wplata wplata, Long waluta) throws Exception

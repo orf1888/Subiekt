@@ -158,8 +158,8 @@ public class WidokGlowny extends JFrame
 			tab.addTab("Magazyn", null, panelMagazynu);
 		}
 		{
-			KontrachentPanel panelKontrahentow = new KontrachentPanel(false);
-			tab.addTab("Kontrahenci", null, panelKontrahentow);
+			KontrachentPanel panelkontrachentow = new KontrachentPanel(false);
+			tab.addTab("Kontrachenci", null, panelkontrachentow);
 		}
 		{
 			FakturyZakupuPanel panelFakturZakupu = new FakturyZakupuPanel();
@@ -297,7 +297,7 @@ public class WidokGlowny extends JFrame
 			{
 				if (FakturaZPliku.wczytajTowaryZFS())
 					MojeUtils
-							.showMsg("Faktura wczytana poprawnie. Pamiętaj o wstawieniu kontrahenta!");
+							.showMsg("Faktura wczytana poprawnie. Pamiętaj o wstawieniu kontrachenta!");
 
 			} catch (Exception e1)
 			{

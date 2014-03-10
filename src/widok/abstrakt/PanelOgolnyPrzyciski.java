@@ -292,7 +292,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 							tabelaDodajWiersz(nowy.piszWierszTabeli());
 
 							FakturaBaza.zaplacFaktury(
-									((Faktura) nowy).kontrahent.id_kontrachent,
+									((Faktura) nowy).kontrachent.id_kontrachent,
 									(((Faktura) nowy).waluta).intValue());
 
 							ukryjModalneOkno();

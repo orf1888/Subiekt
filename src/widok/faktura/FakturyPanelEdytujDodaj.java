@@ -320,7 +320,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 
 	protected void zmienKontrachent()
 	{
-		/* Przy fakturach zakuku nie uwzględniaj rabatów kontrahenta */
+		/* Przy fakturach zakuku nie uwzględniaj rabatów kontrachenta */
 		if (rodzajFaktury == Faktura.SPRZEDAZ)
 		{
 			if (tmpNieZmieniaKontrachenta)
@@ -432,15 +432,15 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		{
 			/*
 			 * Przypadek w którym wczytano fakturę z pliku .xls - nie występuje
-			 * w niej kontrahent
+			 * w niej kontrachent
 			 */
-			if (faktura.kontrahent == null)
+			if (faktura.kontrachent == null)
 			{
 				comboKontrachenci.setSelectedIndex(-1);
 			} else
 			{
 				tmpNieZmieniaKontrachenta = true;
-				comboKontrachenci.setSelectedItem(faktura.kontrahent.nazwa);
+				comboKontrachenci.setSelectedItem(faktura.kontrachent.nazwa);
 				tmpNieZmieniaKontrachenta = false;
 			}
 		}
@@ -516,9 +516,9 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	@Override
 	public ObiektZId pobierzZFormatki(int id) throws Exception
 	{
-		Kontrachent kontrahent = pobierzKontrachenta();
+		Kontrachent kontrachent = pobierzKontrachenta();
 
-		if (kontrahent == null)
+		if (kontrachent == null)
 		{
 			throw new UserShowException("Nie wybrano kontrachenta");
 		}
@@ -565,7 +565,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			copy_lista.addAll(listaProduktow);
 			boolean zaplacona = false;
 			return new Faktura(0, numer, data_wystawienia, termin_platnosci,
-					zaplacona, rodzajFaktury, kontrahent, wartosc, true, false,
+					zaplacona, rodzajFaktury, kontrachent, wartosc, true, false,
 					copy_lista, null, waluta);
 		} else
 		{
@@ -590,7 +590,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			return new Faktura(faktura.id_faktura, numer,
 					panelDatyWystawFaktury.getDate(),
 					panelTerminPlatnosci.getDate(), false, rodzajFaktury,
-					kontrahent, wartosc, true, faktura.isKorekta, copy_lista,
+					kontrachent, wartosc, true, faktura.isKorekta, copy_lista,
 					null, waluta);
 		}
 	}

@@ -94,9 +94,9 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 	@Override
 	public ObiektZId pobierzZFormatki(int id) throws Exception
 	{
-		Kontrachent kontrahent = pobierzKontrachenta();
+		Kontrachent kontrachent = pobierzKontrachenta();
 
-		if (kontrahent == null)
+		if (kontrachent == null)
 		{
 			throw new UserShowException("Nie wybrano kontrachenta");
 		}
@@ -151,7 +151,7 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 			copy_lista_korekta.addAll(listaProduktowKorekta);
 			boolean zaplacona = false;
 			return new Faktura(0, numer, data_wystawienia, termin_platnosci,
-					zaplacona, rodzajFaktury, kontrahent, wartosc, true, true,
+					zaplacona, rodzajFaktury, kontrachent, wartosc, true, true,
 					copy_lista, copy_lista_korekta, waluta);
 		} else
 		{
@@ -187,7 +187,7 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 			return new Faktura(faktura.id_faktura, numer,
 					panelDatyWystawFaktury.getDate(),
 					panelTerminPlatnosci.getDate(), false, rodzajFaktury,
-					kontrahent, wartosc, true, faktura.isKorekta, copy_lista,
+					kontrachent, wartosc, true, faktura.isKorekta, copy_lista,
 					copy_lista_korekta, waluta);
 		}
 	}

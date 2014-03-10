@@ -214,7 +214,7 @@ public class ZestawieniaPanel extends JPanel
 		// Faktura[] faktury
 
 		/*
-		 * String[][] dataDlugKontrahentaPLN = fakturaBaza
+		 * String[][] dataDlugkontrachentaPLN = fakturaBaza
 		 * .pobierzWierszeZBazy(warunkiDlugPLN); poierz listę faktur w EUR - 2
 		 * ObiektWyszukanieWarunki warunkiDlugEUR = ObiektWyszukanieWarunki
 		 * .TworzWarunekFaktura(); warunkiDlugEUR.dodajWarunek(Faktura.SPRZEDAZ,
@@ -224,7 +224,7 @@ public class ZestawieniaPanel extends JPanel
 		 * warunkiDlugEUR.dodajWarunek(warunekKontrachent, "id_kontrachent");
 		 * warunkiDlugEUR.generujWarunekWhere();
 		 * 
-		 * String[][] dataDlugKontrahentaEUR = fakturaBaza
+		 * String[][] dataDlugkontrachentaEUR = fakturaBaza
 		 * .pobierzWierszeZBazy(warunkiDlugEUR); poierz listę faktur w USD - 3
 		 * ObiektWyszukanieWarunki warunkiDlugUSD = ObiektWyszukanieWarunki
 		 * .TworzWarunekFaktura(); warunkiDlugUSD.dodajWarunek(Faktura.SPRZEDAZ,
@@ -234,7 +234,7 @@ public class ZestawieniaPanel extends JPanel
 		 * warunkiDlugUSD.dodajWarunek(warunekKontrachent, "id_kontrachent");
 		 * warunkiDlugUSD.generujWarunekWhere();
 		 * 
-		 * String[][] dataDlugKontrahentaUSD = fakturaBaza
+		 * String[][] dataDlugkontrachentaUSD = fakturaBaza
 		 * .pobierzWierszeZBazy(warunkiDlugUSD); listę faktur w EUR - 4
 		 * ObiektWyszukanieWarunki warunkiDlugUAH = ObiektWyszukanieWarunki
 		 * .TworzWarunekFaktura(); warunkiDlugUAH.dodajWarunek(Faktura.SPRZEDAZ,
@@ -244,7 +244,7 @@ public class ZestawieniaPanel extends JPanel
 		 * warunkiDlugUAH.dodajWarunek(warunekKontrachent, "id_kontrachent");
 		 * warunkiDlugUAH.generujWarunekWhere();
 		 * 
-		 * String[][] dataDlugKontrahentaUAH = fakturaBaza
+		 * String[][] dataDlugkontrachentaUAH = fakturaBaza
 		 * .pobierzWierszeZBazy(warunkiDlugUAH);
 		 */
 		WyswietlPDFPanel panel = new WyswietlPDFPanel();
@@ -321,7 +321,7 @@ public class ZestawieniaPanel extends JPanel
 			panel.setLayout(gbl_panel);
 
 			{
-				JLabel btnDunicy = new JLabel("Długi kontrahentów");
+				JLabel btnDunicy = new JLabel("Długi kontrachentów");
 				GridBagConstraints gbc_btnDunicy = new GridBagConstraints();
 				gbc_btnDunicy.insets = new Insets(0, 0, 5, 5);
 				gbc_btnDunicy.gridx = 1;
@@ -330,7 +330,7 @@ public class ZestawieniaPanel extends JPanel
 			}
 			{
 
-				JLabel btnDlugi = new JLabel("Nasze należności kontrahentom");
+				JLabel btnDlugi = new JLabel("Nasze należności kontrachentom");
 				GridBagConstraints gbc_btnDlugi = new GridBagConstraints();
 				gbc_btnDlugi.insets = new Insets(0, 0, 5, 5);
 				gbc_btnDlugi.gridx = 0;

@@ -378,8 +378,8 @@ public class FakturaBaza implements ObiektBazaManager
 						+ "',"
 						+ SqlUtils.popraw(nowaFaktura.rodzaj)
 						+ ","
-						+ SqlUtils.popraw(((nowaFaktura.kontrahent == null ? 0
-								: nowaFaktura.kontrahent.id_kontrachent)))
+						+ SqlUtils.popraw(((nowaFaktura.kontrachent == null ? 0
+								: nowaFaktura.kontrachent.id_kontrachent)))
 						+ ",'"
 						+ SqlUtils.popraw(nowaFaktura.wartosc_z_narzutem)
 						+ "','"
@@ -416,7 +416,7 @@ public class FakturaBaza implements ObiektBazaManager
 		{
 			LOCKED_FAKTURY.add(faktura.id_faktura);
 
-			zaplacFaktury(faktura.kontrahent.id_kontrachent,
+			zaplacFaktury(faktura.kontrachent.id_kontrachent,
 					faktura.waluta.intValue());
 		} finally
 		{
@@ -481,7 +481,7 @@ public class FakturaBaza implements ObiektBazaManager
 						+ SqlUtils.popraw(nowaFaktura.rodzaj)
 						+ "', id_kontrachent = '"
 						+ SqlUtils
-								.popraw(nowaFaktura.kontrahent.id_kontrachent)
+								.popraw(nowaFaktura.kontrachent.id_kontrachent)
 						+ "', wartosc = '"
 						+ SqlUtils.popraw(nowaFaktura.wartosc_z_narzutem)
 						+ "', aktualna = '"
@@ -586,22 +586,22 @@ public class FakturaBaza implements ObiektBazaManager
 	/*
 	 * metoda wywolywana: - dla kazdego insert - dla kazdego update
 	 */
-	static final Set<Integer> LOCKED_KONTRAHENT = new HashSet<Integer>();
+	static final Set<Integer> LOCKED_kontrachent = new HashSet<Integer>();
 
 	public static void zaplacFaktury(int id_kontrachent, int waluta)
 			throws Exception
 	{
-		if (LOCKED_KONTRAHENT.contains(id_kontrachent))
+		if (LOCKED_kontrachent.contains(id_kontrachent))
 			return;
 
 		try
 		{
-			LOCKED_KONTRAHENT.add(id_kontrachent);
+			LOCKED_kontrachent.add(id_kontrachent);
 
 			zaplacFaktury_impl(id_kontrachent, waluta);
 		} finally
 		{
-			LOCKED_KONTRAHENT.remove(id_kontrachent);
+			LOCKED_kontrachent.remove(id_kontrachent);
 		}
 	}
 

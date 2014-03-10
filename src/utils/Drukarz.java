@@ -217,7 +217,7 @@ public class Drukarz
 					helvetica10));
 			tabelka_kontrachenci.addCell(newSeparator());
 			tabelka_kontrachenci.addCell(newCellPodkreslony(
-					(faktura.kontrahent == null ? "" : faktura.kontrahent
+					(faktura.kontrachent == null ? "" : faktura.kontrachent
 							.piszDoFaktury()), helvetica10));
 			// settings
 			tabelka_kontrachenci.setWidths(szerokosci);
@@ -499,7 +499,7 @@ public class Drukarz
 				// DOKUMENTU///////////////////////////////
 				{
 					Paragraph nazwa_dokumentu = new Paragraph(
-							"Raport długów dla kontrahenta\n"
+							"Raport długów dla kontrachenta\n"
 									+ kontrachent.nazwa, helvetica14);
 					nazwa_dokumentu.setSpacingBefore(50);
 					nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);

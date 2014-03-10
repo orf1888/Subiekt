@@ -18,7 +18,7 @@ public class Faktura implements ObiektZId
 	public final static int kolumnaUkryta = 5; // liczac od 0, kolumna id
 
 	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
-	{ "Numer faktury", "Data wystawienia", " Termin płatności", "Kontrahent",
+	{ "Numer faktury", "Data wystawienia", " Termin płatności", "kontrachent",
 			"Wartość", "id" }, kolumnaUkryta);
 
 	public static String[] kolumnyWBazie =
@@ -40,7 +40,7 @@ public class Faktura implements ObiektZId
 
 	public int rodzaj; // int okresla rodzaj
 
-	public Kontrachent kontrahent;
+	public Kontrachent kontrachent;
 
 	public int wartosc_z_narzutem;
 
@@ -58,7 +58,7 @@ public class Faktura implements ObiektZId
 
 	public Faktura(int id_faktura, int numer, Date data_wystawienia,
 			Date termin_platnosci, boolean zaplacona, int rodzaj,
-			Kontrachent kontrahent, int wartosc, boolean aktualna,
+			Kontrachent kontrachent, int wartosc, boolean aktualna,
 			boolean isKorekta, List<ProduktWFakturze> produkty,
 			List<ProduktWFakturze> produktyKorekta, Long waluta) {
 		this.id_faktura = id_faktura;
@@ -67,7 +67,7 @@ public class Faktura implements ObiektZId
 		this.termin_platnosci = termin_platnosci;
 		this.zaplacona = zaplacona;
 		this.rodzaj = rodzaj;
-		this.kontrahent = kontrahent;
+		this.kontrachent = kontrachent;
 		this.wartosc_z_narzutem = wartosc;
 		this.aktualna = aktualna;
 		this.isKorekta = isKorekta;
@@ -85,7 +85,7 @@ public class Faktura implements ObiektZId
 				.format(data_wystawienia));
 		wiersz[2] = DataUtils.formatujDate(DataUtils.stringToDate_format
 				.format(termin_platnosci));
-		wiersz[3] = "" + (kontrahent == null ? "Brak!" : kontrahent.nazwa);
+		wiersz[3] = "" + (kontrachent == null ? "Brak!" : kontrachent.nazwa);
 		wiersz[4] = MojeUtils.formatujWartosc(wartosc_z_narzutem)
 				+ " "
 				+ WalutaManager.pobierzNazweZBazy(waluta - 1,

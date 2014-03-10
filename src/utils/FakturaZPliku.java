@@ -113,7 +113,7 @@ public class FakturaZPliku
 				komunikat_koncowy += "\nProdukty znajdujące się na liście występują w ilości\n"
 						+ "większej niż w bazie. Zostaną one pominięte!:\n";
 				komunikat_koncowy += zle;
-				komunikat_koncowy += "\nDodaną fakturę należy zedytować ręcznie!\nPamiętaj o dodaniu kontrahenta!";
+				komunikat_koncowy += "\nDodaną fakturę należy zedytować ręcznie!\nPamiętaj o dodaniu kontrachenta!";
 				/* Pokaż komunikat */
 				MojeUtils.showMsg(komunikat_koncowy);
 				return false;
@@ -130,7 +130,7 @@ public class FakturaZPliku
 				komunikat_koncowy += "Produkty znajdujące się na liście występują w ilości\n"
 						+ "większej niż w bazie. Zostaną one pominięte!:\n\n";
 				komunikat_koncowy += zle;
-				komunikat_koncowy += "\nDodaną fakturę należy zedytować ręcznie!\nPamiętaj o dodaniu kontrahenta!";
+				komunikat_koncowy += "\nDodaną fakturę należy zedytować ręcznie!\nPamiętaj o dodaniu kontrachenta!";
 				/* Pokaż komunikat */
 				MojeUtils.showMsg(komunikat_koncowy);
 				return false;

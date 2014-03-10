@@ -45,7 +45,7 @@ public class KontrachentPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	 * @param editable
 	 */
 	public KontrachentPanelEdytujDodaj(String tytul, boolean editable) {
-		setBorder(new TitledBorder(null, tytul + " kontrahenta",
+		setBorder(new TitledBorder(null, tytul + " kontrachenta",
 				TitledBorder.CENTER, TitledBorder.TOP, null, null));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]

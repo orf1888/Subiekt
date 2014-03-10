@@ -81,7 +81,7 @@ public class Loger
 
 			result += ((Faktura) nowy).numer
 					+ " dla kontrachenta "
-					+ ((Faktura) nowy).kontrahent.nazwa
+					+ ((Faktura) nowy).kontrachent.nazwa
 					+ " o wartości "
 					+ MojeUtils
 							.utworzWartoscZlotowki(((Faktura) nowy).wartosc_z_narzutem)
@@ -89,29 +89,29 @@ public class Loger
 					+ waluta
 					+ " długi ("
 					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.dlug_pln)
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_pln)
 					+ "PLN;"
 					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.dlug_eur)
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_eur)
 					+ "EUR;"
 					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.dlug_usd)
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_usd)
 					+ "USD;"
 					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.dlug_uah)
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_uah)
 					+ "UAH)"
 					+ ", nadpłaty("
 					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.nadplata_pln)
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_pln)
 					+ "PLN;"
 					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.nadplata_eur)
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_eur)
 					+ "EUR;"
 					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.nadplata_usd)
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_usd)
 					+ "USD;"
 					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrahent.nadplata_uah)
+							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_uah)
 					+ "UAH)";
 		} else
 		{
