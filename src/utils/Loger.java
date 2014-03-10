@@ -2,6 +2,8 @@ package utils;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -129,5 +131,13 @@ public class Loger
 	{
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar
 				.getInstance().getTime());
+	}
+
+	public static String pobierzStackStrace(Exception e)
+	{
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		e.printStackTrace(pw);
+		return sw.toString();
 	}
 }

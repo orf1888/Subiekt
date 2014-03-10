@@ -64,7 +64,7 @@ public class MojeUtils
 		e.printStackTrace();
 		try
 		{
-			Loger.log(LogerNazwa.BledyLog, e.getLocalizedMessage());
+			Loger.log(LogerNazwa.BledyLog, Loger.pobierzStackStrace(e));
 		} catch (IOException e1)
 		{
 			e1.printStackTrace();

@@ -689,6 +689,7 @@ public class FakturaBaza implements ObiektBazaManager
 			dlug += dlugggg_pomniejszony;
 		}
 
+		@SuppressWarnings("unused")
 		String walutaStr;
 		switch (waluta)
 		{
