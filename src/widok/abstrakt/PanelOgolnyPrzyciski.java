@@ -298,7 +298,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 							ukryjModalneOkno();
 
 							Loger.log(LogerNazwa.FinanseLog,
-									Loger.tworzLog(nowy));
+									Loger.tworzLog(null, nowy));
 
 						} catch (Exception e)
 						{
@@ -319,7 +319,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 							ukryjModalneOkno();
 							Loger.log(LogerNazwa.FinanseLog,
-									Loger.tworzLog(nowy));
+									Loger.tworzLog(null, nowy));
 						} catch (Exception e)
 						{
 							MojeUtils
@@ -402,6 +402,13 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 							stara_wplata.waluta);
 					FakturaBaza.zaplacFaktury(nowa_wplata.id_kontrachent,
 							nowa_wplata.waluta);
+					Loger.log(LogerNazwa.FinanseLog,
+							Loger.tworzLog(staryObiekt, nowy));
+				} else if (staryObiekt instanceof Faktura
+						&& nowy instanceof Faktura)
+				{
+					Loger.log(LogerNazwa.FinanseLog,
+							Loger.tworzLog(staryObiekt, nowy));
 				}
 				ukryjModalneOkno();
 			} catch (UserShowException e)

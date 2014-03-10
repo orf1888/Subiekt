@@ -52,7 +52,21 @@ public class Loger
 		}
 	}
 
-	public static String tworzLog(Object nowy)
+	public static String tworzLog(Object stary, Object nowy)
+	{
+		if (stary == null)
+			/* Dodanie faktury/wpłaty */
+			return pobierzDane(nowy, false);
+		else
+		{
+			/* Edycja faktury/wpłaty */
+			String result = pobierzDane(stary, true);
+			result += "\n" + pobierzDane(nowy, true);
+			return result;
+		}
+	}
+
+	private static String pobierzDane(Object nowy, boolean isEdytuj)
 	{
 		String waluta = new String();
 		String result = new String();
@@ -60,7 +74,13 @@ public class Loger
 		{
 			waluta = WalutaManager.pobierzNazweZBazy(
 					((Faktura) nowy).waluta - 1, "slownikWaluta");
-			result += "Dodano nową fakturę dla kontrachenta "
+			if (isEdytuj)
+				result += "Edytowano fakturę o nr ";
+			else
+				result += "Dodano fakturę o nr ";
+
+			result += ((Faktura) nowy).numer
+					+ " dla kontrachenta "
 					+ ((Faktura) nowy).kontrahent.nazwa
 					+ " o wartości "
 					+ MojeUtils
@@ -99,7 +119,11 @@ public class Loger
 					(long) ((Wplata) nowy).waluta - 1, "slownikWaluta");
 			Kontrachent kontrachent = (Kontrachent) KontrachentBaza
 					.pobierzObiektZBazy(((Wplata) nowy).id_kontrachent);
-			result += "Dodano nową wpłatę dla kontrachenta "
+			if (isEdytuj)
+				result += "Edytowano wpłatę o id ";
+			else
+				result += "Dodano wpłatę o id ";
+			result += ((Wplata) nowy).id_wplata + " dla kontrachenta "
 					+ kontrachent.nazwa + " o wartości "
 					+ MojeUtils.utworzWartoscZlotowki(((Wplata) nowy).wartosc)
 					+ " w walucie " + waluta + " długi ("
