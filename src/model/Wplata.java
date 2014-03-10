@@ -50,7 +50,7 @@ public class Wplata implements ObiektZId
 		wiersz[0] = DataUtils.formatujDate(DataUtils.stringToDate_format
 				.format(data_wplaty));
 		wiersz[1] = KontrachentBaza.pobierzNazweZBazy(id_kontrachent);
-		wiersz[2] = MojeUtils.formatujWartosc(wartosc)
+		wiersz[2] = MojeUtils.utworzWartoscZlotowki(wartosc)
 				+ " "
 				+ WalutaManager.pobierzNazweZBazy((long) waluta - 1,
 						Waluta.tabelaWaluta);

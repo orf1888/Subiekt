@@ -108,7 +108,7 @@ public class WplataPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		} catch (Exception e)
 		{
 			MojeUtils.showError("Błąd pobierania wpłaty!");
-			MojeUtils.error(e);;
+			MojeUtils.error(e);
 		}
 		textWartoscWplaty.setText(MojeUtils
 				.utworzWartoscZlotowki(wplata.wartosc));
@@ -119,12 +119,13 @@ public class WplataPanelEdytujDodaj extends PanelEdytujDodajObiekt
 	@Override
 	public ObiektZId pobierzZFormatki(int id) throws Exception
 	{
-		/* zrobić sprawdzanie!!! */
 		int wartosc = MojeUtils.utworzWartoscGrosze(
 				textWartoscWplaty.getText(), "Wartość wpłaty");
+
 		if (wartosc <= 0)
 			throw new UserShowException(
 					"Wartość wpłaty musi być większa niż 0!");
+
 		Kontrachent tmp_kontrachent = (Kontrachent) KontrachentBaza
 				.pobierzObiektZBazy(comboKontrachent.getSelectedItem()
 						.toString());

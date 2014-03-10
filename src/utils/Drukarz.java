@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import kontroler.PodmiotBaza;
 import kontroler.WalutaManager;
 import model.Faktura;
+import model.Kontrachent;
 import model.TransportRozliczenie;
 import model.Waluta;
+import model.Wplata;
 import model.Wysylka;
 import model.produkt.ProduktWFakturze;
 import model.produkt.ProduktWWysylce;
@@ -101,15 +103,19 @@ public class Drukarz
 		}
 	}
 
-	public static File tworzRaportDlugowPDF(String[][] PLN, String[][] EUR,
-			String[][] USD, String[][] UAH)
+	public static File tworzRaportDlugowPDF(ArrayList<Faktura> f_pln,
+			ArrayList<Faktura> f_eur, ArrayList<Faktura> f_usd,
+			ArrayList<Faktura> f_uah, ArrayList<Wplata> w_pln,
+			ArrayList<Wplata> w_eur, ArrayList<Wplata> w_usd,
+			ArrayList<Wplata> w_uah, Kontrachent kontrachent)
 	{
 		try
 		{
 			File temp = File.createTempFile("temp",
 					Long.toString(System.nanoTime()));
 			Document doc = otworzPdf(temp);
-			if (wypelnijRaportODluznikach(PLN, EUR, USD, UAH, doc))
+			if (wypelnijRaportODluznikach(f_pln, f_eur, f_usd, f_uah, w_pln,
+					w_eur, w_usd, w_uah, kontrachent, doc))
 			{
 				doc.close();
 				return temp;
@@ -413,60 +419,198 @@ public class Drukarz
 		}
 	}
 
-	private static boolean wypelnijRaportODluznikach(String[][] PLN,
-			String[][] EUR, String[][] USD, String[][] UAH, Document doc)
+	private static boolean wypelnijRaportODluznikach(ArrayList<Faktura> f_pln,
+			ArrayList<Faktura> f_eur, ArrayList<Faktura> f_usd,
+			ArrayList<Faktura> f_uah, ArrayList<Wplata> w_pln,
+			ArrayList<Wplata> w_eur, ArrayList<Wplata> w_usd,
+			ArrayList<Wplata> w_uah, Kontrachent kontrachent, Document doc)
 			throws DocumentException
 	{
-		if (PLN.length == 0 && EUR.length == 0 && USD.length == 0
-				&& UAH.length == 0)
+		/* Dług walutowy sprzed okresu programu (jeśli istnieje) */
 		{
-			return false;
-		} else
-		{
-			float[] szerokosci = new float[]
-			{ 500, 400, 500 };
-			// ///////////////////TERMIN WYSTAWIENIA////////////////////////////
+			int dlug_poczatkowy_pln = 0;
+			int watosc_plat_pln = 0;
+			for (Wplata w : w_pln)
+				if (w.wartosc < 0)
+					dlug_poczatkowy_pln += Math.abs(w.wartosc);
+				else
+					watosc_plat_pln += w.wartosc;
+			int dlug_poczatkowy_eur = 0;
+			int watosc_plat_eur = 0;
+			for (Wplata w : w_eur)
+				if (w.wartosc < 0)
+					dlug_poczatkowy_eur += Math.abs(w.wartosc);
+				else
+					watosc_plat_eur += w.wartosc;
+			int dlug_poczatkowy_usd = 0;
+			int watosc_plat_usd = 0;
+			for (Wplata w : w_usd)
+				if (w.wartosc < 0)
+					dlug_poczatkowy_usd += Math.abs(w.wartosc);
+				else
+					watosc_plat_usd += w.wartosc;
+			int dlug_poczatkowy_uah = 0;
+			int watosc_plat_uah = 0;
+			for (Wplata w : w_uah)
+				if (w.wartosc < 0)
+					dlug_poczatkowy_uah += Math.abs(w.wartosc);
+				else
+					watosc_plat_uah += w.wartosc;
+			/* Jesli dlug poczatkowy jest wiekszy niz suma wplat wyswietlaj dlug */
+			if (dlug_poczatkowy_pln < watosc_plat_pln)
+				dlug_poczatkowy_pln = 0;
+			if (dlug_poczatkowy_eur < watosc_plat_eur)
+				dlug_poczatkowy_eur = 0;
+			if (dlug_poczatkowy_usd < watosc_plat_usd)
+				dlug_poczatkowy_usd = 0;
+			if (dlug_poczatkowy_uah < watosc_plat_uah)
+				dlug_poczatkowy_uah = 0;
+			if (f_pln.size() == 0 && f_eur.size() == 0 && f_usd.size() == 0
+					&& f_uah.size() == 0 && dlug_poczatkowy_pln == 0
+					&& dlug_poczatkowy_eur == 0 && dlug_poczatkowy_usd == 0
+					&& dlug_poczatkowy_uah == 0)
 			{
-				PdfPTable tabelka_dat = new PdfPTable(3);
-				tabelka_dat.addCell(newCellWysrodkowanySzary(
-						"Data utworzenia raportu", helvetica10));
-				tabelka_dat.addCell(newSeparator());
-				tabelka_dat.addCell(newSeparator());
-				// newline
-				tabelka_dat.addCell(newCellWysrodkowany(
-						DataUtils.pobierzAktualnaDate(), helvetica10));
-				tabelka_dat.addCell(newSeparator());
-				tabelka_dat.addCell(newSeparator());
-				// settings
+				return false;
+			} else
+			{
+				float[] szerokosci = new float[]
+				{ 500, 400, 500 };
+				// ///////////////////TERMIN
+				// WYSTAWIENIA////////////////////////////
+				{
+					PdfPTable tabelka_dat = new PdfPTable(3);
+					tabelka_dat.addCell(newCellWysrodkowanySzary(
+							"Data utworzenia raportu", helvetica10));
+					tabelka_dat.addCell(newSeparator());
+					tabelka_dat.addCell(newSeparator());
+					// newline
+					tabelka_dat.addCell(newCellWysrodkowany(
+							DataUtils.pobierzAktualnaDate(), helvetica10));
+					tabelka_dat.addCell(newSeparator());
+					tabelka_dat.addCell(newSeparator());
+					// settings
 
-				tabelka_dat.setWidths(szerokosci);
-				Paragraph paragDaty = new Paragraph();
-				paragDaty.add(tabelka_dat);
-				doc.add(paragDaty);
+					tabelka_dat.setWidths(szerokosci);
+					Paragraph paragDaty = new Paragraph();
+					paragDaty.add(tabelka_dat);
+					doc.add(paragDaty);
+				}
+				// ///////////////////NAZWA
+				// DOKUMENTU///////////////////////////////
+				{
+					Paragraph nazwa_dokumentu = new Paragraph(
+							"Raport długów dla kontrahenta\n"
+									+ kontrachent.nazwa, helvetica14);
+					nazwa_dokumentu.setSpacingBefore(50);
+					nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
+					doc.add(nazwa_dokumentu);
+				}
+
+				if (dlug_poczatkowy_pln != 0 || dlug_poczatkowy_eur != 0
+						|| dlug_poczatkowy_usd != 0 || dlug_poczatkowy_uah != 0)
+				{
+					/* Tabelka długów początkowych */
+					String[] naglowki_dlug_poczatkowy =
+					{ "Dług początkowy", "PLN", "EUR", "USD", "UAH" };
+					PdfPTable tabelka_dlug_poczatkowy = new PdfPTable(
+							naglowki_dlug_poczatkowy.length);
+					tabelka_dlug_poczatkowy.setSpacingBefore(25);
+					tabelka_dlug_poczatkowy.setSpacingAfter(10);
+
+					for (String naglowek : naglowki_dlug_poczatkowy)
+					{
+						PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
+								helvetica10));
+						komorka_lp.setBackgroundColor(new BaseColor(244, 244,
+								244));
+						tabelka_dlug_poczatkowy.addCell(komorka_lp);
+					}
+					tabelka_dlug_poczatkowy.addCell(newSeparator());
+					tabelka_dlug_poczatkowy.addCell(new Phrase(MojeUtils
+							.utworzWartoscZlotowki(dlug_poczatkowy_pln),
+							helvetica10));
+					tabelka_dlug_poczatkowy.addCell(new Phrase(MojeUtils
+							.utworzWartoscZlotowki(dlug_poczatkowy_eur),
+							helvetica10));
+					tabelka_dlug_poczatkowy.addCell(new Phrase(MojeUtils
+							.utworzWartoscZlotowki(dlug_poczatkowy_usd),
+							helvetica10));
+					tabelka_dlug_poczatkowy.addCell(new Phrase(MojeUtils
+							.utworzWartoscZlotowki(dlug_poczatkowy_uah),
+							helvetica10));
+					Paragraph tabelka = new Paragraph();
+					tabelka.add(tabelka_dlug_poczatkowy);
+					doc.add(tabelka);
+				}
+				if (kontrachent.nadplata_pln != 0
+						|| kontrachent.nadplata_eur != 0
+						|| kontrachent.nadplata_usd != 0
+						|| kontrachent.nadplata_uah != 0)
+				{
+					String[] naglowki_nadplata =
+					{ "Środki nierozliczone", "PLN", "EUR", "USD", "UAH" };
+					PdfPTable tabelka_nadplata = new PdfPTable(
+							naglowki_nadplata.length);
+					for (String naglowek : naglowki_nadplata)
+					{
+						PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
+								helvetica10));
+						komorka_lp.setBackgroundColor(new BaseColor(244, 244,
+								244));
+						tabelka_nadplata.addCell(komorka_lp);
+					}
+					tabelka_nadplata.addCell(newSeparator());
+					tabelka_nadplata.addCell(new Phrase(MojeUtils
+							.utworzWartoscZlotowki(kontrachent.nadplata_pln),
+							helvetica10));
+					tabelka_nadplata.addCell(new Phrase(MojeUtils
+							.utworzWartoscZlotowki(kontrachent.nadplata_eur),
+							helvetica10));
+					tabelka_nadplata.addCell(new Phrase(MojeUtils
+							.utworzWartoscZlotowki(kontrachent.nadplata_usd),
+							helvetica10));
+					tabelka_nadplata.addCell(new Phrase(MojeUtils
+							.utworzWartoscZlotowki(kontrachent.nadplata_uah),
+							helvetica10));
+					Paragraph tabelka = new Paragraph();
+					tabelka.add(tabelka_nadplata);
+					doc.add(tabelka);
+				}
 			}
-			// ///////////////////NAZWA DOKUMENTU///////////////////////////////
+			/* Tabela długu rzeczywistego */
 			{
-				String nazwa_kontrachenta = new String();
-				if (EUR.length != 0)
-					nazwa_kontrachenta = EUR[0][3];
-				if (PLN.length != 0)
-					nazwa_kontrachenta = PLN[0][3];
-				if (USD.length != 0)
-					nazwa_kontrachenta = USD[0][3];
-				if (UAH.length != 0)
-					nazwa_kontrachenta = UAH[0][3];
-
-				Paragraph nazwa_dokumentu = new Paragraph(
-						"Raport długów dla kontrahenta\n" + nazwa_kontrachenta,
-						helvetica14);
-				nazwa_dokumentu.setSpacingBefore(50);
-				nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
-				doc.add(nazwa_dokumentu);
+				String[] naglowki_dlug_rzeczywisty =
+				{ "Dług rzeczywisty", "PLN", "EUR", "USD", "UAH" };
+				PdfPTable tabelka_dlug_rzeczywisty = new PdfPTable(
+						naglowki_dlug_rzeczywisty.length);
+				for (String naglowek : naglowki_dlug_rzeczywisty)
+				{
+					PdfPCell komorka_lp = new PdfPCell(new Phrase(naglowek,
+							helvetica10));
+					komorka_lp.setBackgroundColor(new BaseColor(244, 244, 244));
+					tabelka_dlug_rzeczywisty.addCell(komorka_lp);
+				}
+				tabelka_dlug_rzeczywisty.addCell(newSeparator());
+				tabelka_dlug_rzeczywisty.addCell(new Phrase(MojeUtils
+						.utworzWartoscZlotowki(kontrachent.dlug_pln),
+						helvetica10));
+				tabelka_dlug_rzeczywisty.addCell(new Phrase(MojeUtils
+						.utworzWartoscZlotowki(kontrachent.dlug_eur),
+						helvetica10));
+				tabelka_dlug_rzeczywisty.addCell(new Phrase(MojeUtils
+						.utworzWartoscZlotowki(kontrachent.dlug_usd),
+						helvetica10));
+				tabelka_dlug_rzeczywisty.addCell(new Phrase(MojeUtils
+						.utworzWartoscZlotowki(kontrachent.dlug_uah),
+						helvetica10));
+				Paragraph tabelka = new Paragraph();
+				tabelka.add(tabelka_dlug_rzeczywisty);
+				doc.add(tabelka);
 			}
 			// ///////////////////TABELA FAKTÓR
 			// PLN//////////////////////////////
 			{
-				if (PLN.length != 0)
+				if (f_pln.size() != 0)
 				{
 					// // naglowek
 					String[] naglowki =
@@ -485,26 +629,49 @@ public class Drukarz
 						tabelka_PLN.addCell(komorka_lp);
 					}
 					// // wiersze PLN
-					for (int i = 0; i < PLN.length; i++)
+					int wartosc_pln = 0;
+					for (int i = 0; i < f_pln.size(); i++)
 					{
 						tabelka_PLN.addCell(new Phrase((i + 1) + "",
 								helvetica10));
-						tabelka_PLN.addCell(new Phrase(PLN[i][0], helvetica10));
-						tabelka_PLN.addCell(new Phrase(PLN[i][1], helvetica10));
-						tabelka_PLN.addCell(new Phrase(PLN[i][2], helvetica10));
-						tabelka_PLN.addCell(newCellDoPrawej(PLN[i][4],
-								helvetica10));
+						tabelka_PLN
+								.addCell(new Phrase(
+										MojeUtils.poprawNrFaktury(
+												1,
+												f_pln.get(i).numer,
+												DataUtils
+														.getYear(DataUtils.stringToDate_format.format(f_pln
+																.get(i).data_wystawienia)),
+												f_pln.get(i).isKorekta),
+										helvetica10));
+						tabelka_PLN
+								.addCell(new Phrase(
+										DataUtils.dateToString_format
+												.format(f_pln.get(i).data_wystawienia),
+										helvetica10));
+						tabelka_PLN
+								.addCell(new Phrase(
+										DataUtils.dateToString_format
+												.format(f_pln.get(i).termin_platnosci),
+										helvetica10));
+						tabelka_PLN
+								.addCell(newCellDoPrawej(
+										MojeUtils.utworzWartoscZlotowki(f_pln
+												.get(i).wartosc_z_narzutem),
+										helvetica10));
+						wartosc_pln += f_pln.get(i).wartosc_z_narzutem;
 					}
 					// ostatni wiersz z sumą
 					tabelka_PLN.addCell(newSeparator());
 					tabelka_PLN.addCell(newSeparator());
 					tabelka_PLN.addCell(newSeparator());
 					tabelka_PLN.addCell(newSeparator());
-					tabelka_PLN.addCell(newCellWysrodkowanyZRamka(
-							"Suma długu PLN\n"
-									+ MojeUtils
-											.zliczWartoscFakturDoRaportu(PLN),
-							helvetica10));
+					tabelka_PLN
+							.addCell(newCellWysrodkowanyZRamka(
+									"Suma długu PLN\n"
+											+ MojeUtils
+													.utworzWartoscZlotowki(wartosc_pln),
+									helvetica10));
 
 					// settings
 					float[] columnWidths = new float[]
@@ -520,7 +687,7 @@ public class Drukarz
 			// ///////////////////TABELA FAKTÓR
 			// EUR//////////////////////////////
 			{
-				if (EUR.length != 0)
+				if (f_eur.size() != 0)
 				{
 					// // naglowek
 					String[] naglowki =
@@ -539,26 +706,49 @@ public class Drukarz
 						tabelka_EUR.addCell(komorka_lp);
 					}
 					// // wiersze PLN
-					for (int i = 0; i < EUR.length; i++)
+					int wartosc_eur = 0;
+					for (int i = 0; i < f_eur.size(); i++)
 					{
 						tabelka_EUR.addCell(new Phrase((i + 1) + "",
 								helvetica10));
-						tabelka_EUR.addCell(new Phrase(EUR[i][0], helvetica10));
-						tabelka_EUR.addCell(new Phrase(EUR[i][1], helvetica10));
-						tabelka_EUR.addCell(new Phrase(EUR[i][2], helvetica10));
-						tabelka_EUR.addCell(newCellDoPrawej(EUR[i][4],
-								helvetica10));
+						tabelka_EUR
+								.addCell(new Phrase(
+										MojeUtils.poprawNrFaktury(
+												1,
+												f_eur.get(i).numer,
+												DataUtils
+														.getYear(DataUtils.stringToDate_format.format(f_eur
+																.get(i).data_wystawienia)),
+												f_eur.get(i).isKorekta),
+										helvetica10));
+						tabelka_EUR
+								.addCell(new Phrase(
+										DataUtils.dateToString_format
+												.format(f_eur.get(i).data_wystawienia),
+										helvetica10));
+						tabelka_EUR
+								.addCell(new Phrase(
+										DataUtils.dateToString_format
+												.format(f_eur.get(i).termin_platnosci),
+										helvetica10));
+						tabelka_EUR
+								.addCell(newCellDoPrawej(
+										MojeUtils.utworzWartoscZlotowki(f_eur
+												.get(i).wartosc_z_narzutem),
+										helvetica10));
+						wartosc_eur += f_eur.get(i).wartosc_z_narzutem;
 					}
 					// ostatni wiersz z sumą
 					tabelka_EUR.addCell(newSeparator());
 					tabelka_EUR.addCell(newSeparator());
 					tabelka_EUR.addCell(newSeparator());
 					tabelka_EUR.addCell(newSeparator());
-					tabelka_EUR.addCell(newCellWysrodkowanyZRamka(
-							"Suma długu EUR\n"
-									+ MojeUtils
-											.zliczWartoscFakturDoRaportu(EUR),
-							helvetica10));
+					tabelka_EUR
+							.addCell(newCellWysrodkowanyZRamka(
+									"Suma długu EUR\n"
+											+ MojeUtils
+													.utworzWartoscZlotowki(wartosc_eur),
+									helvetica10));
 
 					// settings
 					float[] columnWidths = new float[]
@@ -574,7 +764,7 @@ public class Drukarz
 			// ///////////////////TABELA FAKTÓR
 			// USD//////////////////////////////
 			{
-				if (USD.length != 0)
+				if (f_usd.size() != 0)
 				{
 					// // naglowek
 					String[] naglowki =
@@ -593,26 +783,49 @@ public class Drukarz
 						tabelka_USD.addCell(komorka_lp);
 					}
 					// // wiersze PLN
-					for (int i = 0; i < USD.length; i++)
+					int wartosc_usd = 0;
+					for (int i = 0; i < f_usd.size(); i++)
 					{
 						tabelka_USD.addCell(new Phrase((i + 1) + "",
 								helvetica10));
-						tabelka_USD.addCell(new Phrase(USD[i][0], helvetica10));
-						tabelka_USD.addCell(new Phrase(USD[i][1], helvetica10));
-						tabelka_USD.addCell(new Phrase(USD[i][2], helvetica10));
-						tabelka_USD.addCell(newCellDoPrawej(USD[i][4],
-								helvetica10));
+						tabelka_USD
+								.addCell(new Phrase(
+										MojeUtils.poprawNrFaktury(
+												1,
+												f_usd.get(i).numer,
+												DataUtils
+														.getYear(DataUtils.stringToDate_format.format(f_usd
+																.get(i).data_wystawienia)),
+												f_usd.get(i).isKorekta),
+										helvetica10));
+						tabelka_USD
+								.addCell(new Phrase(
+										DataUtils.dateToString_format
+												.format(f_usd.get(i).data_wystawienia),
+										helvetica10));
+						tabelka_USD
+								.addCell(new Phrase(
+										DataUtils.dateToString_format
+												.format(f_usd.get(i).termin_platnosci),
+										helvetica10));
+						tabelka_USD
+								.addCell(newCellDoPrawej(
+										MojeUtils.utworzWartoscZlotowki(f_usd
+												.get(i).wartosc_z_narzutem),
+										helvetica10));
+						wartosc_usd += f_usd.get(i).wartosc_z_narzutem;
 					}
 					// ostatni wiersz z sumą
 					tabelka_USD.addCell(newSeparator());
 					tabelka_USD.addCell(newSeparator());
 					tabelka_USD.addCell(newSeparator());
 					tabelka_USD.addCell(newSeparator());
-					tabelka_USD.addCell(newCellWysrodkowanyZRamka(
-							"Suma długu USD\n"
-									+ MojeUtils
-											.zliczWartoscFakturDoRaportu(USD),
-							helvetica10));
+					tabelka_USD
+							.addCell(newCellWysrodkowanyZRamka(
+									"Suma długu USD\n"
+											+ MojeUtils
+													.utworzWartoscZlotowki(wartosc_usd),
+									helvetica10));
 
 					// settings
 					float[] columnWidths = new float[]
@@ -628,7 +841,7 @@ public class Drukarz
 			// ///////////////////TABELA FAKTÓR
 			// UAH//////////////////////////////
 			{
-				if (UAH.length != 0)
+				if (f_uah.size() != 0)
 				{
 					// // naglowek
 					String[] naglowki =
@@ -647,26 +860,49 @@ public class Drukarz
 						tabelka_UAH.addCell(komorka_lp);
 					}
 					// // wiersze PLN
-					for (int i = 0; i < UAH.length; i++)
+					int wartosc_uah = 0;
+					for (int i = 0; i < f_uah.size(); i++)
 					{
 						tabelka_UAH.addCell(new Phrase((i + 1) + "",
 								helvetica10));
-						tabelka_UAH.addCell(new Phrase(UAH[i][0], helvetica10));
-						tabelka_UAH.addCell(new Phrase(UAH[i][1], helvetica10));
-						tabelka_UAH.addCell(new Phrase(UAH[i][2], helvetica10));
-						tabelka_UAH.addCell(newCellDoPrawej(UAH[i][4],
-								helvetica10));
+						tabelka_UAH
+								.addCell(new Phrase(
+										MojeUtils.poprawNrFaktury(
+												1,
+												f_uah.get(i).numer,
+												DataUtils
+														.getYear(DataUtils.stringToDate_format.format(f_uah
+																.get(i).data_wystawienia)),
+												f_uah.get(i).isKorekta),
+										helvetica10));
+						tabelka_UAH
+								.addCell(new Phrase(
+										DataUtils.dateToString_format
+												.format(f_uah.get(i).data_wystawienia),
+										helvetica10));
+						tabelka_UAH
+								.addCell(new Phrase(
+										DataUtils.dateToString_format
+												.format(f_uah.get(i).termin_platnosci),
+										helvetica10));
+						tabelka_UAH
+								.addCell(newCellDoPrawej(
+										MojeUtils.utworzWartoscZlotowki(f_uah
+												.get(i).wartosc_z_narzutem),
+										helvetica10));
+						wartosc_uah += f_uah.get(i).wartosc_z_narzutem;
 					}
 					// ostatni wiersz z sumą
 					tabelka_UAH.addCell(newSeparator());
 					tabelka_UAH.addCell(newSeparator());
 					tabelka_UAH.addCell(newSeparator());
 					tabelka_UAH.addCell(newSeparator());
-					tabelka_UAH.addCell(newCellWysrodkowanyZRamka(
-							"Suma długu UAH\n"
-									+ MojeUtils
-											.zliczWartoscFakturDoRaportu(UAH),
-							helvetica10));
+					tabelka_UAH
+							.addCell(newCellWysrodkowanyZRamka(
+									"Suma długu UAH\n"
+											+ MojeUtils
+													.utworzWartoscZlotowki(wartosc_uah),
+									helvetica10));
 
 					// settings
 					float[] columnWidths = new float[]

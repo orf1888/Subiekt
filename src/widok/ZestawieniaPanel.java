@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -20,8 +21,10 @@ import javax.swing.table.DefaultTableModel;
 import kontroler.FakturaBaza;
 import kontroler.KontrachentBaza;
 import kontroler.ObiektWyszukanieWarunki;
+import kontroler.WplataBaza;
 import model.Faktura;
 import model.Kontrachent;
+import model.Wplata;
 import utils.MojeUtils;
 
 public class ZestawieniaPanel extends JPanel
@@ -72,7 +75,9 @@ public class ZestawieniaPanel extends JPanel
 					dluznicy();
 					break;
 				case RaportDluguWalutowego:
-					raportDlugi();
+					raportDlugi((Kontrachent) KontrachentBaza
+							.pobierzObiektZBazy(comboBoxRaportDluznika
+									.getSelectedIndex() + 1));
 					break;
 				case ZestawienieDlugi:
 					dlugi();
@@ -132,19 +137,26 @@ public class ZestawieniaPanel extends JPanel
 	public void raportDlugiZmienKontrachent() throws Exception
 	{
 
+		/*
+		 * if (comboBoxRaportDluznika.getSelectedIndex() < 0) return; if
+		 * (comboBoxRaportDluznika.getSelectedItem().toString().isEmpty())
+		 * warunekKontrachent = null; else { warunekKontrachent = ((Kontrachent)
+		 * KontrachentBaza .pobierzObiektZBazy(comboBoxRaportDluznika
+		 * .getSelectedItem().toString())).getId(); }
+		 */
+		/*
+		 * comboBoxRaportDluznika.setModel(MojeUtils.odswiezDaneWCombo(false,
+		 * KontrachentBaza.pobierzWszystkieNazwyZBazy()));
+		 */
+		/* Pobierz kontrachenta */
 		if (comboBoxRaportDluznika.getSelectedIndex() < 0)
 			return;
-		if (comboBoxRaportDluznika.getSelectedItem().toString().isEmpty())
-			warunekKontrachent = null;
-		else
-		{
-			warunekKontrachent = ((Kontrachent) KontrachentBaza
-					.pobierzObiektZBazy(comboBoxRaportDluznika
-							.getSelectedItem().toString())).getId();
-		}
+		Kontrachent kontrachent = (Kontrachent) KontrachentBaza
+				.pobierzObiektZBazy(comboBoxRaportDluznika.getSelectedIndex() + 1);
+		/* Odśwież dane w combo jeśli dodaliśmy nowego kontrachenta */
 		comboBoxRaportDluznika.setModel(MojeUtils.odswiezDaneWCombo(false,
 				KontrachentBaza.pobierzWszystkieNazwyZBazy()));
-		raportDlugi();
+		raportDlugi(kontrachent);
 	}
 
 	public void dlugiZmienKontrachent() throws Exception
@@ -166,59 +178,107 @@ public class ZestawieniaPanel extends JPanel
 				KontrachentBaza.pobierzWszystkieNazwyZBazy()));
 	}
 
-	public void raportDlugi() throws Exception
+	public void raportDlugi(Kontrachent kontrachent) throws Exception
 	{
+		/* Pobierz faktury niezapłacone kontrachenta w walucie */
+		ArrayList<Faktura> f_pln = pobierzListeFakturNiezaplaconcyh(
+				kontrachent.id_kontrachent, 1);
+		ArrayList<Faktura> f_eur = pobierzListeFakturNiezaplaconcyh(
+				kontrachent.id_kontrachent, 2);
+		ArrayList<Faktura> f_usd = pobierzListeFakturNiezaplaconcyh(
+				kontrachent.id_kontrachent, 3);
+		ArrayList<Faktura> f_uah = pobierzListeFakturNiezaplaconcyh(
+				kontrachent.id_kontrachent, 4);
+
+		/* Pobierz wpłaty kontrachenta w walucie */
+		ArrayList<Wplata> w_pln = pobierzWplatyWaluta(
+				kontrachent.id_kontrachent, 1);
+		ArrayList<Wplata> w_eur = pobierzWplatyWaluta(
+				kontrachent.id_kontrachent, 2);
+		ArrayList<Wplata> w_usd = pobierzWplatyWaluta(
+				kontrachent.id_kontrachent, 3);
+		ArrayList<Wplata> w_uah = pobierzWplatyWaluta(
+				kontrachent.id_kontrachent, 4);
+
 		/* poierz listę faktur w PLN - 1 */
-		ObiektWyszukanieWarunki warunkiDlugPLN = ObiektWyszukanieWarunki
-				.TworzWarunekFaktura();
-		warunkiDlugPLN.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
-		warunkiDlugPLN.dodajWarunek("1", "waluta"); // waluta PLN
-		warunkiDlugPLN.dodajWarunek("0", "zaplacona"); // nie zapłacona
-		if (warunekKontrachent != null)
-			warunkiDlugPLN.dodajWarunek(warunekKontrachent, "id_kontrachent");
-		warunkiDlugPLN.generujWarunekWhere();
+		/*
+		 * ObiektWyszukanieWarunki warunkiDlugPLN = ObiektWyszukanieWarunki
+		 * .TworzWarunekFaktura(); warunkiDlugPLN.dodajWarunek(Faktura.SPRZEDAZ,
+		 * "rodzaj"); warunkiDlugPLN.dodajWarunek("1", "waluta"); // waluta PLN
+		 * warunkiDlugPLN.dodajWarunek("0", "zaplacona"); // nie zapłacona if
+		 * (warunekKontrachent != null)
+		 * warunkiDlugPLN.dodajWarunek(warunekKontrachent, "id_kontrachent");
+		 * warunkiDlugPLN.generujWarunekWhere();
+		 */
 
-		String[][] dataDlugKontrahentaPLN = fakturaBaza
-				.pobierzWierszeZBazy(warunkiDlugPLN);
-		/* poierz listę faktur w EUR - 2 */
-		ObiektWyszukanieWarunki warunkiDlugEUR = ObiektWyszukanieWarunki
-				.TworzWarunekFaktura();
-		warunkiDlugEUR.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
-		warunkiDlugEUR.dodajWarunek("2", "waluta"); // waluta EUR
-		warunkiDlugEUR.dodajWarunek("0", "zaplacona"); // nie zapłacona
-		if (warunekKontrachent != null)
-			warunkiDlugEUR.dodajWarunek(warunekKontrachent, "id_kontrachent");
-		warunkiDlugEUR.generujWarunekWhere();
+		// Faktura[] faktury
 
-		String[][] dataDlugKontrahentaEUR = fakturaBaza
-				.pobierzWierszeZBazy(warunkiDlugEUR);
-		/* poierz listę faktur w USD - 3 */
-		ObiektWyszukanieWarunki warunkiDlugUSD = ObiektWyszukanieWarunki
-				.TworzWarunekFaktura();
-		warunkiDlugUSD.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
-		warunkiDlugUSD.dodajWarunek("3", "waluta"); // waluta USD
-		warunkiDlugUSD.dodajWarunek("0", "zaplacona"); // nie zapłacona
-		if (warunekKontrachent != null)
-			warunkiDlugUSD.dodajWarunek(warunekKontrachent, "id_kontrachent");
-		warunkiDlugUSD.generujWarunekWhere();
-
-		String[][] dataDlugKontrahentaUSD = fakturaBaza
-				.pobierzWierszeZBazy(warunkiDlugUSD);
-		/* listę faktur w EUR - 4 */
-		ObiektWyszukanieWarunki warunkiDlugUAH = ObiektWyszukanieWarunki
-				.TworzWarunekFaktura();
-		warunkiDlugUAH.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
-		warunkiDlugUAH.dodajWarunek("4", "waluta"); // waluta UAH
-		warunkiDlugUAH.dodajWarunek("0", "zaplacona"); // nie zapłacona
-		if (warunekKontrachent != null)
-			warunkiDlugUAH.dodajWarunek(warunekKontrachent, "id_kontrachent");
-		warunkiDlugUAH.generujWarunekWhere();
-
-		String[][] dataDlugKontrahentaUAH = fakturaBaza
-				.pobierzWierszeZBazy(warunkiDlugUAH);
+		/*
+		 * String[][] dataDlugKontrahentaPLN = fakturaBaza
+		 * .pobierzWierszeZBazy(warunkiDlugPLN); poierz listę faktur w EUR - 2
+		 * ObiektWyszukanieWarunki warunkiDlugEUR = ObiektWyszukanieWarunki
+		 * .TworzWarunekFaktura(); warunkiDlugEUR.dodajWarunek(Faktura.SPRZEDAZ,
+		 * "rodzaj"); warunkiDlugEUR.dodajWarunek("2", "waluta"); // waluta EUR
+		 * warunkiDlugEUR.dodajWarunek("0", "zaplacona"); // nie zapłacona if
+		 * (warunekKontrachent != null)
+		 * warunkiDlugEUR.dodajWarunek(warunekKontrachent, "id_kontrachent");
+		 * warunkiDlugEUR.generujWarunekWhere();
+		 * 
+		 * String[][] dataDlugKontrahentaEUR = fakturaBaza
+		 * .pobierzWierszeZBazy(warunkiDlugEUR); poierz listę faktur w USD - 3
+		 * ObiektWyszukanieWarunki warunkiDlugUSD = ObiektWyszukanieWarunki
+		 * .TworzWarunekFaktura(); warunkiDlugUSD.dodajWarunek(Faktura.SPRZEDAZ,
+		 * "rodzaj"); warunkiDlugUSD.dodajWarunek("3", "waluta"); // waluta USD
+		 * warunkiDlugUSD.dodajWarunek("0", "zaplacona"); // nie zapłacona if
+		 * (warunekKontrachent != null)
+		 * warunkiDlugUSD.dodajWarunek(warunekKontrachent, "id_kontrachent");
+		 * warunkiDlugUSD.generujWarunekWhere();
+		 * 
+		 * String[][] dataDlugKontrahentaUSD = fakturaBaza
+		 * .pobierzWierszeZBazy(warunkiDlugUSD); listę faktur w EUR - 4
+		 * ObiektWyszukanieWarunki warunkiDlugUAH = ObiektWyszukanieWarunki
+		 * .TworzWarunekFaktura(); warunkiDlugUAH.dodajWarunek(Faktura.SPRZEDAZ,
+		 * "rodzaj"); warunkiDlugUAH.dodajWarunek("4", "waluta"); // waluta UAH
+		 * warunkiDlugUAH.dodajWarunek("0", "zaplacona"); // nie zapłacona if
+		 * (warunekKontrachent != null)
+		 * warunkiDlugUAH.dodajWarunek(warunekKontrachent, "id_kontrachent");
+		 * warunkiDlugUAH.generujWarunekWhere();
+		 * 
+		 * String[][] dataDlugKontrahentaUAH = fakturaBaza
+		 * .pobierzWierszeZBazy(warunkiDlugUAH);
+		 */
 		WyswietlPDFPanel panel = new WyswietlPDFPanel();
-		panel.uzupelnijRaport(dataDlugKontrahentaPLN, dataDlugKontrahentaEUR,
-				dataDlugKontrahentaUSD, dataDlugKontrahentaUAH, new JDialog());
+		panel.uzupelnijRaport(f_pln, f_eur, f_usd, f_uah, w_pln, w_eur, w_usd,
+				w_uah, kontrachent, new JDialog());
+	}
+
+	private ArrayList<Faktura> pobierzListeFakturNiezaplaconcyh(
+			int id_kontrachent, int waluta) throws Exception
+	{
+		ArrayList<Faktura> f_waluta = new ArrayList<>();
+		ObiektWyszukanieWarunki warunkiDlugWaluta = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
+		warunkiDlugWaluta.dodajWarunek(id_kontrachent, "id_kontrachent");
+		warunkiDlugWaluta.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
+		warunkiDlugWaluta.dodajWarunek(waluta, "waluta"); // waluta PLN
+		warunkiDlugWaluta.dodajWarunek("0", "zaplacona"); // nie zapłacona
+		warunkiDlugWaluta.generujWarunekWhere();
+		Integer[] id_faktury = FakturaBaza.pobierzIdZBazy(warunkiDlugWaluta);
+
+		for (int j = 0; j < id_faktury.length; j++)
+		{
+			f_waluta.add(((Faktura) FakturaBaza
+					.pobierzObiektZBazy(id_faktury[j])));
+		}
+
+		return f_waluta;
+	}
+
+	private ArrayList<Wplata> pobierzWplatyWaluta(int id_kontrachent, int waluta)
+			throws Exception
+	{
+		return ((ArrayList<Wplata>) WplataBaza.pobierzObiektyZBazy(
+				id_kontrachent, waluta));
 	}
 
 	public void dlugi() throws Exception

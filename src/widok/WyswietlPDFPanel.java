@@ -21,8 +21,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import model.Faktura;
+import model.Kontrachent;
 import model.ObiektZId;
 import model.TransportRozliczenie;
+import model.Wplata;
 import model.Wysylka;
 
 import org.jpedal.PdfDecoder;
@@ -415,13 +417,17 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 		initFormatki(plik.getAbsolutePath());
 	}
 
-	public void uzupelnijRaport(String[][] PLN, String[][] EUR, String[][] USD,
-			String[][] UAH, JDialog parent)
+	public void uzupelnijRaport(ArrayList<Faktura> f_pln,
+			ArrayList<Faktura> f_eur, ArrayList<Faktura> f_usd,
+			ArrayList<Faktura> f_uah, ArrayList<Wplata> w_pln,
+			ArrayList<Wplata> w_eur, ArrayList<Wplata> w_usd,
+			ArrayList<Wplata> w_uah, Kontrachent kontrachent, JDialog parent)
 	{
 		currentPage = 1;
 		pageCounter2.setText("1");
 		frame = parent;
-		plik = Drukarz.tworzRaportDlugowPDF(PLN, EUR, USD, UAH);
+		plik = Drukarz.tworzRaportDlugowPDF(f_pln, f_eur, f_usd, f_uah, w_pln,
+				w_eur, w_usd, w_uah, kontrachent);
 		if (plik != null)
 		{
 			initFormatki(plik.getAbsolutePath());

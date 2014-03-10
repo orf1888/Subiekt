@@ -194,7 +194,7 @@ public class FakturaBaza implements ObiektBazaManager
 		}
 	}
 
-	private static ObiektZId pobierzObiektZBazy(final int id_faktura)
+	public static ObiektZId pobierzObiektZBazy(final int id_faktura)
 	{
 		try
 		{
@@ -566,13 +566,14 @@ public class FakturaBaza implements ObiektBazaManager
 		onChange(id_faktura);
 	}
 
-	private static List<Faktura> pobierzFakturyByWaluta(int id_kontrachent,
+	public static List<Faktura> pobierzFakturyByWaluta(int id_kontrachent,
 			int waluta) throws Exception
 	{
 		ObiektWyszukanieWarunki warunki = ObiektWyszukanieWarunki
 				.TworzWarunekFaktura();
 		warunki.dodajWarunek(id_kontrachent, "id_kontrachent");
 		warunki.dodajWarunek(waluta, "waluta");
+		warunki.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
 		Integer[] id_faktury = pobierzIdZBazy(warunki);
 		ArrayList<Faktura> result = new ArrayList<>();
 		for (int i = 0; i < id_faktury.length; i++)
