@@ -779,7 +779,7 @@ public class Drukarz
 
 		// settings
 		float[] columnWidths = new float[]
-		{ 35, 280, 130, 95, 95 };
+		{ 35, 280, 120, 100, 100 };
 		tabelka_produkty.setWidths(columnWidths);
 		Paragraph tabelka = new Paragraph();
 		tabelka.add(tabelka_produkty);
