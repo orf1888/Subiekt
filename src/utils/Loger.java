@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,9 +16,11 @@ import model.Wplata;
 
 public class Loger
 {
+	private static String katalog = "log";
+
 	public enum LogerNazwa
 	{
-		FinanseLog("log\\finanse.txt"), BledyLog("log\\err.txt");
+		FinanseLog(katalog + "\\finanse.txt"), BledyLog(katalog + "\\err.txt");
 
 		LogerNazwa(String _sciezka) {
 			sciezka = _sciezka;
@@ -29,6 +32,7 @@ public class Loger
 	public static void log(LogerNazwa rodzaj, String logContent)
 			throws IOException
 	{
+		tworzKatalogJesliNieIstnieje();
 		String info = getTime() + " --> ";
 		info += rodzaj + " ";
 		switch (rodzaj)
@@ -139,5 +143,14 @@ public class Loger
 		PrintWriter pw = new PrintWriter(sw);
 		e.printStackTrace(pw);
 		return sw.toString();
+	}
+
+	private static void tworzKatalogJesliNieIstnieje()
+	{
+		File dir = new File(katalog);
+		if (!dir.exists())
+			dir.mkdir();
+		else
+			return;
 	}
 }
