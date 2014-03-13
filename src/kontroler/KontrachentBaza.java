@@ -110,7 +110,8 @@ public class KontrachentBaza implements ObiektBazaManager
 										result.getInt(18), result.getInt(19));
 							} catch (Exception e)
 							{
-								MojeUtils.error(e);
+								/* przemilcz */
+								/* MojeUtils.error(e); */
 								return null;
 							}
 						}

@@ -301,6 +301,7 @@ public class WidokGlowny extends JFrame
 
 			} catch (Exception e1)
 			{
+				e1.printStackTrace();
 				MojeUtils
 						.showError("Wybrany plik ma niekompatybilną strukturę wewnętrzną!\nNie można dodać faktury!");
 			}

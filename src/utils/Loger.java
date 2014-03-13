@@ -79,40 +79,44 @@ public class Loger
 			else
 				result += "Dodano fakturę o nr ";
 
-			result += ((Faktura) nowy).numer
-					+ " dla kontrachenta "
-					+ ((Faktura) nowy).kontrachent.nazwa
-					+ " o wartości "
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).wartosc_z_narzutem)
-					+ " w walucie "
-					+ waluta
-					+ " długi ("
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_pln)
-					+ "PLN;"
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_eur)
-					+ "EUR;"
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_usd)
-					+ "USD;"
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_uah)
-					+ "UAH)"
-					+ ", nadpłaty("
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_pln)
-					+ "PLN;"
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_eur)
-					+ "EUR;"
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_usd)
-					+ "USD;"
-					+ MojeUtils
-							.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_uah)
-					+ "UAH)";
+			result += ((Faktura) nowy).numer + " dla kontrachenta ";
+			if (((Faktura) nowy).kontrachent == null)
+				result += " brak  ";
+			else
+			{
+				result += ((Faktura) nowy).kontrachent.nazwa;
+				result += " o wartości "
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).wartosc_z_narzutem)
+						+ " w walucie "
+						+ waluta
+						+ " długi ("
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_pln)
+						+ "PLN;"
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_eur)
+						+ "EUR;"
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_usd)
+						+ "USD;"
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.dlug_uah)
+						+ "UAH)"
+						+ ", nadpłaty("
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_pln)
+						+ "PLN;"
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_eur)
+						+ "EUR;"
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_usd)
+						+ "USD;"
+						+ MojeUtils
+								.utworzWartoscZlotowki(((Faktura) nowy).kontrachent.nadplata_uah)
+						+ "UAH)";
+			}
 		} else
 		{
 			waluta = WalutaManager.pobierzNazweZBazy(

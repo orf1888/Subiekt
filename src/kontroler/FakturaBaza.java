@@ -415,9 +415,9 @@ public class FakturaBaza implements ObiektBazaManager
 		try
 		{
 			LOCKED_FAKTURY.add(faktura.id_faktura);
-
-			zaplacFaktury(faktura.kontrachent.id_kontrachent,
-					faktura.waluta.intValue());
+			if (faktura.kontrachent != null)
+				zaplacFaktury(faktura.kontrachent.id_kontrachent,
+						faktura.waluta.intValue());
 		} finally
 		{
 			LOCKED_FAKTURY.remove(faktura.id_faktura);
