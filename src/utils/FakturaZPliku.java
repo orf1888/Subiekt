@@ -16,6 +16,7 @@ import model.Faktura;
 import model.TransportRozliczenie;
 import model.produkt.Produkt;
 import model.produkt.ProduktWFakturze;
+import utils.Loger.LogerNazwa;
 import widok.WidokGlowny;
 
 public class FakturaZPliku
@@ -190,6 +191,17 @@ public class FakturaZPliku
 			{
 				String[] rachunek_transportowy = pobierzRachunekTrasportowy(
 						arkusz, start_end[1]);
+				/* Złap null'a */
+				String nr_faktury = rachunek_transportowy[1];
+				if (nr_faktury == null)
+					Loger.log(LogerNazwa.BledyLog, "nr_faktury==null");
+				String watrosc = rachunek_transportowy[2];
+				if (watrosc == null)
+					Loger.log(LogerNazwa.BledyLog, "watrosc==null");
+				String waluta = rachunek_transportowy[0];
+				if (waluta == null)
+					Loger.log(LogerNazwa.BledyLog, "waluta==null");
+
 				rachunek = new TransportRozliczenie(0, new Date(),
 						rachunek_transportowy[1],
 						Integer.parseInt(rachunek_transportowy[2]),
@@ -198,6 +210,7 @@ public class FakturaZPliku
 			{
 				/* W fakturze z pliku nie znaleziono rachunku transportowego */
 				isRachunek = false;
+				MojeUtils.error(e);
 			}
 		} catch (Exception e)
 		{
@@ -226,6 +239,7 @@ public class FakturaZPliku
 			break;
 		}
 		default:
+			MojeUtils.showMsg("Nie rozpoznano waluty: " + tmp_waluta);
 			break;
 		}
 		/* Numer oryginału faktury */
