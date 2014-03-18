@@ -18,7 +18,7 @@ public class Faktura implements ObiektZId
 	public final static int kolumnaUkryta = 5; // liczac od 0, kolumna id
 
 	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
-	{ "Numer faktury", "Data wystawienia", " Termin płatności", "kontrachent",
+	{ "Numer faktury", "Data wystawienia", " Termin płatności", "Kontrachent",
 			"Wartość", "id" }, kolumnaUkryta);
 
 	public static String[] kolumnyWBazie =

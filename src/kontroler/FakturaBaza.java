@@ -650,7 +650,7 @@ public class FakturaBaza implements ObiektBazaManager
 		int faktur_odznaczonych = 0;
 		for (Faktura f : faktury)
 		{
-			if (suma_wplat > (f.wartosc_z_narzutem + f_suma_oplacone))
+			if (suma_wplat >= (f.wartosc_z_narzutem + f_suma_oplacone))
 			{
 				// oznacz
 				ustawZaplacona(f.id_faktura, true);

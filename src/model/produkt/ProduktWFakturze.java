@@ -48,7 +48,7 @@ public class ProduktWFakturze extends ProduktNaSztuki
 	 */
 	public int liczWartoscZNarzutem()
 	{
-		return ((_cena_jednostkowa * ilosc_produktu * (100 - rabat)) / 100);
+		return (MojeUtils.zaokraglijWartosc(_cena_jednostkowa, (-rabat)) * ilosc_produktu);
 	}
 
 	public ProduktWFakturze copy()

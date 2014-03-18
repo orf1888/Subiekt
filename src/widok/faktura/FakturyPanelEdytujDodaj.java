@@ -335,13 +335,9 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 				listaWybranychPanel.wyczyscTabele();
 				for (ProduktWFakturze _produkt : listaProduktow)
 				{
-					double mnoznik = 100;
-					mnoznik += k._cena_mnoznik;
 					/* Prawidłowe zaokrąglenie */
-					double cena_zaokraglona = ((_produkt.produkt.cena_zakupu)
-							* mnoznik / 100);
-					_produkt._cena_jednostkowa = (int) Math
-							.round(cena_zaokraglona);
+					_produkt._cena_jednostkowa = MojeUtils.zaokraglijWartosc(
+							_produkt.produkt.cena_zakupu, k._cena_mnoznik);
 					listaWybranychPanel.tabelaDodajWiersz(_produkt.pisz());
 				}
 			} else
@@ -565,8 +561,8 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			copy_lista.addAll(listaProduktow);
 			boolean zaplacona = false;
 			return new Faktura(0, numer, data_wystawienia, termin_platnosci,
-					zaplacona, rodzajFaktury, kontrachent, wartosc, true, false,
-					copy_lista, null, waluta);
+					zaplacona, rodzajFaktury, kontrachent, wartosc, true,
+					false, copy_lista, null, waluta);
 		} else
 		{
 			int wartosc = 0;

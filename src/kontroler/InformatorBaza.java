@@ -25,7 +25,7 @@ public class InformatorBaza
 	}
 
 	public static String[] kolumny_sprzedaz =
-	{ "Numer faktury", "Data wystawienia", "Ilość produktu", "kontrachent" };
+	{ "Numer faktury", "Data wystawienia", "Ilość produktu", "Kontrachent" };
 
 	public static String[] kolumny_sprzedaz_ilosc =
 	{ "Kod", "Nazwa", "Ilość sprzedanych" };

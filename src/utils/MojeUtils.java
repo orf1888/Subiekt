@@ -437,4 +437,12 @@ public class MojeUtils
 		}
 		return nr_faktury_odpowiadajacej[0][0];
 	}
+
+	public static int zaokraglijWartosc(int wartosc, int narzut)
+	{
+		double mnoznik = 100;
+		mnoznik += narzut;
+		double cena_zaokraglona = ((wartosc) * mnoznik / 100);
+		return (int) Math.round(cena_zaokraglona);
+	}
 }

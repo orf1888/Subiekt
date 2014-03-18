@@ -53,8 +53,6 @@ public class FakturyPanelKorekta extends FakturyPanelEdytujDodaj
 	@Override
 	protected void zmienKontrachent()
 	{
-		// LogerBledow.log(LogerNazwa.FakturaLog, "zmienKontrachent hahaha");
-
 		if (tmpNieZmieniaKontrachenta)
 			return;
 		Kontrachent k = pobierzKontrachenta();

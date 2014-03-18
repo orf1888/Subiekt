@@ -251,10 +251,10 @@ public class Drukarz
 				tabelka_produkty.addCell(new Phrase(p.produkt.nazwa,
 						helvetica10));
 				tabelka_produkty
-						.addCell(newCellDoPrawej(
-								MojeUtils
-										.utworzWartoscZlotowki((p._cena_jednostkowa * (100 - p.rabat)) / 100),
-								helvetica10));
+						.addCell(newCellDoPrawej(MojeUtils
+								.utworzWartoscZlotowki(MojeUtils
+										.zaokraglijWartosc(p._cena_jednostkowa,
+												(-p.rabat))), helvetica10));
 				tabelka_produkty.addCell(newCellDoPrawej("" + p.ilosc_produktu,
 						helvetica10));
 				tabelka_produkty.addCell(newCellDoPrawej(MojeUtils
