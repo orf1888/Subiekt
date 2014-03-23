@@ -1,4 +1,4 @@
-package widok;
+package widok.informator;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

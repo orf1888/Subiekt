@@ -39,6 +39,7 @@ import widok.faktura.FakturySprzedazyPanel;
 import widok.faktura.FakturyZakupuPanel;
 import widok.kontrachent.KontrachentPanel;
 import widok.podmiot.PodmiotOkno;
+import widok.transport_rozliczenie.TransportRozliczeniePanel;
 import widok.wplata.WplataPanel;
 import widok.wysylka.WysylkaPanel;
 

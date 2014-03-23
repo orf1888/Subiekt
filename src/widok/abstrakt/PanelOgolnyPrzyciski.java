@@ -35,8 +35,8 @@ import utils.Loger;
 import utils.Loger.LogerNazwa;
 import utils.MojeUtils;
 import utils.UserShowException;
-import widok.InformatorOkno;
 import widok.WyswietlPDFPanel;
+import widok.informator.InformatorOkno;
 
 public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 {
