@@ -188,9 +188,13 @@ public class FakturaZPliku
 			}
 			rachunek = pobierzRachunekTrasportowy(arkusz, start_end[1]);
 			if (rachunek == null)
+			{
 				/* W fakturze z pliku nie znaleziono rachunku transportowego */
 				isRachunek = false;
-			// MojeUtils.error(e);
+			} else
+			{
+				isRachunek = true;
+			}
 		} catch (Exception e)
 		{
 			MojeUtils.showError("Wczytany plik jest niekompatybilny!");
