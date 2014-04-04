@@ -3,6 +3,10 @@ package widok.transport_rozliczenie;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.SwingConstants;
+
 import kontroler.ObiektWyszukanieWarunki;
 import kontroler.SorterKontroler;
 import kontroler.TransportRozliczenieBaza;
@@ -18,21 +22,28 @@ public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
 
 	private static final long serialVersionUID = 2132580214548407183L;
 
+	private JPopupMenu tworzMenuPopup()
+	{
+		JPopupMenu result = new JPopupMenu();
+		JMenuItem itemEdytuj = new JMenuItem("Edytuj", null);
+		result.add(itemEdytuj);
+		itemEdytuj.setHorizontalTextPosition(SwingConstants.RIGHT);
+		edytujListener = tworzEdytujListener();
+		itemEdytuj.addActionListener(edytujListener);
+
+		return result;
+	}
+
 	public TransportRozliczeniePanel(boolean s) throws Exception {
 		super(s);
 		try
 		{
-			// JPopupMenu popupTabeliMagazynu = null;//
-			// tworzPopupMagazynWysylce();
 			warunki = new ObiektWyszukanieWarunki(null);
-			// PanelEdytujDodajObiekt panelDwukliku = new WyswietlPDFPanel();
 			PanelOgolnyParametry params = new PanelOgolnyParametry(
-					tworzModelFuktor(), null/*
-											 * tworzMenuPopup ()
-											 */,
-					new TransportRozliczenieBaza(), null, null,
-					null/* panelDwukliku */, false,
-					TransportRozliczenie.opisKolumn);
+					tworzModelFuktor(), tworzMenuPopup(),
+					new TransportRozliczenieBaza(), null,
+					new TransportPanelEdytujDodaj(), null/* panelDwukliku */,
+					false, TransportRozliczenie.opisKolumn);
 
 			sorter.addActionListener(new ActionListener()
 			{
@@ -88,7 +99,6 @@ public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
 				try
 				{
 					return getObiektBazaManager().pobierzWierszeZBazy(warunki);
-					/* return ustawOkres(null); */
 				} catch (Exception e)
 				{
 					MojeUtils.showPrintError(e);

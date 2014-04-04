@@ -16,7 +16,6 @@ import model.Faktura;
 import model.TransportRozliczenie;
 import model.produkt.Produkt;
 import model.produkt.ProduktWFakturze;
-import utils.Loger.LogerNazwa;
 import widok.WidokGlowny;
 
 public class FakturaZPliku
@@ -187,31 +186,11 @@ public class FakturaZPliku
 						.replaceAll(",000", "");
 				++result_index;
 			}
-			try
-			{
-				String[] rachunek_transportowy = pobierzRachunekTrasportowy(
-						arkusz, start_end[1]);
-				/* Złap null'a */
-				String nr_faktury = rachunek_transportowy[1];
-				if (nr_faktury == null)
-					Loger.log(LogerNazwa.BledyLog, "nr_faktury==null");
-				String watrosc = rachunek_transportowy[2];
-				if (watrosc == null)
-					Loger.log(LogerNazwa.BledyLog, "watrosc==null");
-				String waluta = rachunek_transportowy[0];
-				if (waluta == null)
-					Loger.log(LogerNazwa.BledyLog, "waluta==null");
-
-				rachunek = new TransportRozliczenie(0, new Date(),
-						rachunek_transportowy[1],
-						Integer.parseInt(rachunek_transportowy[2]),
-						Long.parseLong(rachunek_transportowy[0]), 0);
-			} catch (Exception e)
-			{
+			rachunek = pobierzRachunekTrasportowy(arkusz, start_end[1]);
+			if (rachunek == null)
 				/* W fakturze z pliku nie znaleziono rachunku transportowego */
 				isRachunek = false;
-				MojeUtils.error(e);
-			}
+			// MojeUtils.error(e);
 		} catch (Exception e)
 		{
 			MojeUtils.showError("Wczytany plik jest niekompatybilny!");
@@ -220,31 +199,33 @@ public class FakturaZPliku
 		return result;
 	}
 
-	private static String[] pobierzRachunekTrasportowy(Sheet arkusz,
-			int koniec_towarow)
+	private static TransportRozliczenie pobierzRachunekTrasportowy(
+			Sheet arkusz, int koniec_towarow)
 	{
-		String[] result = new String[3];
+		TransportRozliczenie result = new TransportRozliczenie(0, new Date(),
+				null, 0, 0L, 0);
 		/* Waluta */
 		String tmp_waluta = arkusz.getCell(7, 8).getContents().toString();
 		switch (tmp_waluta)
 		{
 		case TransportRozliczenie.EURO:
 		{
-			result[0] = "" + 2;
+			result.waluta = 2L;
 			break;
 		}
 		case TransportRozliczenie.PLN:
 		{
-			result[0] = "" + 1;
+			result.waluta = 1L;
 			break;
 		}
 		default:
-			MojeUtils.showMsg("Nie rozpoznano waluty: " + tmp_waluta);
+			// MojeUtils.showMsg("Nie rozpoznano waluty: " + tmp_waluta);
+			result.waluta = 0L;
 			break;
 		}
 		/* Numer oryginału faktury */
 		String tmp_numer = arkusz.getCell(0, 12).getContents().toString();
-		result[1] = tmp_numer;/* .substring(tmp_numer.length() - 9); */
+		result.nr_faktury = tmp_numer;
 		/* Wartosc */
 		String tmp_wartosc = arkusz.getCell(8, (koniec_towarow + 4))
 				.getContents().toString().replaceAll(",", "");
@@ -252,7 +233,16 @@ public class FakturaZPliku
 		 * Znak spacji nie jest rozpoznawany jako spacja, w funkcji znajduje się
 		 * znak żywcem wklejony...
 		 */
-		result[2] = tmp_wartosc.replaceAll(" ", "").trim();
+		try
+		{
+			result.wartosc = Integer.parseInt(tmp_wartosc.replaceAll(" ", "")
+					.trim());
+		} catch (Exception e)
+		{
+			MojeUtils.error(e);
+			return null;
+		}
+
 		return result;
 	}
 

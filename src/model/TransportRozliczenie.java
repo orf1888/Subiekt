@@ -27,11 +27,12 @@ public class TransportRozliczenie implements ObiektZId
 	/* Struktura widoku i DB */
 	public static String tableName = "transport_rozliczenie";
 
-	public final static int kolumnaUkryta = -1; // zadna
+	public final static int kolumnaUkryta = 4; // id
 
-	public final static OpisKolumn opisKolumn = new OpisKolumn(new String[]
-	{ "Numer oryginału", "Numer faktury", "Data wystawienia", "Wartość" },
-			kolumnaUkryta);
+	public final static OpisKolumn opisKolumn = new OpisKolumn(
+			new String[]
+			{ "Numer oryginału", "Numer faktury", "Data wystawienia",
+					"Wartość", "ID" }, kolumnaUkryta);
 
 	public static String[] kolumnyWBazie =
 	{ "nr_faktury", "data_ksiegowania", "wartosc", "waluta",
@@ -66,6 +67,7 @@ public class TransportRozliczenie implements ObiektZId
 				.trim());
 		this.waluta = (long) WalutaManager.konwertujWalute(wiersz[3].substring(
 				wiersz[3].length() - 3).trim());
+		this.id = Integer.parseInt(wiersz[4]);
 	}
 
 	@Override
@@ -83,11 +85,13 @@ public class TransportRozliczenie implements ObiektZId
 				.pobierzNrFakturyOdpowiadającej(this.id_faktury_odpowiadajacej);
 		wiersz[2] = DataUtils.formatujDate(DataUtils.stringToDate_format
 				.format(data_ksiegowania));
-		wiersz[3] = ""
-				+ MojeUtils.formatujWartosc(wartosc)
-				+ " "
-				+ WalutaManager.pobierzNazweZBazy(waluta - 1,
-						Waluta.tabelaWaluta);
+		wiersz[3] = "" + MojeUtils.formatujWartosc(wartosc) + " ";
+		if (WalutaManager.pobierzNazweZBazy(waluta - 1, Waluta.tabelaWaluta)
+				.equals(null))
+			wiersz[3] += "Nierozpoznana";
+		else
+			wiersz[3] += WalutaManager.pobierzNazweZBazy(waluta - 1,
+					Waluta.tabelaWaluta);
 		wiersz[4] = "" + id;
 		return wiersz;
 	}

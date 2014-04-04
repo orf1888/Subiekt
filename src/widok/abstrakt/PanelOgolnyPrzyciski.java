@@ -82,9 +82,6 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 	{
 		MojeUtils.println("Inicjuje " + this.getClass().getName());
 
-		// super.init(params, false);
-
-		// this.obiektBazaManager = params.obiektBazaManager;
 		this.panelDodaj = params.panelDodaj;
 		this.panelEdytuj = params.panelEdytuj;
 		if (panelDodaj != null)
@@ -104,8 +101,10 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 		else
 			usunListener = null;
 		if (isRozlicz)
+		{
 			rozliczListener = tworzRozliczListener();
-
+			edytujListener = tworzEdytujListener();
+		}
 		funktorDwuklikTabela = new FunktorDwuklikTabelaAkcja(this);
 		super.init(params, false);
 		initPrzyciski(isRozlicz);
@@ -123,11 +122,11 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 				gbl_panel_przycikow.columnWidths = new int[]
 				{ 0, 0 };
 				gbl_panel_przycikow.rowHeights = new int[]
-				{ 0, 0, 0, 0 };
+				{ 0, 0, 0, 0, 0 };
 				gbl_panel_przycikow.columnWeights = new double[]
 				{ 0.0, Double.MIN_VALUE };
 				gbl_panel_przycikow.rowWeights = new double[]
-				{ 0.0, 0.0, 0.0, Double.MIN_VALUE };
+				{ 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 				panel_przycikow.setLayout(gbl_panel_przycikow);
 			}
 		} else
@@ -139,11 +138,11 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 				gbl_panel_przycikow.columnWidths = new int[]
 				{ 0, 0 };
 				gbl_panel_przycikow.rowHeights = new int[]
-				{ 0, 0, 0, 0, 0, 0 };
+				{ 0, 0, 0, 0, 0, 0, 0 };
 				gbl_panel_przycikow.columnWeights = new double[]
 				{ 0.0, Double.MIN_VALUE };
 				gbl_panel_przycikow.rowWeights = new double[]
-				{ 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+				{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 				panel_przycikow.setLayout(gbl_panel_przycikow);
 			}
 		}
@@ -193,28 +192,28 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			GridBagConstraints gbc_poczatek_okresu = new GridBagConstraints();
 			gbc_poczatek_okresu.fill = GridBagConstraints.HORIZONTAL;
 			gbc_poczatek_okresu.gridx = 0;
-			gbc_poczatek_okresu.gridy = 1;
+			gbc_poczatek_okresu.gridy = 2;
 			panel_przycikow.add(poczatek_okresu, gbc_poczatek_okresu);
 
 			okresOd = new DatePanel();
 			GridBagConstraints gbc_okresOd = new GridBagConstraints();
 			gbc_okresOd.fill = GridBagConstraints.HORIZONTAL;
 			gbc_okresOd.gridx = 0;
-			gbc_okresOd.gridy = 2;
+			gbc_okresOd.gridy = 3;
 			panel_przycikow.add(okresOd, gbc_okresOd);
 
 			JLabel koniec_okresu = new JLabel("Koniec okresu");
 			GridBagConstraints gbc_koniec_okresu = new GridBagConstraints();
 			gbc_koniec_okresu.fill = GridBagConstraints.HORIZONTAL;
 			gbc_koniec_okresu.gridx = 0;
-			gbc_koniec_okresu.gridy = 3;
+			gbc_koniec_okresu.gridy = 4;
 			panel_przycikow.add(koniec_okresu, gbc_koniec_okresu);
 
 			okresDo = new DatePanel();
 			GridBagConstraints gbc_okresDo = new GridBagConstraints();
 			gbc_okresDo.fill = GridBagConstraints.HORIZONTAL;
 			gbc_okresDo.gridx = 0;
-			gbc_okresDo.gridy = 4;
+			gbc_okresDo.gridy = 5;
 			panel_przycikow.add(okresDo, gbc_okresDo);
 		}
 	}
@@ -291,9 +290,11 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 							getObiektBazaManager().dodaj(nowy);
 							tabelaDodajWiersz(nowy.piszWierszTabeli());
 
-							FakturaBaza.zaplacFaktury(
-									((Faktura) nowy).kontrachent.id_kontrachent,
-									(((Faktura) nowy).waluta).intValue());
+							FakturaBaza
+									.zaplacFaktury(
+											((Faktura) nowy).kontrachent.id_kontrachent,
+											(((Faktura) nowy).waluta)
+													.intValue());
 
 							ukryjModalneOkno();
 

@@ -3,8 +3,10 @@ package kontroler;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import model.ObiektWiersz;
 import model.ObiektZId;
@@ -38,17 +40,22 @@ public class TransportRozliczenieBaza implements ObiektBazaManager
 			{
 				String data_ksiegowania = DataUtils.formatujDate(result
 						.getString(2));
+				String wartosc = MojeUtils.formatujWartosc(result.getInt(3))
+						+ " ";
+
+				if (WalutaManager.pobierzNazweZBazy(result.getLong(4) - 1,
+						Waluta.tabelaWaluta) != null)
+					wartosc += (WalutaManager.pobierzNazweZBazy(
+							result.getLong(4) - 1, Waluta.tabelaWaluta));
+				else
+					wartosc += "Nierozpoznano";
+
 				String[] wiersz =
 				{
 						result.getString(1),
 						MojeUtils.pobierzNrFakturyOdpowiadającej(result
 								.getInt(5)),// id faktury
-						data_ksiegowania,
-						MojeUtils.formatujWartosc(result.getInt(3))
-								+ " "
-								+ WalutaManager.pobierzNazweZBazy(
-										result.getLong(4) - 1,
-										Waluta.tabelaWaluta) };
+						data_ksiegowania, wartosc, "" + result.getInt(6) };
 				wynik.add(wiersz);
 			}
 			return wynik;
@@ -59,7 +66,7 @@ public class TransportRozliczenieBaza implements ObiektBazaManager
 	public String[][] pobierzWierszeZBazy(ObiektWyszukanieWarunki warunki)
 			throws Exception
 	{
-		String querySql = "SELECT DISTINCT nr_faktury, data_ksiegowania, wartosc, waluta, id_faktury_odpowiadajacej FROM "
+		String querySql = "SELECT DISTINCT nr_faktury, data_ksiegowania, wartosc, waluta, id_faktury_odpowiadajacej, id FROM "
 				+ TransportRozliczenie.tableName;
 		if (warunki != null)
 			querySql += warunki.generujWarunekWhere()
@@ -113,17 +120,48 @@ public class TransportRozliczenieBaza implements ObiektBazaManager
 		return new TransportRozliczenie(wiersz);
 	}
 
-	/* Narazie nieużywane */
 	@Override
 	public ObiektZId pobierzObiektZBazy(ObiektWiersz wiersz)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		final int id = getIdFromWiersz(wiersz);
+		String querySql = "SELECT DISTINCT nr_faktury, data_ksiegowania, wartosc, waluta, id_faktury_odpowiadajacej, id FROM "
+				+ TransportRozliczenie.tableName;
+		querySql += " WHERE id= " + SqlUtils.popraw(id);
+		try
+		{
+			return (ObiektZId) BazaDanych.getInstance().zapytanie(querySql,
+					new BazaStatementFunktor()
+					{
+						@Override
+						public Object operacja(ResultSet result)
+								throws Exception
+						{
+							try
+							{
+								return new TransportRozliczenie(result
+										.getInt(6), DataUtils.parsujDate(result
+										.getString(2)), result.getString(1),
+										result.getInt(3), result.getLong(4),
+										result.getInt(5));
+							} catch (Exception e)
+							{
+								/* przemilcz */
+								/* MojeUtils.error(e); */
+								return null;
+							}
+						}
+					});
+		} catch (Exception e)
+		{
+			MojeUtils.error(e);
+			return null;
+		}
 	}
 
 	@Override
 	public void dodaj(Object nowy) throws Exception
 	{
+		/* Narazie nieużywane */
 		// TODO Auto-generated method stub
 
 	}
@@ -131,7 +169,21 @@ public class TransportRozliczenieBaza implements ObiektBazaManager
 	@Override
 	public void edytuj(Object stary, Object nowy) throws Exception
 	{
-		// TODO Auto-generated method stub
+		TransportRozliczenie nowy_t = (TransportRozliczenie) nowy;
+		TransportRozliczenie stary_t = (TransportRozliczenie) stary;
+		String data_ksiegowania = new SimpleDateFormat("yyyy-mm-dd hh:mm",
+				Locale.US).format(stary_t.data_ksiegowania);
+		BazaDanych.getInstance().aktualizacja(
+				"UPDATE " + TransportRozliczenie.tableName
+						+ " set nr_faktury= '"
+						+ SqlUtils.popraw(nowy_t.nr_faktury)
+						+ "', data_ksiegowania= '"
+						+ SqlUtils.popraw(data_ksiegowania) + "', wartosc= '"
+						+ SqlUtils.popraw(nowy_t.wartosc) + "', waluta= '"
+						+ SqlUtils.popraw(nowy_t.waluta)
+						+ "', id_faktury_odpowiadajacej= '"
+						+ SqlUtils.popraw(nowy_t.id_faktury_odpowiadajacej)
+						+ "' WHERE id = " + SqlUtils.popraw(stary_t.id));
 
 	}
 
@@ -139,8 +191,14 @@ public class TransportRozliczenieBaza implements ObiektBazaManager
 	public void zmienWidocznosc(ObiektWiersz wiersz, boolean widoczny)
 			throws SQLException
 	{
+		/* narazie nie używana */
 		// TODO Auto-generated method stub
 
+	}
+
+	public static int getIdFromWiersz(ObiektWiersz wiersz)
+	{
+		return Integer.parseInt(wiersz.wiersz[4]);
 	}
 
 }
