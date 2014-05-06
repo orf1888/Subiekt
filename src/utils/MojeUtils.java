@@ -80,6 +80,21 @@ public class MojeUtils
 	}
 
 	/**
+	 * Sprawdza czy str jest liczbą.
+	 */
+	public static boolean isDigit(String str)
+	{
+		try
+		{
+			Double.parseDouble(str.replace(",", "."));
+		} catch (Exception e)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * @param isKorekta
 	 * @param int typFaktury przedrostek(1-FS, 2-FZ, 3-FK)
 	 * @param int nr - nr porządkowy faktury
@@ -438,7 +453,7 @@ public class MojeUtils
 		return nr_faktury_odpowiadajacej[0][0];
 	}
 
-	public static int zaokraglijWartosc(int wartosc, int narzut)
+	public static int zaokraglijWartosc(int wartosc, double narzut)
 	{
 		double mnoznik = 100;
 		mnoznik += narzut;

@@ -133,9 +133,10 @@ public class FakturyPanelListaWybranych extends
 			{
 				try
 				{
-					if (!MojeUtils.isNumer(data))
+					if (!MojeUtils.isDigit(data))
 						throw new UserShowException("Wprowadź poprawną liczbę!");
-					zmienionyProdukt.rabat = Integer.parseInt(rabat);
+					zmienionyProdukt.rabat = Double.parseDouble(rabat.replace(
+							",", "."));
 				} catch (Exception e1)
 				{
 					MojeUtils.showError(e1);

@@ -11,10 +11,11 @@ public class ProduktWFakturze extends ProduktNaSztuki
 	// @Transient
 	public int wartoscPoKorekcie;
 
-	public int rabat;
+	public double rabat;
 
 	public ProduktWFakturze(int lp, int cena_jednostkowa, int ilosc_produktu,
-			Produkt produkt, boolean korekta, int wartoscPoKorekcie, int rabat) {
+			Produkt produkt, boolean korekta, int wartoscPoKorekcie,
+			double rabat) {
 		super(lp, ilosc_produktu, produkt);
 		this._cena_jednostkowa = cena_jednostkowa;
 		this.korekta = korekta;
