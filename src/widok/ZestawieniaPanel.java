@@ -181,13 +181,13 @@ public class ZestawieniaPanel extends JPanel
 	public void raportDlugi(Kontrachent kontrachent) throws Exception
 	{
 		/* Pobierz faktury niezapłacone kontrachenta w walucie */
-		ArrayList<Faktura> f_pln = pobierzListeFakturNiezaplaconcyh(
+		ArrayList<Faktura> f_pln = pobierzListeFaktur(
 				kontrachent.id_kontrachent, 1);
-		ArrayList<Faktura> f_eur = pobierzListeFakturNiezaplaconcyh(
+		ArrayList<Faktura> f_eur = pobierzListeFaktur(
 				kontrachent.id_kontrachent, 2);
-		ArrayList<Faktura> f_usd = pobierzListeFakturNiezaplaconcyh(
+		ArrayList<Faktura> f_usd = pobierzListeFaktur(
 				kontrachent.id_kontrachent, 3);
-		ArrayList<Faktura> f_uah = pobierzListeFakturNiezaplaconcyh(
+		ArrayList<Faktura> f_uah = pobierzListeFaktur(
 				kontrachent.id_kontrachent, 4);
 
 		/* Pobierz wpłaty kontrachenta w walucie */
@@ -252,16 +252,19 @@ public class ZestawieniaPanel extends JPanel
 				w_uah, kontrachent, new JDialog());
 	}
 
-	private ArrayList<Faktura> pobierzListeFakturNiezaplaconcyh(
-			int id_kontrachent, int waluta) throws Exception
+	/*
+	 * Pobieramy wszystkie faktury, w Drukarzu dopisujemy status:
+	 * zaplacona/niezaplacona
+	 */
+	private ArrayList<Faktura> pobierzListeFaktur(int id_kontrachent, int waluta)
+			throws Exception
 	{
 		ArrayList<Faktura> f_waluta = new ArrayList<>();
 		ObiektWyszukanieWarunki warunkiDlugWaluta = ObiektWyszukanieWarunki
 				.TworzWarunekFaktura();
 		warunkiDlugWaluta.dodajWarunek(id_kontrachent, "id_kontrachent");
 		warunkiDlugWaluta.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
-		warunkiDlugWaluta.dodajWarunek(waluta, "waluta"); // waluta PLN
-		warunkiDlugWaluta.dodajWarunek("0", "zaplacona"); // nie zapłacona
+		warunkiDlugWaluta.dodajWarunek(waluta, "waluta");
 		warunkiDlugWaluta.generujWarunekWhere();
 		Integer[] id_faktury = FakturaBaza.pobierzIdZBazy(warunkiDlugWaluta);
 

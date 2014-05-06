@@ -503,6 +503,7 @@ public class Drukarz
 									+ kontrachent.nazwa, helvetica14);
 					nazwa_dokumentu.setSpacingBefore(50);
 					nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
+					nazwa_dokumentu.setSpacingAfter(50);
 					doc.add(nazwa_dokumentu);
 				}
 
@@ -615,7 +616,7 @@ public class Drukarz
 					// // naglowek
 					String[] naglowki =
 					{ "L.p.", "Nr. faktury", "Data wystawienia",
-							"Data Płatności", "Wartość" };
+							"Data Płatności", "Status", "Wartość" };
 					PdfPTable tabelka_PLN = new PdfPTable(naglowki.length);
 					tabelka_PLN.setSpacingBefore(25);
 					tabelka_PLN.setSpacingAfter(10);
@@ -654,6 +655,9 @@ public class Drukarz
 										DataUtils.dateToString_format
 												.format(f_pln.get(i).termin_platnosci),
 										helvetica10));
+						tabelka_PLN.addCell(new Phrase(
+								(f_pln.get(i).zaplacona ? "Zapłacona"
+										: "Niezapłacona"), helvetica10));
 						tabelka_PLN
 								.addCell(newCellDoPrawej(
 										MojeUtils.utworzWartoscZlotowki(f_pln
@@ -662,6 +666,7 @@ public class Drukarz
 						wartosc_pln += f_pln.get(i).wartosc_z_narzutem;
 					}
 					// ostatni wiersz z sumą
+					tabelka_PLN.addCell(newSeparator());
 					tabelka_PLN.addCell(newSeparator());
 					tabelka_PLN.addCell(newSeparator());
 					tabelka_PLN.addCell(newSeparator());
@@ -675,7 +680,7 @@ public class Drukarz
 
 					// settings
 					float[] columnWidths = new float[]
-					{ 35, 130, 105, 100, 110 };
+					{ 35, 130, 105, 100, 100, 110 };
 					tabelka_PLN.setWidths(columnWidths);
 					Paragraph tabelka = new Paragraph();
 					tabelka.add(tabelka_PLN);
@@ -692,7 +697,7 @@ public class Drukarz
 					// // naglowek
 					String[] naglowki =
 					{ "L.p.", "Nr. faktury", "Data wystawienia",
-							"Data Płatności", "Wartość" };
+							"Data Płatności", "Status", "Wartość" };
 					PdfPTable tabelka_EUR = new PdfPTable(naglowki.length);
 					tabelka_EUR.setSpacingBefore(25);
 					tabelka_EUR.setSpacingAfter(10);
@@ -731,6 +736,9 @@ public class Drukarz
 										DataUtils.dateToString_format
 												.format(f_eur.get(i).termin_platnosci),
 										helvetica10));
+						tabelka_EUR.addCell(new Phrase(
+								(f_eur.get(i).zaplacona ? "Zapłacona"
+										: "Niezapłacona"), helvetica10));
 						tabelka_EUR
 								.addCell(newCellDoPrawej(
 										MojeUtils.utworzWartoscZlotowki(f_eur
@@ -739,6 +747,7 @@ public class Drukarz
 						wartosc_eur += f_eur.get(i).wartosc_z_narzutem;
 					}
 					// ostatni wiersz z sumą
+					tabelka_EUR.addCell(newSeparator());
 					tabelka_EUR.addCell(newSeparator());
 					tabelka_EUR.addCell(newSeparator());
 					tabelka_EUR.addCell(newSeparator());
@@ -752,7 +761,7 @@ public class Drukarz
 
 					// settings
 					float[] columnWidths = new float[]
-					{ 35, 130, 105, 100, 110 };
+					{ 35, 130, 105, 100, 100, 110 };
 					tabelka_EUR.setWidths(columnWidths);
 					Paragraph tabelka = new Paragraph();
 					tabelka.add(tabelka_EUR);
@@ -769,7 +778,7 @@ public class Drukarz
 					// // naglowek
 					String[] naglowki =
 					{ "L.p.", "Nr. faktury", "Data wystawienia",
-							"Data Płatności", "Wartość" };
+							"Data Płatności", "Status", "Wartość" };
 					PdfPTable tabelka_USD = new PdfPTable(naglowki.length);
 					tabelka_USD.setSpacingBefore(25);
 					tabelka_USD.setSpacingAfter(10);
@@ -808,6 +817,9 @@ public class Drukarz
 										DataUtils.dateToString_format
 												.format(f_usd.get(i).termin_platnosci),
 										helvetica10));
+						tabelka_USD.addCell(new Phrase(
+								(f_usd.get(i).zaplacona ? "Zapłacona"
+										: "Niezapłacona"), helvetica10));
 						tabelka_USD
 								.addCell(newCellDoPrawej(
 										MojeUtils.utworzWartoscZlotowki(f_usd
@@ -816,6 +828,7 @@ public class Drukarz
 						wartosc_usd += f_usd.get(i).wartosc_z_narzutem;
 					}
 					// ostatni wiersz z sumą
+					tabelka_USD.addCell(newSeparator());
 					tabelka_USD.addCell(newSeparator());
 					tabelka_USD.addCell(newSeparator());
 					tabelka_USD.addCell(newSeparator());
@@ -829,7 +842,7 @@ public class Drukarz
 
 					// settings
 					float[] columnWidths = new float[]
-					{ 35, 130, 105, 100, 110 };
+					{ 35, 130, 105, 100, 100, 110 };
 					tabelka_USD.setWidths(columnWidths);
 					Paragraph tabelka = new Paragraph();
 					tabelka.add(tabelka_USD);
@@ -846,7 +859,7 @@ public class Drukarz
 					// // naglowek
 					String[] naglowki =
 					{ "L.p.", "Nr. faktury", "Data wystawienia",
-							"Data Płatności", "Wartość" };
+							"Data Płatności", "Status", "Wartość" };
 					PdfPTable tabelka_UAH = new PdfPTable(naglowki.length);
 					tabelka_UAH.setSpacingBefore(25);
 					tabelka_UAH.setSpacingAfter(10);
@@ -885,6 +898,9 @@ public class Drukarz
 										DataUtils.dateToString_format
 												.format(f_uah.get(i).termin_platnosci),
 										helvetica10));
+						tabelka_UAH.addCell(new Phrase(
+								(f_uah.get(i).zaplacona ? "Zapłacona"
+										: "Niezapłacona"), helvetica10));
 						tabelka_UAH
 								.addCell(newCellDoPrawej(
 										MojeUtils.utworzWartoscZlotowki(f_uah
@@ -893,6 +909,7 @@ public class Drukarz
 						wartosc_uah += f_uah.get(i).wartosc_z_narzutem;
 					}
 					// ostatni wiersz z sumą
+					tabelka_UAH.addCell(newSeparator());
 					tabelka_UAH.addCell(newSeparator());
 					tabelka_UAH.addCell(newSeparator());
 					tabelka_UAH.addCell(newSeparator());
@@ -906,7 +923,7 @@ public class Drukarz
 
 					// settings
 					float[] columnWidths = new float[]
-					{ 35, 130, 105, 100, 110 };
+					{ 35, 130, 105, 100, 100, 110 };
 					tabelka_UAH.setWidths(columnWidths);
 					Paragraph tabelka = new Paragraph();
 					tabelka.add(tabelka_UAH);
