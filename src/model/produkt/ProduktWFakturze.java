@@ -32,7 +32,7 @@ public class ProduktWFakturze extends ProduktNaSztuki
 					MojeUtils.utworzWartoscZlotowki(_cena_jednostkowa),
 					"" + ilosc_produktu,
 					MojeUtils.utworzWartoscZlotowki(wartoscPoKorekcie),
-					"" + rabat };
+					MojeUtils.formatujWartosc(rabat) };
 		} else
 		{
 			return new String[]
@@ -40,7 +40,7 @@ public class ProduktWFakturze extends ProduktNaSztuki
 					MojeUtils.utworzWartoscZlotowki(_cena_jednostkowa),
 					"" + ilosc_produktu,
 					MojeUtils.utworzWartoscZlotowki(liczWartoscZNarzutem()),
-					"" + rabat };
+					MojeUtils.formatujWartosc(rabat) };
 		}
 	}
 

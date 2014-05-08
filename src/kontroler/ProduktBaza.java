@@ -18,6 +18,10 @@ import utils.SqlUtils;
 import utils.UserShowException;
 import widok.MagazynPanel;
 
+/**
+ * @author oRF1888
+ * 
+ */
 public class ProduktBaza implements ObiektBazaManager
 {
 	private MagazynPanel panel;
@@ -57,7 +61,8 @@ public class ProduktBaza implements ObiektBazaManager
 							+ SqlUtils.popraw(produkt.lp) + ","
 							+ SqlUtils.popraw(produkt.korekta) + ","
 							+ SqlUtils.popraw(produkt.wartoscPoKorekcie) + ","
-							+ SqlUtils.popraw(produkt.rabat) + ")");
+							+ SqlUtils.popraw(rabatDoubleToInt(produkt.rabat))
+							+ ")");
 		}
 	}
 
@@ -106,7 +111,8 @@ public class ProduktBaza implements ObiektBazaManager
 								int cena = result.getInt(9);
 								int ilosc = result.getInt(10);
 								int wartoscPoKorekcie = result.getInt(11);
-								int rabat = result.getInt(12);
+								double rabat = rabatIntToDouble(result
+										.getInt(12));
 								produkty.add(new ProduktWFakturze(lp, cena,
 										ilosc, produktSlownik, korekta,
 										wartoscPoKorekcie, rabat));
@@ -409,26 +415,6 @@ public class ProduktBaza implements ObiektBazaManager
 						+ id_parent);
 	}
 
-	/*
-	 * public static void usunListeProduktow( String table, List<? extends
-	 * ProduktNaSztuki> produkty, String id_parent_column, int id_parent )
-	 * throws Exception { StringBuilder sql = new StringBuilder(); sql.append(
-	 * "DELETE FROM " ).append( table ).append( " WHERE " ).append(
-	 * id_parent_column ) .append( "= " ).append( id_parent ).append(
-	 * " AND id_produkt in(" ); for ( ProduktNaSztuki produkt : produkty )
-	 * sql.append( produkt.produkt.id_produkt ).append( ',' ); sql.deleteCharAt(
-	 * sql.length() - 1 ); sql.append( ")" );
-	 * BazaDanych.getInstance().aktualizacja( sql.toString() ); }
-	 */
-
-	/*
-	 * public static void usunListeProduktow_wysylka( Wysylka wysylka ) throws
-	 * Exception { for ( ProduktWWysylce produkt : wysylka.produkty )
-	 * BazaDanych.getInstance().aktualizacja( "DELETE FROM " +
-	 * Produkt.tableLaczacaWysylka + " WHERE (id_produkt=" +
-	 * produkt.produkt.id_produkt + " AND id_wysylka=" + wysylka.id + ")" ); }
-	 */
-
 	/**
 	 * @param dodaj
 	 *            - jesli true, zwieksza stan na magazynie (cofniecie faktury),
@@ -564,5 +550,29 @@ public class ProduktBaza implements ObiektBazaManager
 							+ SqlUtils.popraw(produkt.ilosc_produktu) + ","
 							+ SqlUtils.popraw(produkt.lp) + ")");
 		}
+	}
+
+	/**
+	 * Metoda konwertuje double*100 na inty.
+	 * 
+	 * @param value
+	 *            - wartosc double
+	 * @return int wartosc
+	 */
+	private static int rabatDoubleToInt(Double value)
+	{
+		return (int) (value * 100);
+	}
+
+	/**
+	 * Metoda konwertuje inty na double.
+	 * 
+	 * @param value
+	 *            wartosc int
+	 * @return double wartosc
+	 */
+	private static double rabatIntToDouble(int value)
+	{
+		return ((double) value / 100);
 	}
 }

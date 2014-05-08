@@ -393,7 +393,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 			listaWybranych.tabelaDodajWiersz(new String[]
 			{ "" + lp, wiersz.wiersz[1], MojeUtils.utworzWartoscZlotowki(cena),
 					ilosc + "", MojeUtils.utworzWartoscZlotowki(ilosc * cena),
-					"0" });
+					"0,00" });
 			listaProduktow.add(new ProduktWFakturze(lp, cena, ilosc,
 					produktSlownik, false, 0, 0));
 		}
@@ -492,7 +492,6 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		{
 			init();
 			((FakturyPanelListaWybranych) listaWybranychPanel).czysc();
-			// tutaj 2
 			comboKontrachenci.setSelectedIndex(-1);
 			if (rodzajFaktury == Faktura.ZAKUP)
 				numerField.setText("");

@@ -173,7 +173,6 @@ public class FakturyPanelListaWybranych extends
 			itemUsun.setHorizontalTextPosition(SwingConstants.RIGHT);
 			itemUsun.addActionListener(usunListener);
 
-			// ObiektBazaManager baza = null;
 			ObiektBazaManager baza = new FakturaBaza();
 			PanelOgolnyParametry params = PanelOgolnyParametry
 					.createMinimalParametry(tworzModelFuktor(), popupMenu,

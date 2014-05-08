@@ -119,15 +119,27 @@ public class MojeUtils
 	/**
 	 * Zwraca wartość w formacie zz,gg
 	 * 
-	 * @param String
-	 *            cena
-	 * @return int cena
+	 * @param int cena
+	 * @return String cena
 	 */
 	public static String formatujWartosc(int wartosc)
 	{
 		int groszy = (wartosc % 100);
 		String strGroszy = (groszy < 10) ? "0" + groszy : groszy + "";
 		return new String("" + (wartosc / 100) + "," + strGroszy);
+
+	}
+
+	/**
+	 * Zwraca wartość w formacie zz,gg dla wartosci double
+	 * 
+	 * @param double cena
+	 * @return String cena
+	 */
+	public static String formatujWartosc(double wartosc)
+	{
+		int wartoscInt = (int) (wartosc * 100);
+		return formatujWartosc(wartoscInt);
 
 	}
 
@@ -288,12 +300,6 @@ public class MojeUtils
 				params_chmura, "Kończenie pracy", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, polskiePrzyciski,
 				polskiePrzyciski[1]);
-
-		/*
-		 * = dialogTakNie( "Kończenie pracy",
-		 * "Czy chcesz przeprowadzić backup bazy danych przed zamknięciem programu?"
-		 * , true);
-		 */
 		if (wybor == 0 && chmura.isSelected())
 		{
 			try
