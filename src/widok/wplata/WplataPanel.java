@@ -33,7 +33,7 @@ public class WplataPanel extends PanelOgolnyPrzyciski
 																	 * dwulkik
 																	 * na
 																	 * wierszu
-																	 */, false,
+																	 */, true,
 					Wplata.opisKolumn), false);
 			sorter.addActionListener(new ActionListener()
 			{

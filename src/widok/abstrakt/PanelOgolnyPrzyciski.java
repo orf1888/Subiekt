@@ -23,6 +23,7 @@ import kontroler.KontrachentBaza;
 import kontroler.ObiektWyszukanieWarunki;
 import kontroler.ProduktBaza;
 import kontroler.TransportRozliczenieBaza;
+import kontroler.WalutaManager;
 import model.Faktura;
 import model.Kontrachent;
 import model.ObiektWiersz;
@@ -305,7 +306,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 						{
 							MojeUtils
 									.showError("Coś poszło nie tak z dodaniem długu.");
-							MojeUtils.error(e);;
+							MojeUtils.error(e);
 						}
 					} else if (nowy instanceof Wplata)
 					{
@@ -485,8 +486,29 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 					if (MojeUtils.usunWiersz("Czy na peno chcesz usunąć?",
 							wiersz))
 					{
+						/* Usun z widoku i wykonaj update'y na bazie */
 						getObiektBazaManager().zmienWidocznosc(wiersz, false);
 						tabelaUsunWiersz(numerEdytowanegoWiersza);
+
+						/* Jesli wiersz jest wpata to przelicz dlugi ect. */
+						try
+						{
+							int id_kontrachent = KontrachentBaza
+									.pobierzObiektZBazy(wiersz.wiersz[1])
+									.getId();
+							int id_waluta = WalutaManager
+									.konwertujWalute(wiersz.wiersz[2].substring(
+											wiersz.wiersz[2].length() - 3,
+											wiersz.wiersz[2].length()));
+							FakturaBaza
+									.zaplacFaktury(id_kontrachent, id_waluta);
+
+						} catch (Exception e)
+						{
+							MojeUtils
+									.println("Nie podejmuje zadnej akcji, ponieważ obiekt wiersz nie jest Wplata!");
+						}
+
 						ukryjModalneOkno();
 					}
 				} catch (Exception e)

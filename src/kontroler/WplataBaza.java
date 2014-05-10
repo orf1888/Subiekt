@@ -180,10 +180,17 @@ public class WplataBaza implements ObiektBazaManager
 		BazaDanych.getInstance().aktualizacja(updateSQL);
 	}
 
+	/***
+	 * Metoda USUWA obiekt o wybranym id z bazy, oraz przelicza dlug
+	 * kontrachenta!
+	 */
 	@Override
 	public void zmienWidocznosc(ObiektWiersz wiersz, boolean widoczny)
 			throws Exception
 	{
-		return;
+		String deleteSQL = "DELETE FROM " + Wplata.tableName
+				+ " WHERE id_wplata=" + getIdFromWiersz(wiersz);
+		MojeUtils.println(deleteSQL);
+		BazaDanych.getInstance().aktualizacja(deleteSQL);
 	}
 }
