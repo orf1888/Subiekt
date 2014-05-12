@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -19,54 +20,111 @@ public class PanelPrzyciskowInformator extends JPanel
 	private final JLabel lblDataDo;
 	public final DatePanel dataDo;
 	private final JButton btnPoka;
+	private JCheckBox chx;
 
-	public PanelPrzyciskowInformator(ActionListener listener) {
+	/**
+	 * 
+	 * @param listener
+	 *            - ActionListaener odpowiadający za akcje przycisku "Pokaż".
+	 * @param isPoziomaOrientacja
+	 *            - boolaen odpowiadający za orientacje ulożenia przycików.
+	 * @param isExtraWidgets
+	 *            - boolean odpowiadający za dodanie widgetów parametryzacji.
+	 */
+	public PanelPrzyciskowInformator(ActionListener listener,
+			boolean isPoziomaOrientacja, boolean isExtraWidgets) {
+
 		GridBagLayout gbl_panelPrzyciskow = new GridBagLayout();
-		gbl_panelPrzyciskow.columnWidths = new int[]
-		{ 0, 0, 0, 0, 0, 0 };
-		gbl_panelPrzyciskow.rowHeights = new int[]
-		{ 0, 0 };
-		gbl_panelPrzyciskow.columnWeights = new double[]
-		{ 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
-		gbl_panelPrzyciskow.rowWeights = new double[]
-		{ 0.0, Double.MIN_VALUE };
+
+		if (isPoziomaOrientacja)
+		{
+			gbl_panelPrzyciskow.columnWidths = new int[]
+			{ 0, 0, 0, 0, 0, 0 };
+			gbl_panelPrzyciskow.rowHeights = new int[]
+			{ 0, 0 };
+			gbl_panelPrzyciskow.columnWeights = new double[]
+			{ 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+			gbl_panelPrzyciskow.rowWeights = new double[]
+			{ 0.0, Double.MIN_VALUE };
+		} else
+		{
+
+			gbl_panelPrzyciskow.columnWidths = new int[]
+			{ 0, 0 };
+			gbl_panelPrzyciskow.rowHeights = new int[]
+			{ 0, 0, 0, 0, 0, 0 };
+			gbl_panelPrzyciskow.columnWeights = new double[]
+			{ 0.0, Double.MIN_VALUE };
+			gbl_panelPrzyciskow.rowWeights = new double[]
+			{ 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+
+		}
 		setLayout(gbl_panelPrzyciskow);
 
 		lblDataOd = new JLabel("Data od: ");
-		GridBagConstraints gbc_lblDataOd = new GridBagConstraints();
-		gbc_lblDataOd.insets = new Insets(0, 0, 0, 5);
-		gbc_lblDataOd.gridx = 0;
-		gbc_lblDataOd.gridy = 0;
-		add(lblDataOd, gbc_lblDataOd);
+		add(lblDataOd, tworzGBC(isPoziomaOrientacja, 0, 0));
 
 		dataOd = new DatePanel();
-		GridBagConstraints gbc_dataOd = new GridBagConstraints();
-		gbc_dataOd.insets = new Insets(0, 0, 0, 5);
-		gbc_dataOd.gridx = 1;
-		gbc_dataOd.gridy = 0;
-		add(dataOd, gbc_dataOd);
+		add(dataOd, tworzGBC(isPoziomaOrientacja, 1, 0));
 
 		lblDataDo = new JLabel("Data do: ");
-		GridBagConstraints gbc_lblDataDo = new GridBagConstraints();
-		gbc_lblDataDo.insets = new Insets(0, 0, 0, 5);
-		gbc_lblDataDo.gridx = 2;
-		gbc_lblDataDo.gridy = 0;
-		add(lblDataDo, gbc_lblDataDo);
+		add(lblDataDo, tworzGBC(isPoziomaOrientacja, 2, 0));
 
 		dataDo = new DatePanel();
-		GridBagConstraints gbc_dataDo = new GridBagConstraints();
-		gbc_dataDo.insets = new Insets(0, 0, 0, 5);
-		gbc_dataDo.gridx = 3;
-		gbc_dataDo.gridy = 0;
-		add(dataDo, gbc_dataDo);
+		add(dataDo, tworzGBC(isPoziomaOrientacja, 3, 0));
 
-		btnPoka = new JButton("Pokaż");
-		GridBagConstraints gbc_btnPoka = new GridBagConstraints();
-		gbc_btnPoka.anchor = GridBagConstraints.NORTH;
-		gbc_btnPoka.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnPoka.gridx = 4;
-		gbc_btnPoka.gridy = 0;
-		add(btnPoka, gbc_btnPoka);
-		btnPoka.addActionListener(listener);
+		if (isExtraWidgets)
+		{
+
+			chx = new JCheckBox("Uwzględniaj tylko faktury niezapłacone");
+			add(chx, tworzGBC(isPoziomaOrientacja, 4, 0));
+
+			btnPoka = new JButton("Pokaż");
+			GridBagConstraints gbc_btn = tworzGBC(isPoziomaOrientacja, 5, 0);
+			gbc_btn.anchor = GridBagConstraints.NORTH;
+			gbc_btn.fill = GridBagConstraints.HORIZONTAL;
+			add(btnPoka, gbc_btn);
+			btnPoka.addActionListener(listener);
+		} else
+		{
+			btnPoka = new JButton("Pokaż");
+			GridBagConstraints gbc_btn = tworzGBC(isPoziomaOrientacja, 4, 0);
+			gbc_btn.anchor = GridBagConstraints.NORTH;
+			gbc_btn.fill = GridBagConstraints.HORIZONTAL;
+			add(btnPoka, gbc_btn);
+			btnPoka.addActionListener(listener);
+		}
+	}
+
+	/**
+	 * Metoda zwraca GBC. Jesli orientacja jest pionowa zamieniane sa gridx i
+	 * gridy.
+	 * 
+	 * @param isPoziomaOrientacja
+	 * @param gridx
+	 * @param gridy
+	 * @return
+	 */
+	private GridBagConstraints tworzGBC(boolean isPoziomaOrientacja, int gridx,
+			int gridy)
+	{
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(0, 0, 0, 5);
+		if (isPoziomaOrientacja)
+		{
+			gbc.gridx = gridx;
+			gbc.gridy = gridy;
+		} else
+		{
+			gbc.gridx = gridy;
+			gbc.gridy = gridx;
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+		}
+		return gbc;
+	}
+
+	public boolean isChxSelected()
+	{
+		return chx.isSelected();
 	}
 }

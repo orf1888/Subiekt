@@ -80,6 +80,7 @@ public class TransportRozliczenieBaza implements ObiektBazaManager
 				.zapytanie(
 				/* sql do pobrania */querySql,
 				/* operacja na pobranych danych */pobieranieWierszaFunktor);
+		MojeUtils.println("" + wynik.size());
 		return wynik.toArray(new String[wynik.size()][]);
 	}
 

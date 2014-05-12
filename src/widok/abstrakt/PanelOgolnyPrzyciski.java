@@ -37,7 +37,7 @@ import utils.Loger.LogerNazwa;
 import utils.MojeUtils;
 import utils.UserShowException;
 import widok.WyswietlPDFPanel;
-import widok.informator.InformatorOkno;
+import widok.informator.InformatorProduktOkno;
 
 public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 {
@@ -63,7 +63,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 
 	protected ActionListener pokazDlugiListener;
 
-	protected static ActionListener informatorListener;
+	protected ActionListener informatorListener;
 
 	protected JPanel panel_przycikow;
 
@@ -561,7 +561,7 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 				{
 					ObiektWiersz wiersz = new ObiektWiersz(
 							pobierzZaznaczonyWiersz());
-					InformatorOkno.init(ProduktBaza
+					InformatorProduktOkno.init(ProduktBaza
 							.getNazwaFromWiersz(pobierzZaznaczonyWiersz()),
 							wiersz);
 				} catch (Exception e)
@@ -570,11 +570,6 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 				}
 			}
 		};
-	}
-
-	public static ActionListener setInformatorListener()
-	{
-		return informatorListener;
 	}
 
 	/* SZUKAJ-------------------------------------- */

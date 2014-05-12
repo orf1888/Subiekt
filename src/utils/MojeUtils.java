@@ -12,6 +12,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import kontroler.BackupChmura;
@@ -250,7 +251,7 @@ public class MojeUtils
 		FChooserPL c = new FChooserPL();
 		c.chooser.setAcceptAllFileFilterUsed(false);
 		c.chooser.addChoosableFileFilter(new FiltrPlikow(rozszerzenie));
-		int retrival = c.chooser.showSaveDialog(WidokGlowny.frame);
+		int retrival = c.chooser.showSaveDialog((JFrame) null);
 		if (retrival == JFileChooser.APPROVE_OPTION)
 		{
 			try

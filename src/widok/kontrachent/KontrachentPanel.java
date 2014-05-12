@@ -1,5 +1,8 @@
 package widok.kontrachent;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
@@ -7,9 +10,11 @@ import javax.swing.SwingConstants;
 import kontroler.KontrachentBaza;
 import kontroler.ObiektWyszukanieWarunki;
 import model.Kontrachent;
+import model.ObiektWiersz;
 import utils.MojeUtils;
 import widok.abstrakt.PanelOgolnyParametry;
 import widok.abstrakt.PanelOgolnyPrzyciski;
+import widok.informator.InformatorKontrachentOkno;
 
 public class KontrachentPanel extends PanelOgolnyPrzyciski
 {
@@ -29,6 +34,12 @@ public class KontrachentPanel extends PanelOgolnyPrzyciski
 		itemPokazDlugi.setHorizontalTextPosition(SwingConstants.RIGHT);
 		pokazDlugiListener = tworzDlugiListener();
 		itemPokazDlugi.addActionListener(pokazDlugiListener);
+
+		JMenuItem itemInformator = new JMenuItem("Informator", null);
+		result.add(itemInformator);
+		itemInformator.setHorizontalTextPosition(SwingConstants.RIGHT);
+		informatorListener = tworzInformatorKontrachentListener();
+		itemInformator.addActionListener(informatorListener);
 
 		JMenuItem itemUsun = new JMenuItem("Usuń", null);
 		result.add(itemUsun);
@@ -72,4 +83,25 @@ public class KontrachentPanel extends PanelOgolnyPrzyciski
 			}
 		}
 	};
+
+	private ActionListener tworzInformatorKontrachentListener()
+	{
+		return new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				try
+				{
+					ObiektWiersz wiersz = new ObiektWiersz(
+							pobierzZaznaczonyWiersz());
+					InformatorKontrachentOkno.init(wiersz.wiersz[0], wiersz);
+				} catch (Exception e)
+				{
+					MojeUtils.showPrintError(e);
+				}
+			}
+		};
+	}
 }

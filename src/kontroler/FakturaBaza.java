@@ -117,6 +117,7 @@ public class FakturaBaza implements ObiektBazaManager
 
 		List<Integer> wynik = (List<Integer>) BazaDanych.getInstance()
 				.zapytanie(querySql, pobieranieIdFunktor);
+		MojeUtils.println("" + wynik.size());
 		return wynik.toArray(new Integer[wynik.size()]);
 	}
 
@@ -564,6 +565,26 @@ public class FakturaBaza implements ObiektBazaManager
 						+ (zaplacona ? "1" : "0") + " WHERE id_faktura = "
 						+ SqlUtils.popraw(id_faktura));
 		onChange(id_faktura);
+	}
+
+	public static List<Faktura> pobierzFakturyZaOkres(int id_kontrachent,
+			boolean tylkoNiezaplacone, String[] daty) throws Exception
+	{
+		ObiektWyszukanieWarunki warunki = ObiektWyszukanieWarunki
+				.TworzWarunekFaktura();
+		warunki.dodajWarunek(id_kontrachent, "id_kontrachent");
+		/* Tylko niezaplacone */
+		if (tylkoNiezaplacone)
+			warunki.dodajWarunek(0, "zaplacona");
+		warunki.dodajWarunek(Faktura.SPRZEDAZ, "rodzaj");
+		warunki.dodajWarunekZData(daty[0], daty[1], "data_wystawienia");
+		Integer[] id_faktury = pobierzIdZBazy(warunki);
+		ArrayList<Faktura> result = new ArrayList<>();
+		for (int i = 0; i < id_faktury.length; i++)
+		{
+			result.add((Faktura) pobierzObiektZBazy(id_faktury[i]));
+		}
+		return result;
 	}
 
 	public static List<Faktura> pobierzFakturyByWaluta(int id_kontrachent,

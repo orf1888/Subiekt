@@ -128,6 +128,24 @@ public class Drukarz
 		}
 	}
 
+	public static File tworzFakturyKontrachentowZaOkres(
+			ArrayList<Faktura> listaFaktur, String[] daty)
+	{
+		try
+		{
+			File temp = File.createTempFile("temp",
+					Long.toString(System.nanoTime()));
+			Document doc = otworzPdf(temp);
+			wypelnijFakturyKontrachentowZaOkres(doc, daty, listaFaktur);
+			doc.close();
+			return temp;
+		} catch (Exception e)
+		{
+			MojeUtils.showPrintError(e);
+			return null;
+		}
+	}
+
 	private static Document otworzPdf(File temp) throws Exception
 	{
 		Document document = new Document(PageSize.A4, 15, 15, 35, 45);
@@ -1037,6 +1055,74 @@ public class Drukarz
 		Paragraph tabelka = new Paragraph();
 		tabelka.add(tabelka_produkty);
 		doc.add(tabelka);
+	}
+
+	private static void wypelnijFakturyKontrachentowZaOkres(Document doc,
+			String[] daty, ArrayList<Faktura> listaFaktur)
+			throws DocumentException
+	{
+		PdfPTable tabelka_dat = new PdfPTable(3);
+		tabelka_dat.addCell(newCellWysrodkowanySzary("Termin utworzenia",
+				helvetica10));
+		tabelka_dat.addCell(newSeparator());
+		// newline
+		tabelka_dat.addCell(newSeparator());
+		tabelka_dat.addCell(newCellWysrodkowany(
+				DataUtils.pobierzAktualnaDateFormat(), helvetica10));
+		tabelka_dat.addCell(newSeparator());
+		tabelka_dat.addCell(newSeparator());
+		doc.add(tabelka_dat);
+		// ///////////////Tutuł/////////////////////
+		String kontrachent_nazwa = listaFaktur.get(0).kontrachent.nazwa;
+		Paragraph nazwa_dokumentu = new Paragraph(
+				"FAKTURY SPRZEDAŻY dla " + kontrachent_nazwa + " za ("
+						+ daty[0] + " - " + daty[1] + ")", helvetica14);
+		nazwa_dokumentu.setSpacingBefore(50);
+		nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
+		nazwa_dokumentu.setSpacingAfter(50);
+		doc.add(nazwa_dokumentu);
+		// ///////////////Tabela faktur/////////////////////
+		String[] naglowki =
+		{ "L.p.", "Nr. faktury", "Data wystawienia", "Data Płatności",
+				"Status", "Wartość" };
+		PdfPTable tabelka_faktur = new PdfPTable(naglowki.length);
+		for (String naglowek : naglowki)
+		{
+			PdfPCell komorka_lp = new PdfPCell(
+					new Phrase(naglowek, helvetica10));
+			komorka_lp.setBackgroundColor(new BaseColor(244, 244, 244));
+			tabelka_faktur.addCell(komorka_lp);
+		}
+		/* Faktury */
+		int lp = 0;
+		for (Faktura f : listaFaktur)
+		{
+			lp++;
+			tabelka_faktur.addCell(new Phrase("" + lp, helvetica10));
+			tabelka_faktur.addCell(new Phrase(""
+					+ MojeUtils.poprawNrFaktury(f.rodzaj, f.numer, DataUtils
+							.getYear(DataUtils.stringToDate_format
+									.format(f.data_wystawienia)), f.isKorekta),
+					helvetica10));
+			tabelka_faktur.addCell(new Phrase(""
+					+ DataUtils.dateToString_format.format(f.data_wystawienia),
+					helvetica10));
+			tabelka_faktur.addCell(new Phrase(""
+					+ DataUtils.dateToString_format.format(f.termin_platnosci),
+					helvetica10));
+			tabelka_faktur.addCell(new Phrase(f.zaplacona ? "Zapłacona"
+					: "Niezapłacona", helvetica10));
+			tabelka_faktur.addCell(new Phrase(""
+					+ MojeUtils.formatujWartosc(f.wartosc_z_narzutem)));
+
+		}
+		float[] columnWidths = new float[]
+		{ 35, 130, 105, 100, 100, 110 };
+		tabelka_faktur.setWidths(columnWidths);
+		Paragraph tabelka = new Paragraph();
+		tabelka.add(tabelka_faktur);
+		doc.add(tabelka);
+
 	}
 
 	private static PdfPCell newSeparator()

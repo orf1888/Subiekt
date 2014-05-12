@@ -20,7 +20,7 @@ import utils.DataUtils;
 import utils.Globals;
 import utils.MojeUtils;
 
-public class InformatorOkno extends JDialog
+public class InformatorProduktOkno extends JDialog
 {
 
 	private static final long serialVersionUID = -6195767829553617471L;
@@ -52,7 +52,7 @@ public class InformatorOkno extends JDialog
 
 	public ObiektWiersz wiersz;
 
-	public InformatorOkno(String nazwa, ObiektWiersz wiersz) {
+	public InformatorProduktOkno(String nazwa, ObiektWiersz wiersz) {
 		this.wiersz = wiersz;
 
 		setModalityType(ModalityType.APPLICATION_MODAL);
@@ -68,6 +68,7 @@ public class InformatorOkno extends JDialog
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
+
 		/* Wysyłki */
 		panelWysylki = new JPanel();
 		tabbedPane.addTab("Wysyłki za okres", null, panelWysylki, null);
@@ -77,8 +78,9 @@ public class InformatorOkno extends JDialog
 		tableWysylki = new JTable();
 		scrollPaneWysylki.setViewportView(tableWysylki);
 		panelPrzyciskowWysylki = new PanelPrzyciskowInformator(
-				pokazWysylkiListener);
+				pokazWysylkiListener, true, false);
 		panelWysylki.add(panelPrzyciskowWysylki, BorderLayout.NORTH);
+
 		/* Sprzedaż */
 		panelSprzedazy = new JPanel();
 		tabbedPane.addTab("Sprzedaż za okres", null, panelSprzedazy, null);
@@ -88,7 +90,7 @@ public class InformatorOkno extends JDialog
 		tableSprzedaz = new JTable();
 		scrollPaneSprzedazy.setViewportView(tableSprzedaz);
 		panelPrzyciskowSprzedaz = new PanelPrzyciskowInformator(
-				pokazSprzedazListener);
+				pokazSprzedazListener, true, false);
 		panelSprzedazy.add(panelPrzyciskowSprzedaz, BorderLayout.NORTH);
 
 		/* Ilosc sprzedaży */
@@ -101,7 +103,7 @@ public class InformatorOkno extends JDialog
 		tableIloscSprzedazy = new JTable();
 		scrollPaneIloscSprzedazy.setViewportView(tableIloscSprzedazy);
 		panelPrzyciskowSprzedazIlosc = new PanelPrzyciskowInformator(
-				pokazSprzedazIloscListener);
+				pokazSprzedazIloscListener, true, false);
 		panelIloscSprzedazy.add(panelPrzyciskowSprzedazIlosc,
 				BorderLayout.NORTH);
 
@@ -115,7 +117,7 @@ public class InformatorOkno extends JDialog
 		tableIloscWyslanych = new JTable();
 		scrollPaneIloscWyslanych.setViewportView(tableIloscWyslanych);
 		panelPrzyciskowWyslanychIlosc = new PanelPrzyciskowInformator(
-				pokazWyslanychIloscListener);
+				pokazWyslanychIloscListener, true, false);
 		panelIloscWyslanych.add(panelPrzyciskowWyslanychIlosc,
 				BorderLayout.NORTH);
 
@@ -128,7 +130,7 @@ public class InformatorOkno extends JDialog
 		tableRuchTowaru = new JTable();
 		scrollPaneRuchTowaru.setViewportView(tableRuchTowaru);
 		panelPrzyciskowRuchTowaru = new PanelPrzyciskowInformator(
-				pokazRuchTowaruListener);
+				pokazRuchTowaruListener, true, false);
 		panelRuchTowaru.add(panelPrzyciskowRuchTowaru, BorderLayout.NORTH);
 
 	}
@@ -276,14 +278,15 @@ public class InformatorOkno extends JDialog
 			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
-				MojeUtils.error(e1);;
+				MojeUtils.error(e1);
 			}
 		}
 	};
 
 	public static void init(String nazwa, ObiektWiersz wiersz)
 	{
-		InformatorOkno informator = new InformatorOkno(nazwa, wiersz);
+		InformatorProduktOkno informator = new InformatorProduktOkno(nazwa,
+				wiersz);
 		informator.setVisible(true);
 	}
 }

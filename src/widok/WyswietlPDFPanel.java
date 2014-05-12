@@ -74,6 +74,28 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 		pageCounter3.setText("z " + pdfDecoder.getPageCount() + "  ");
 	}
 
+	private JPanel initPDFPanel(String name)
+	{
+		pdfDecoder = new PdfDecoder(true);
+		FontMappings.setFontReplacements();
+		currentFile = name;
+
+		try
+		{
+			pdfDecoder.openPdfFile(currentFile);
+			pdfDecoder.decodePage(currentPage);
+			pdfDecoder.setPageParameters(1, 1);
+		} catch (Exception e)
+		{
+			MojeUtils.error(e);
+		}
+
+		pageCounter2.setText(String.valueOf(currentPage));
+		pageCounter3.setText("z " + pdfDecoder.getPageCount() + "  ");
+
+		return initializeAllViewer();
+	}
+
 	public void JPanelDemo()
 	{
 		pdfDecoder = new PdfDecoder(true);
@@ -110,6 +132,29 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 
 	}
 
+	private JPanel initializeAllViewer()
+	{
+		JPanel result = new JPanel();
+		result.setLayout(new BorderLayout());
+
+		JButton open = initOpenBut();
+		Component[] itemsToAdd = initChangerPanel();
+
+		JPanel topBar = new JPanel();
+		topBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		topBar.add(open);
+		for (Component anItemsToAdd : itemsToAdd)
+		{
+			topBar.add(anItemsToAdd);
+		}
+
+		result.add(topBar, BorderLayout.NORTH);
+
+		JScrollPane display = initPDFDisplay();
+		result.add(display, BorderLayout.CENTER);
+		return result;
+	}
+
 	private JButton initOpenBut()
 	{
 		JButton open = new JButton();
@@ -128,7 +173,8 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					MojeUtils.zapiszPlik(plik, "pdf", false);
 				} catch (Exception e1)
 				{
-					MojeUtils.error(e1);;
+					if (!e1.getMessage().equals("Anulowano"))
+						MojeUtils.error(e1);
 				}
 			}
 		});
@@ -145,6 +191,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		currentScroll.setViewportView(pdfDecoder);
+		currentScroll.getVerticalScrollBar().setUnitIncrement(16);
 
 		return currentScroll;
 	}
@@ -173,7 +220,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					{
 						pdfDecoder.decodePage(currentPage);
 						pdfDecoder.invalidate();
-						frame.repaint();
+						pdfDecoder.repaint();
 					} catch (Exception e1)
 					{
 						System.err.println("back to page 1");
@@ -202,7 +249,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					{
 						pdfDecoder.decodePage(currentPage);
 						pdfDecoder.invalidate();
-						frame.repaint();
+						pdfDecoder.repaint();
 					} catch (Exception e1)
 					{
 						System.err.println("back 10 pages");
@@ -232,7 +279,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					{
 						pdfDecoder.decodePage(currentPage);
 						pdfDecoder.invalidate();
-						frame.repaint();
+						pdfDecoder.repaint();
 					} catch (Exception e1)
 					{
 						System.err.println("back 1 page");
@@ -270,7 +317,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					{
 						pdfDecoder.decodePage(currentPage);
 						pdfDecoder.invalidate();
-						frame.repaint();
+						pdfDecoder.repaint();
 					} catch (Exception e)
 					{
 						System.err.println("page number entered");
@@ -319,7 +366,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					{
 						pdfDecoder.decodePage(currentPage);
 						pdfDecoder.invalidate();
-						frame.repaint();
+						pdfDecoder.repaint();
 					} catch (Exception e1)
 					{
 						System.err.println("forward 1 page");
@@ -352,7 +399,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					{
 						pdfDecoder.decodePage(currentPage);
 						pdfDecoder.invalidate();
-						frame.repaint();
+						pdfDecoder.repaint();
 					} catch (Exception e1)
 					{
 						System.err.println("forward 10 pages");
@@ -386,7 +433,7 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 					{
 						pdfDecoder.decodePage(currentPage);
 						pdfDecoder.invalidate();
-						frame.repaint();
+						pdfDecoder.repaint();
 					} catch (Exception e1)
 					{
 						System.err.println("forward to last page");
@@ -436,6 +483,22 @@ public class WyswietlPDFPanel extends PanelEdytujDodajObiekt
 		{
 			MojeUtils.showMsg("Kontrachent nie posiada długów.");
 		}
+	}
+
+	public JPanel uzupelnijtworzFakturyKontrachentowZaOkres(
+			ArrayList<Faktura> listaFaktur, String[] daty) throws Exception
+	{
+		currentPage = 1;
+		pageCounter2.setText("1");
+		if (!listaFaktur.isEmpty())
+			plik = Drukarz.tworzFakturyKontrachentowZaOkres(listaFaktur, daty);
+		else
+			plik = null;
+		if (plik != null)
+		{
+			return initPDFPanel(plik.getAbsolutePath());
+		}
+		throw new Exception("Brak faktur");
 	}
 
 	public void uzupelnijTransportRozliczenie(
