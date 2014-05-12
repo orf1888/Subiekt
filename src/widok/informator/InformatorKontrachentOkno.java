@@ -78,15 +78,10 @@ public class InformatorKontrachentOkno extends JDialog
 											Integer.parseInt(wiersz.wiersz[3]),
 											panelPrzyciskow.isChxSelected(),
 											daty), daty), BorderLayout.CENTER);
-					invalidate();
-					validate();
-					repaint();
+					odrysujFormtke();
 				} catch (Exception e1)
 				{
-					invalidate();
-					validate();
-					repaint();
-
+					odrysujFormtke();
 					if (!e1.getMessage().equals("Brak faktur"))
 						MojeUtils.showError("Błąd utworzenia wykazu faktur!");
 					MojeUtils.showMsg("Brak faktur dla " + wiersz.wiersz[0]
@@ -102,5 +97,12 @@ public class InformatorKontrachentOkno extends JDialog
 	{
 		contentPanel.removeAll();
 		contentPanel.add(panelPrzyciskow, BorderLayout.EAST);
+	}
+
+	private void odrysujFormtke()
+	{
+		invalidate();
+		validate();
+		repaint();
 	}
 }
