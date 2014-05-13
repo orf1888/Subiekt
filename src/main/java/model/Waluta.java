@@ -13,9 +13,9 @@ public class Waluta implements ObiektZId
 	public final static String[] kolumnyWBazie =
 	{ "wartosc" };
 
-	public Waluta() {}
-
 	public Waluta(long id, String wartosc) {
+		if (wartosc == null)
+			throw new NullPointerException();
 		this.id = id;
 		this.wartosc = wartosc;
 	}
