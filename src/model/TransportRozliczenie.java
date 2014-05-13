@@ -82,7 +82,7 @@ public class TransportRozliczenie implements ObiektZId
 		String[] wiersz = new String[5];
 		wiersz[0] = nr_faktury;
 		wiersz[1] = MojeUtils
-				.pobierzNrFakturyOdpowiadającej(this.id_faktury_odpowiadajacej);
+				.pobierzNrFakturyOdpowiadajacej(this.id_faktury_odpowiadajacej);
 		wiersz[2] = DataUtils.formatujDate(DataUtils.stringToDate_format
 				.format(data_ksiegowania));
 		wiersz[3] = "" + MojeUtils.formatujWartosc(wartosc) + " ";

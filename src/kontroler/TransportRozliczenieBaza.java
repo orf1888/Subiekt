@@ -53,7 +53,7 @@ public class TransportRozliczenieBaza implements ObiektBazaManager
 				String[] wiersz =
 				{
 						result.getString(1),
-						MojeUtils.pobierzNrFakturyOdpowiadającej(result
+						MojeUtils.pobierzNrFakturyOdpowiadajacej(result
 								.getInt(5)),// id faktury
 						data_ksiegowania, wartosc, "" + result.getInt(6) };
 				wynik.add(wiersz);

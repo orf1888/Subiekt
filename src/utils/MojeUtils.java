@@ -435,17 +435,17 @@ public class MojeUtils
 	 * Funkcja pobiera z bazy oraz formatuje numer faktury, której odpowiada
 	 * dany rachunek transportowy.
 	 * 
-	 * @param id_faktury_odopwiadającej_rachunkowi
+	 * @param id_faktury_odopwiadajacej_rachunkowi
 	 * @return String - numer faktury której odpowiada dany rachunek
 	 *         transportowy.
 	 * @throws Exception
 	 */
-	public static String pobierzNrFakturyOdpowiadającej(
-			int id_faktury_odopwiadającej_rachunkowi) throws Exception
+	public static String pobierzNrFakturyOdpowiadajacej(
+			int id_faktury_odopwiadajacej_rachunkowi) throws Exception
 	{
 		ObiektWyszukanieWarunki warunki_faktury = ObiektWyszukanieWarunki
 				.TworzWarunekFaktura();
-		warunki_faktury.dodajWarunek(id_faktury_odopwiadającej_rachunkowi,
+		warunki_faktury.dodajWarunek(id_faktury_odopwiadajacej_rachunkowi,
 				"id_faktura");
 		String[][] nr_faktury_odpowiadajacej = null;
 		try
