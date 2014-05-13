@@ -146,8 +146,6 @@ public class TransportRozliczenieBaza implements ObiektBazaManager
 										result.getInt(5));
 							} catch (Exception e)
 							{
-								/* przemilcz */
-								/* MojeUtils.error(e); */
 								return null;
 							}
 						}
