@@ -16,6 +16,6 @@ public class Globals
 
 	public final static String WersjaAplikacji = "Subiekt GTC v.1.15.58";
 
-	public final static ImageIcon IkonaAplikacji = new ImageIcon(
-			"icons\\sGTC.gif");
+	public final static ImageIcon IkonaAplikacji = new ImageIcon(Globals.class
+			.getClassLoader().getResource("sGTC.gif"));
 }
