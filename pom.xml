@@ -7,6 +7,13 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 </properties>
+<repositories>
+    <repository>
+      <id>libs</id>
+      <name>missing libs</name>
+      <url>https://raw.githubusercontent.com/orf1888/libs/master</url>
+    </repository>
+  </repositories>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -64,15 +71,11 @@
   		<groupId>jpedal</groupId>
   		<artifactId>jpedal</artifactId>
   		<version>0.1</version>
-  		<scope>system</scope>
-  		<systemPath>C:\Users\oRF1888\git2\Subiekt\lib\jpedal_lgpl.jar</systemPath>
   	</dependency>
   	<dependency>
-  		<groupId>nachocalendar</groupId>
-  		<artifactId>nachocalendar</artifactId>
+  		<groupId>nacho</groupId>
+  		<artifactId>nacho</artifactId>
   		<version>0.23</version>
-  		<scope>system</scope>
-  		<systemPath>C:\Users\oRF1888\git2\Subiekt\lib\nachocalendar-0.23.jar</systemPath>
   	</dependency>
   </dependencies>
 </project>
