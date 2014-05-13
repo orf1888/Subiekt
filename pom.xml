@@ -4,6 +4,9 @@
   <artifactId>subiekt</artifactId>
   <version>1.15.59-SNAPSHOT</version>
   <name>Subiekt GTC</name>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
