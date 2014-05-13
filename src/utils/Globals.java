@@ -11,7 +11,8 @@ public class Globals
 	static
 	{
 		Properties prop = new Properties();
-		try (InputStream in = Globals.class.getResourceAsStream("version"))
+		try (InputStream in = Globals.class.getClassLoader()
+				.getResourceAsStream("version"))
 		{
 			prop.load(in);
 		} catch (IOException e)
@@ -19,7 +20,7 @@ public class Globals
 			throw new RuntimeException(e);
 
 		}
-		WersjaAplikacji = "Subiekt GTC v." + prop.getProperty("vesion");
+		WersjaAplikacji = "Subiekt GTC v." + prop.getProperty("version");
 	}
 
 	public final static boolean Widoczny = true;
