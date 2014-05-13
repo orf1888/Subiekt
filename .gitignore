@@ -4,7 +4,8 @@ bin/
 .settings
 db/
 lib/
-._baza.db6037795562909893977.tmp
-._baza.db6112221678563220163.tmp
+*.tmp
 log/
 target/
+*.bat
+dependency-reduced-pom.xml
