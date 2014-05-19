@@ -29,6 +29,7 @@ import javax.swing.border.EmptyBorder;
 
 import kontroler.BackupChmura;
 import kontroler.ProduktBaza;
+import kontroler.UpdateProgressKontroler;
 import model.Chmura;
 import utils.BazaDanych;
 import utils.FakturaZPliku;
@@ -127,6 +128,14 @@ public class WidokGlowny extends JFrame
 				JMenuItem mntmZakocz = new JMenuItem("Zakończ");
 				mnPlik.add(mntmZakocz);
 				mntmZakocz.addActionListener(zakonczListener);
+			}
+			{
+				/* Aktualizacje */
+				JMenu mnAktualizacja = new JMenu("Aktualizacje");
+				menuBar.add(mnAktualizacja);
+				JMenuItem mntmAktualizuj = new JMenuItem("Aktualizuj");
+				mnAktualizacja.add(mntmAktualizuj);
+				mntmAktualizuj.addActionListener(aktualizujListener());
 			}
 			{
 				/* O programie */
@@ -331,4 +340,19 @@ public class WidokGlowny extends JFrame
 			}
 		}
 	};
+
+	private final ActionListener aktualizujListener()
+	{
+		return new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				UpdateProgressKontroler upk = new UpdateProgressKontroler(
+						new UpdateProgress(WidokGlowny.this));
+				upk.start();
+			}
+		};
+	}
 }

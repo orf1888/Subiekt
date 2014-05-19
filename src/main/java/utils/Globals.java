@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -37,4 +38,20 @@ public class Globals
 
 	public final static ImageIcon IkonaAplikacji = new ImageIcon(Globals.class
 			.getClassLoader().getResource("sGTC.gif"));
+
+	public static final Properties properties = new Properties();
+
+	static
+	{
+		try
+		{
+			properties.load(new FileInputStream(".properties"));
+		} catch (IOException e)
+		{
+			throw new UserShowException("Wyjątek krytyczny!", e);
+		}
+	}
+
+	public final static String UpdateBat = properties.getProperty("bat");
+
 }
