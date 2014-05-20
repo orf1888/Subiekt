@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 import utils.Globals;
-import utils.MojeUtils;
+import utils.Loger;
 import widok.UpdateProgress;
 
 public class UpdateProgressKontroler extends Thread
@@ -45,15 +45,6 @@ public class UpdateProgressKontroler extends Thread
 					{
 						up.setLblStatus("Update repozytorium...");
 					}
-					/* Allready up to date */
-					if (line.contains("Already up-to-date"))
-					{
-						up.dispose();
-						reader.close();
-						MojeUtils
-								.showMsg("Subiekt GTC nie wyszukał zmian!\nPosiadasz najaktualniejszą wersję.");
-						return;
-					}
 					if (line.contains("Scanning for projects..."))
 					{
 						up.setLblStatus("Kompilacja Subiekt GTC...");
@@ -71,7 +62,7 @@ public class UpdateProgressKontroler extends Thread
 						reader.close();
 						System.exit(0);
 					}
-
+					Loger.piszDoPliku("test.txt", line);
 				}
 			}
 
