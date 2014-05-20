@@ -14,7 +14,7 @@ public class WalutaTest
 		assertEquals(42, w.getId());
 	}
 
-	@Test(expected=NullPointerException.class)
+	@Test(expected = NullPointerException.class)
 	public void testNullValue()
 	{
 		new Waluta(42, null);
