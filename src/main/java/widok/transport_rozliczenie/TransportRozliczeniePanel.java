@@ -98,7 +98,7 @@ public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
 			{
 				try
 				{
-					return getObiektBazaManager().pobierzWierszeZBazy(warunki);
+					return ustawOkres(null);
 				} catch (Exception e)
 				{
 					MojeUtils.showPrintError(e);
