@@ -52,11 +52,6 @@ public class Globals
 		}
 	}
 
-	public final static String gitPullBat = properties.getProperty("gitPull");
-
-	public final static String mavenVerifyBat = properties
-			.getProperty("mvnVerify");
-
-	public final static String replaceBat = properties.getProperty("replace");
+	public final static String UpdateBat = properties.getProperty("bat");
 
 }
