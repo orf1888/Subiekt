@@ -10,3 +10,4 @@ target/
 *.bat
 dependency-reduced-pom.xml
 .properties
+/test.txt
