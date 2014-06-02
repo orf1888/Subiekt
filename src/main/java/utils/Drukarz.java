@@ -1075,7 +1075,7 @@ public class Drukarz
 		// ///////////////Tutuł/////////////////////
 		String kontrachent_nazwa = listaFaktur.get(0).kontrachent.nazwa;
 		Paragraph nazwa_dokumentu = new Paragraph(
-				"FAKTURY SPRZEDAŻY dla " + kontrachent_nazwa + " za ("
+				"Faktury sprzedaży dla " + kontrachent_nazwa + " za ("
 						+ daty[0] + " - " + daty[1] + ")", helvetica14);
 		nazwa_dokumentu.setSpacingBefore(50);
 		nazwa_dokumentu.setAlignment(Element.ALIGN_CENTER);
@@ -1095,6 +1095,7 @@ public class Drukarz
 		}
 		/* Faktury */
 		int lp = 0;
+
 		for (Faktura f : listaFaktur)
 		{
 			lp++;
@@ -1112,8 +1113,12 @@ public class Drukarz
 					helvetica10));
 			tabelka_faktur.addCell(new Phrase(f.zaplacona ? "Zapłacona"
 					: "Niezapłacona", helvetica10));
-			tabelka_faktur.addCell(new Phrase(""
-					+ MojeUtils.formatujWartosc(f.wartosc_z_narzutem)));
+			tabelka_faktur.addCell(newCellDoPrawej(
+					""
+							+ MojeUtils.formatujWartosc(f.wartosc_z_narzutem)
+							+ " "
+							+ WalutaManager.pobierzNazweZBazy(f.waluta - 1,
+									Waluta.tabelaWaluta), helvetica10));
 
 		}
 		float[] columnWidths = new float[]
@@ -1123,6 +1128,33 @@ public class Drukarz
 		tabelka.add(tabelka_faktur);
 		doc.add(tabelka);
 
+		// ///////////////Tabela podsumowania walutowego/////////////////////
+		int[] wartosci = Faktura.getWartoscByWaluta(listaFaktur);
+		for (int i = 0; i < wartosci.length; i++)
+		{
+			if (wartosci[i] != 0)
+			{
+				PdfPTable tabelka_wartosci = new PdfPTable(6);
+				tabelka_wartosci.addCell(newSeparator());
+				tabelka_wartosci.addCell(newSeparator());
+				tabelka_wartosci.addCell(newSeparator());
+				tabelka_wartosci.addCell(newSeparator());
+				tabelka_wartosci
+						.addCell(newCellWysrodkowanySzary(
+								"Wartość "
+										+ WalutaManager.pobierzNazweZBazy(
+												Long.valueOf((i)),
+												Waluta.tabelaWaluta),
+								helvetica10));
+				tabelka_wartosci.addCell(newCellDoPrawej(
+						MojeUtils.formatujWartosc(wartosci[i]), helvetica10));
+				tabelka_wartosci.setWidths(columnWidths);
+				Paragraph par = new Paragraph();
+				tabelka_wartosci.setSpacingBefore(10);
+				par.add(tabelka_wartosci);
+				doc.add(par);
+			}
+		}
 	}
 
 	private static PdfPCell newSeparator()

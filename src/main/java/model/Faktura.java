@@ -146,4 +146,40 @@ public class Faktura implements ObiektZId
 	{
 		return warunekWidoczny;
 	}
+
+	public static int[] getWartoscByWaluta(List<Faktura> list)
+	{
+		/* PLN, EUR, USD, UAH */
+		int[] wartosci = new int[]
+		{ 0, 0, 0, 0 };
+		for (Faktura f : list)
+		{
+			switch ((int) (long) f.waluta)
+			{
+			case 1:
+			{
+				wartosci[0] += f.wartosc_z_narzutem;
+				break;
+			}
+			case 2:
+			{
+				wartosci[1] += f.wartosc_z_narzutem;
+				break;
+			}
+			case 3:
+			{
+				wartosci[2] += f.wartosc_z_narzutem;
+				break;
+			}
+			case 4:
+			{
+				wartosci[3] += f.wartosc_z_narzutem;
+				break;
+			}
+			default:
+				break;
+			}
+		}
+		return wartosci;
+	}
 }

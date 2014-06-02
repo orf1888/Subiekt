@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pl.com.serhii.khilinich</groupId>
 	<artifactId>subiekt</artifactId>
-	<version>1.15.61</version>
+	<version>1.15.62</version>
 	<name>Subiekt GTC</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
