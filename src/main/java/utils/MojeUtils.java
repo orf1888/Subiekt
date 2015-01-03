@@ -457,7 +457,14 @@ public class MojeUtils
 			throw new UserShowException(
 					"Nie udało się pobrać numeru faktury odpowiadającej!");
 		}
-		return nr_faktury_odpowiadajacej[0][0];
+		try
+        {
+		    return nr_faktury_odpowiadajacej[0][0];
+		} catch(ArrayIndexOutOfBoundsException ex)
+        {
+            /*problem pjawił się przy pobieraniu faktury, która została skorygowana*/
+			return "Błąda pobierania numeru faktury!";
+		}
 	}
 
 	public static int zaokraglijWartosc(int wartosc, double narzut)
