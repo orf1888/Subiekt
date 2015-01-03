@@ -35,6 +35,7 @@ public class Loger
 		tworzKatalogJesliNieIstnieje();
 		String info = getTime() + " --> ";
 		info += rodzaj + " ";
+        logContent+="\n";
 		switch (rodzaj)
 		{
 		case FinanseLog:
