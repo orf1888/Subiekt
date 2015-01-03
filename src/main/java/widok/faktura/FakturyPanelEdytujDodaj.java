@@ -672,7 +672,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 		{
 			if (_ilosc_magazyn + wartoscZmiany < 0)
 				throw new UserShowException(
-						"Nie można odjąć tyle produktów z magazynu!");
+						"Nie można odjąć tyle produktów z magazynu! _ilosc_magazyn="+_ilosc_magazyn+" wartoscZmiany"+wartoscZmiany);
 			nowa_wartosc = (_ilosc_magazyn + wartoscZmiany);
 		} else
 		{
