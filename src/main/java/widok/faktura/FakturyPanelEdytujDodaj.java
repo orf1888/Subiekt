@@ -378,7 +378,7 @@ public class FakturyPanelEdytujDodaj extends PanelEdytujDodajObiekt
 						parent.rodzajFaktury);
 			} catch (Exception e)
 			{
-				MojeUtils.showError(e);
+				MojeUtils.showError(e+"\n(Produkt id=)"+id_produktu);
 				return;
 			}
 			Produkt produktSlownik = (Produkt) ProduktBaza
