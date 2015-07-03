@@ -143,18 +143,18 @@ public class WysylkaPanel extends PanelOgolnyPrzyciski
 			sorter.setSelectedItem("Wszystkie");
 			break;
 		}
-		case "Bierzący miesiąc":
+		case "Bieżący miesiąc":
 		{
 			daty = DataUtils.getCurrentMonth();
-			sorter.setSelectedItem("Bierzący miesiąc");
-			sort.sorterW = "Bierzący miesiąc";
+			sorter.setSelectedItem("Bieżący miesiąc");
+			sort.sorterW = "Bieżący miesiąc";
 			break;
 		}
-		case "Bierzący rok":
+		case "Bieżący rok":
 		{
 			daty = DataUtils.getCurrentYear();
-			sorter.setSelectedItem("Bierzący rok");
-			sort.sorterW = "Bierzący rok";
+			sorter.setSelectedItem("Bieżący rok");
+			sort.sorterW = "Bieżący rok";
 			break;
 		}
 		}

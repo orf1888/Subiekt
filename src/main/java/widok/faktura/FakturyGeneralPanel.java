@@ -382,24 +382,24 @@ public class FakturyGeneralPanel extends PanelOgolnyPrzyciski
 			sorter.setSelectedItem("Wszystkie");
 			break;
 		}
-		case "Bierzący miesiąc":
+		case "Bieżący miesiąc":
 		{
 			daty = DataUtils.getCurrentMonth();
-			sorter.setSelectedItem("Bierzący miesiąc");
+			sorter.setSelectedItem("Bieżący miesiąc");
 			if (fakturaRodzaj == Faktura.SPRZEDAZ)
-				sort.sorterFS = "Bierzący miesiąc";
+				sort.sorterFS = "Bieżący miesiąc";
 			else
-				sort.sorterFZ = "Bierzący miesiąc";
+				sort.sorterFZ = "Bieżący miesiąc";
 			break;
 		}
-		case "Bierzący rok":
+		case "Bieżący rok":
 		{
 			daty = DataUtils.getCurrentYear();
-			sorter.setSelectedItem("Bierzący rok");
+			sorter.setSelectedItem("Bieżący rok");
 			if (fakturaRodzaj == Faktura.SPRZEDAZ)
-				sort.sorterFS = "Bierzący rok";
+				sort.sorterFS = "Bieżący rok";
 			else
-				sort.sorterFZ = "Bierzący rok";
+				sort.sorterFZ = "Bieżący rok";
 			break;
 		}
 		}

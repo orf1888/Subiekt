@@ -132,18 +132,18 @@ public class WplataPanel extends PanelOgolnyPrzyciski
 			sorter.setSelectedItem("Wszystkie");
 			break;
 		}
-		case "Bierzący miesiąc":
+		case "Bieżący miesiąc":
 		{
 			daty = DataUtils.getCurrentMonth();
-			sorter.setSelectedItem("Bierzący miesiąc");
-			sort.sorterWp = "Bierzący miesiąc";
+			sorter.setSelectedItem("Bieżący miesiąc");
+			sort.sorterWp = "Bieżący miesiąc";
 			break;
 		}
-		case "Bierzący rok":
+		case "Bieżący rok":
 		{
 			daty = DataUtils.getCurrentYear();
-			sorter.setSelectedItem("Bierzący rok");
-			sort.sorterWp = "Bierzący rok";
+			sorter.setSelectedItem("Bieżący rok");
+			sort.sorterWp = "Bieżący rok";
 			break;
 		}
 		}

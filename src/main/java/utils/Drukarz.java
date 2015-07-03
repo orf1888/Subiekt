@@ -1250,7 +1250,7 @@ public class Drukarz
 			/* Stopka */
 			ColumnText.showTextAligned(writer.getDirectContent(),
 					Element.ALIGN_CENTER, new Phrase(
-							("Wygenerowno w " + Globals.WersjaAplikacji)),
+							("Wygenerowano w " + Globals.WersjaAplikacji)),
 					(rect.getLeft() + 100), rect.getBottom() - 30, 0);
 		}
 	}

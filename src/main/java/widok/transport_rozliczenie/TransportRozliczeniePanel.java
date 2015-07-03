@@ -131,18 +131,18 @@ public class TransportRozliczeniePanel extends PanelOgolnyPrzyciski
 			sorter.setSelectedItem("Wszystkie");
 			break;
 		}
-		case "Bierzący miesiąc":
+		case "Bieżący miesiąc":
 		{
 			daty = DataUtils.getCurrentMonth();
-			sorter.setSelectedItem("Bierzący miesiąc");
-			sort.sorterT = "Bierzący miesiąc";
+			sorter.setSelectedItem("Bieżący miesiąc");
+			sort.sorterT = "Bieżący miesiąc";
 			break;
 		}
-		case "Bierzący rok":
+		case "Bieżący rok":
 		{
 			daty = DataUtils.getCurrentYear();
-			sorter.setSelectedItem("Bierzący rok");
-			sort.sorterT = "Bierzący rok";
+			sorter.setSelectedItem("Bieżący rok");
+			sort.sorterT = "Bieżący rok";
 			break;
 		}
 		}

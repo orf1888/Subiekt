@@ -33,7 +33,7 @@ public abstract class PanelOgolnyTabela extends JPanel
 {
 	private final boolean isSorter;
 	public JComboBox<String> sorter = new JComboBox<>(new String[]
-	{ "Wszystkie", "Bierzący miesiąc", "Bierzący rok" });
+	{ "Wszystkie", "Bieżący miesiąc", "Bieżący rok" });
 
 	public PanelOgolnyTabela(boolean s) {
 		this.isSorter = s;
