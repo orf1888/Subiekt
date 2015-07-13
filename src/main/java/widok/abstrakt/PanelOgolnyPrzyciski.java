@@ -578,32 +578,41 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 		@Override
 		public void actionPerformed(ActionEvent arg0)
 		{
-			String szukanieText = pobierzSzukanyText().trim();
-			if (szukanieText.isEmpty())
-				return;
-
-			/* szuka i wyswietla wg nowych warunkow */
-			try
-			{
-				warunki.ustawTylkoWidoczne();
-				warunki.dodajWarunekDowolnaKolumna(szukanieText);
-				String[][] data = getObiektBazaManager().pobierzWierszeZBazy(
-						warunki);
-				if (data.length == 0)
-				{
-					szukanieText += "*";
-					warunki.dodajWarunekDowolnaKolumna(szukanieText);
-					data = null;
-				}
-				przeladujTabele(data, editableFunktor, false);
-			} catch (Exception e)
-			{
-				MojeUtils.showPrintError(e);
-			}
+            findAndReloadTable();
 		}
 	};
 
-	protected KeyListener szukajEnterListener = new KeyListener()
+    private void findAndReloadTable()
+    {
+        String szukanieText = "";
+        for (String part : pobierzSzukanyText().trim().split("\\s+")) {
+            szukanieText += "%";
+            szukanieText += part;
+        }
+        if (szukanieText.isEmpty())
+            return;
+        szukanieText += "%";
+        /* szuka i wyswietla wg nowych warunkow */
+        try
+        {
+            warunki.ustawTylkoWidoczne();
+            warunki.dodajWarunekDowolnaKolumna(szukanieText);
+            String[][] data = getObiektBazaManager().pobierzWierszeZBazy(
+                    warunki);
+            if (data.length == 0)
+            {
+                szukanieText += "*";
+                warunki.dodajWarunekDowolnaKolumna(szukanieText);
+                data = null;
+            }
+            przeladujTabele(data, editableFunktor, false);
+        } catch (Exception e)
+        {
+            MojeUtils.showPrintError(e);
+        }
+    }
+
+    protected KeyListener szukajEnterListener = new KeyListener()
 	{
 
 		@Override
@@ -620,29 +629,8 @@ public class PanelOgolnyPrzyciski extends PanelOgolnyTabela
 			/* Naciśnięto ENTER */
 			if (e.getKeyCode() == KeyEvent.VK_ENTER)
 			{
-				String szukanieText = pobierzSzukanyText().trim();
-				if (szukanieText.isEmpty())
-					return;
-
-				/* szuka i wyswietla wg nowych warunkow */
-				try
-				{
-					warunki.ustawTylkoWidoczne();
-					warunki.dodajWarunekDowolnaKolumna(szukanieText);
-					String[][] data = getObiektBazaManager()
-							.pobierzWierszeZBazy(warunki);
-					if (data.length == 0)
-					{
-						szukanieText += "*";
-						warunki.dodajWarunekDowolnaKolumna(szukanieText);
-						data = null;
-					}
-					przeladujTabele(data, editableFunktor, false);
-				} catch (Exception e1)
-				{
-					MojeUtils.showPrintError(e1);
-				}
-			} else
+                findAndReloadTable();
+            } else
 			{
 				/* Naciśnięto ESC */
 				if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
