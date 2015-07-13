@@ -49,7 +49,7 @@ public class FakturaBaza implements ObiektBazaManager
 						MojeUtils.poprawNrFaktury(result.getInt(7),
 								result.getInt(1),
 								DataUtils.getYear(result.getString(2)),
-								result.getBoolean(8)),
+								result.getBoolean(7)),
 						data,
 						DataUtils.formatujDate(result.getString(3)),
 						KontrachentBaza.pobierzNazweZBazy(result.getInt(4)),
@@ -130,7 +130,7 @@ public class FakturaBaza implements ObiektBazaManager
 		warunekTmp.warunki = warunki.warunki;
 		warunekTmp.tylkoWidoczne = warunki.tylkoWidoczne;
 
-		String querySql = "SELECT DISTINCT f.numer, f.data_wystawienia,f.termin_platnosci, f.id_kontrachent, f.wartosc, f.id_faktura, f.rodzaj FROM "
+		String querySql = "SELECT DISTINCT f.numer, f.data_wystawienia, f.termin_platnosci, f.id_kontrachent, f.wartosc, f.id_faktura, f.rodzaj, f.czy_korekta, f.waluta FROM "
 				+ Faktura.tableName
 				+ " f JOIN "
 				+ Kontrachent.tableName
