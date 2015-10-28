@@ -1,15 +1,13 @@
 package widok;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -89,6 +87,9 @@ public class WidokGlowny extends JFrame
 	public TransportRozliczeniePanel panelTransportRozliczenie;
 
 	public WidokGlowny() throws Exception, ClassNotFoundException, IOException {
+        /*Ustawmy wiekość czcionki dla "systemu opercyjnego" Window$ 8.1!!!!*/
+        /*Kochany Windows!!!!!!!!*/
+        setDefaultFontSize(20);
 		/* Ustaw ikonę */
 		setIconImage(Globals.IkonaAplikacji.getImage());
 		/* Wersja aplikacji */
@@ -355,4 +356,30 @@ public class WidokGlowny extends JFrame
 			}
 		};
 	}
+
+    /***
+     * Metoda nadpisuje wielkość czcionki dla Win 8.1, póki co nie mam lepszego
+     * pomysłu. Dla dużej rozdzielczości ekranu, czcionka jest za mała nawet dla
+     * kogoś o sokolim wzroku...
+     *
+     * Sam nie wierzę, że to robię... Mamo, Tato przepraszam...
+     * @param size
+     */
+    public static void setDefaultFontSize(int size)
+    {
+        Set<Object> keySet = UIManager.getLookAndFeelDefaults().keySet();
+        Object[] keys = keySet.toArray(new Object[keySet.size()]);
+        for (Object key : keys)
+        {
+            if (key != null && key.toString().toLowerCase().contains("font"))
+            {
+                Font font = UIManager.getDefaults().getFont(key);
+                if (font != null) {
+                    font = font.deriveFont((float)size);
+                    UIManager.put(key, font);
+                }
+            }
+        }
+
+    }
 }
