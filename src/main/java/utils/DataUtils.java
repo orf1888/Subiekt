@@ -12,8 +12,8 @@ import java.util.Locale;
 
 public class DataUtils
 {
-	public static String pierwszy_dzien_roku = "-01-01";
-	public static String ostatni_dzien_roku = "-12-31";
+	public static String pierwszy_dzien_roku = "-01-01 00:00";
+	public static String ostatni_dzien_roku = "-12-31 24:00";
 
 	public static DateFormat stringToDate_format = new SimpleDateFormat(
 			"yyyy-MM-dd hh:mm", Locale.US);
@@ -161,9 +161,9 @@ public class DataUtils
 		String koniec_miesiac = getYear(pobierzAktualnaDateFormat()) + "-"
 				+ getMonth(pobierzAktualnaDateFormat());
 		koniec_miesiac += "-"
-				+ Calendar.getInstance().getMaximum(Calendar.DAY_OF_MONTH);
+				+ Calendar.getInstance().getMaximum(Calendar.DAY_OF_MONTH) + "24:00";
 		String poczatek_miesiac = getYear(pobierzAktualnaDateFormat()) + "-"
-				+ getMonth(pobierzAktualnaDateFormat()) + "-01";
+				+ getMonth(pobierzAktualnaDateFormat()) + "-01 00:00";
 		return new String[]
 		{ poczatek_miesiac, koniec_miesiac };
 	}

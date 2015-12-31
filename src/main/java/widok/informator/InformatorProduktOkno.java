@@ -188,7 +188,7 @@ public class InformatorProduktOkno extends JDialog
 			} catch (Exception e1)
 			{
 				MojeUtils.showError("Coś nie tak.");
-				MojeUtils.error(e1);;
+				MojeUtils.error(e1);
 			}
 		}
 	};
