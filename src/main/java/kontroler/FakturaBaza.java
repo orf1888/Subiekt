@@ -49,7 +49,7 @@ public class FakturaBaza implements ObiektBazaManager
 						MojeUtils.poprawNrFaktury(result.getInt(7),
 								result.getInt(1),
 								DataUtils.getYear(result.getString(2)),
-								result.getBoolean(7)),
+								result.getBoolean(8)),
 						data,
 						DataUtils.formatujDate(result.getString(3)),
 						KontrachentBaza.pobierzNazweZBazy(result.getInt(4)),
