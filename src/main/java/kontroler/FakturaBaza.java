@@ -416,9 +416,6 @@ public class FakturaBaza implements ObiektBazaManager
 		try
 		{
 			LOCKED_FAKTURY.add(faktura.id_faktura);
-			if (faktura.kontrachent != null)
-				zaplacFaktury(faktura.kontrachent.id_kontrachent,
-						faktura.waluta.intValue());
 		} finally
 		{
 			LOCKED_FAKTURY.remove(faktura.id_faktura);
@@ -526,6 +523,9 @@ public class FakturaBaza implements ObiektBazaManager
 		}
 		onChange(staraFaktura);
 		onChange(nowaFaktura);
+		if (nowaFaktura.kontrachent != null)
+			zaplacFaktury(nowaFaktura.kontrachent.id_kontrachent,
+					nowaFaktura.waluta.intValue());
 	}
 
 	/* Refactoring */
@@ -565,6 +565,28 @@ public class FakturaBaza implements ObiektBazaManager
 						+ (zaplacona ? "1" : "0") + " WHERE id_faktura = "
 						+ SqlUtils.popraw(id_faktura));
 		onChange(id_faktura);
+	}
+
+	private static void ustawZaplacone(List<Faktura> faktury, boolean zaplacona)
+			throws Exception
+	{
+		StringBuilder idListBuilder = new StringBuilder();
+		idListBuilder.append("(");
+		int i = 0;
+		for (Faktura faktura : faktury) {
+			i++;
+			if(i<faktury.size()) {
+				idListBuilder.append(faktura.getId()).append(",");
+			}else{
+				idListBuilder.append(faktura.getId());
+			}
+
+		}
+		idListBuilder.append(")");
+		BazaDanych.getInstance().aktualizacja(
+				"UPDATE " + Faktura.tableName + " set zaplacona = "
+						+ (zaplacona ? "1" : "0") + " WHERE id_faktura in "
+						+ SqlUtils.popraw(idListBuilder.toString()));
 	}
 
 	public static List<Faktura> pobierzFakturyZaOkres(int id_kontrachent,
@@ -630,6 +652,7 @@ public class FakturaBaza implements ObiektBazaManager
 	 * przelicza od nowa ktore faktury sa oplacone, bierze pod uwage wszystkie
 	 * faktury i wszystkie wplaty
 	 */
+	/*TODO: Need serious refactor!*/
 	private static void zaplacFaktury_impl(int id_kontrachent, int waluta)
 			throws Exception
 	{
@@ -641,9 +664,12 @@ public class FakturaBaza implements ObiektBazaManager
 		Kontrachent kontrachent = (Kontrachent) KontrachentBaza
 				.pobierzObiektZBazy(id_kontrachent);
 
+
+		// sumuj wplaty i dług
 		int dlugggg = 0;
-		// sumuj wplaty
 		int suma_wplat = 0;
+
+//		liczSumeWplatIDlugu(dlugggg, suma_wplat, wplaty);
 		for (Wplata w : wplaty)
 		{
 			/* Wpłata balansująca dług faktyczny */
@@ -656,20 +682,31 @@ public class FakturaBaza implements ObiektBazaManager
 		int f_suma_oplacone = 0;
 		int f_suma_nieoplacone = 0;
 		int faktur_odznaczonych = 0;
+		List<Faktura> zaplacone = new ArrayList<>();
+		List<Faktura> nieZaplacone = new ArrayList<>();
+
+//		sortujIZapiszFaktury(faktury, zaplacone, nieZaplacone, f_suma_oplacone, f_suma_nieoplacone, faktur_odznaczonych, suma_wplat);
+
 		for (Faktura f : faktury)
 		{
 			if (suma_wplat >= (f.wartosc_z_narzutem + f_suma_oplacone))
 			{
 				// oznacz
-				ustawZaplacona(f.id_faktura, true);
+				zaplacone.add(f);
 				f_suma_oplacone += f.wartosc_z_narzutem;
 			} else
 			{
 				// odznacz
-				ustawZaplacona(f.id_faktura, false);
+				nieZaplacone.add(f);
 				f_suma_nieoplacone += f.wartosc_z_narzutem;
 				++faktur_odznaczonych;
 			}
+		}
+		if(!zaplacone.isEmpty()) {
+			ustawZaplacone(zaplacone, true);
+		}
+		if(!nieZaplacone.isEmpty()) {
+			ustawZaplacone(nieZaplacone, false);
 		}
 
 		// oblicz nadplate
