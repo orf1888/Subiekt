@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pl.com.serhii.khilinich</groupId>
 	<artifactId>subiekt</artifactId>
-	<version>1.15.68</version>
+	<version>1.15.69</version>
 	<name>Subiekt GTC</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -78,7 +78,7 @@
 		<dependency>
 			<groupId>com.dropbox.core</groupId>
 			<artifactId>dropbox-core-sdk</artifactId>
-			<version>1.7.6</version>
+			<version>3.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
