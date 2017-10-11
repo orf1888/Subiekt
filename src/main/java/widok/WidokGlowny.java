@@ -89,7 +89,7 @@ public class WidokGlowny extends JFrame
 	public WidokGlowny() throws Exception, ClassNotFoundException, IOException {
         /*Ustawmy wiekość czcionki dla "systemu opercyjnego" Window$ 8.1!!!!*/
         /*Kochany Windows!!!!!!!!*/
-        //setDefaultFontSize(20);
+        setDefaultFontSize(20);
 		/* Ustaw ikonę */
 		setIconImage(Globals.IkonaAplikacji.getImage());
 		/* Wersja aplikacji */
